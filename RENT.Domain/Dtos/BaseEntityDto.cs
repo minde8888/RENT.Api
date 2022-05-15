@@ -1,12 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RENT.Domain.Entities;
-
+﻿
 namespace RENT.Domain.Dtos
 {
     public class BaseEntityDto

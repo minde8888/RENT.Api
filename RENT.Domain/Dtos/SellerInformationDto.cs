@@ -1,6 +1,5 @@
-﻿using RENT.Domain.Dtos;
-
-namespace RENT.Services.Services.Dtos
+﻿
+namespace RENT.Domain.Dtos
 {
     public class UserInformationDto : BaseEntityDto
     {

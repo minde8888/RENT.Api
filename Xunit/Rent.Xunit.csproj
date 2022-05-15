@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RENT.Api\RENT.Api.csproj" />
     <ProjectReference Include="..\RENT.Data\RENT.Data.csproj" />
     <ProjectReference Include="..\RENT.Services\RENT.Services.csproj" />
   </ItemGroup>

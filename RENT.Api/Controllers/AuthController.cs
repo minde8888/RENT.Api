@@ -5,12 +5,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using RENT.Api.Configuration.Requests;
 using RENT.Data.Interfaces;
-using RENT.Domain.Dtos.Requests;
 using RENT.Domain.Dtos.Responses;
 using RENT.Domain.Entities.Auth;
-using RENT.Services.Services;
-using RENT.Services.Services.Dtos;
-using RENT.Services.Services.Interfaces;
+using RENT.Domain.Dtos;
 
 namespace RENT.Api.Controllers
 {
@@ -21,29 +18,15 @@ namespace RENT.Api.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly TokenValidationParameters _tokenValidationParams;
         private readonly IUserRepository _userRepository;
-        private readonly IAuthService _authService;
+
 
         public AuthController(UserManager<ApplicationUser> userManager, 
             TokenValidationParameters tokenValidationParams, 
-            IUserRepository userRepository, 
-            IAuthService authService)
+            IUserRepository userRepository)
         {
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _tokenValidationParams = tokenValidationParams ?? throw new ArgumentNullException(nameof(tokenValidationParams));
-            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            _authService = authService ?? throw new ArgumentNullException(nameof(authService));
-        }
-
-        public AuthController(UserManager<ApplicationUser> userManager,
-            TokenValidationParameters tokenValidationsParams,
-            IUserRepository userRepository,
-            AuthService authService)
-
-        {
-            _userManager = userManager;
-            _tokenValidationParams = tokenValidationsParams;
-            _userRepository = userRepository;
-            _authService = authService;
+            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));           
         }
 
         [HttpPost]
@@ -74,7 +57,7 @@ namespace RENT.Api.Controllers
                 {
                     Roles = user.Role,
                     Email = user.Email,
-                    UserName = _authService.StringRandom(),
+                    UserName = _userRepository.StringRandom(),
                     PhoneNumber = user.PhoneNumber
                 };
 
@@ -163,9 +146,9 @@ namespace RENT.Api.Controllers
                 }
                 try
                 {
-                    var token = await _authService.GenerateJwtTokenAsync(existingUser);
+                    var token = await _userRepository.GenerateJwtTokenAsync(existingUser);
                     String ImageSrc = String.Format("{0}://{1}{2}", Request.Scheme, Request.Host, Request.PathBase);
-                    var result = await _authService.GetUserInfo(existingUser, token, ImageSrc);
+                    var result = await _userRepository.GetUserInfo(existingUser, token, ImageSrc);
 
                     return Ok(result);
                 }
@@ -198,7 +181,7 @@ namespace RENT.Api.Controllers
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
                 string token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                bool emailHelper = await _authService.SendEmailPasswordReset(model, Request.Headers["origin"], token);
+                bool emailHelper = await _userRepository.SendEmailPasswordReset(model, Request.Headers["origin"], token);
                 if (emailHelper)
                 {
                     return Ok();
@@ -217,7 +200,7 @@ namespace RENT.Api.Controllers
         {
             try
             {
-                bool result = await _authService.NewPassword(model);
+                bool result = await _userRepository.NewPassword(model);
                 if (result)
                 {
                     return Ok(new { message = "Password reset successful, you can now login" });
@@ -244,7 +227,7 @@ namespace RENT.Api.Controllers
                     _tokenValidationParams.ValidateLifetime = false;
                     var principal = jwtTokenHandler.ValidateToken(tokenRequest.Token, _tokenValidationParams, out var validatedToken);
                     _tokenValidationParams.ValidateLifetime = true;
-                    var res = await _authService.VerifyToken(tokenRequest, principal, validatedToken);
+                    var res = await _userRepository.VerifyToken(tokenRequest, principal, validatedToken);
                     if (res == null)
                     {
                         return BadRequest(new RegistrationResponse()

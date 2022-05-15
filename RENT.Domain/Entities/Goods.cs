@@ -6,6 +6,6 @@
         public Guid SellerId { get; set; }
         public Guid CustomersId { get; set; }
         public bool IsDeleted { get; set; } = false;
-        public ICollection<Categories>? Categories { get; set; }
+        public ICollection<Categories> Categories { get; set; }
     }
 }

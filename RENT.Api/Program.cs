@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Identity;
-using RENT.Api;
 using RENT.Data.Context;
 using RENT.Domain.Entities.Auth;
 using RENT.Domain.Entities.Roles;

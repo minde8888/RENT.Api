@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using RENT.Domain.Dtos;
-using RENT.Domain.Dtos.Requests;
-using RENT.Domain.Dtos.UpdateDto;
 using RENT.Domain.Entities;
-using RENT.Services.Services.Dtos;
+
 
 namespace RENT.Services.Services.AppMapper
 {

@@ -7,16 +7,16 @@ using RENT.Domain.Entities.Settings;
 
 namespace RENT.Data.Repositorys
 {
-    public class MailReposidory : IMailReposidory
+    public class MailRepository : IMailReposidory
     {
         private readonly MailSettings _mailSettings;
 
-        public MailReposidory(MailSettings mailSettings)
+        public MailRepository(MailSettings mailSettings)
         {
             _mailSettings = mailSettings ?? throw new ArgumentNullException(nameof(mailSettings));
         }
 
-        public MailReposidory(IOptions<MailSettings> mailSettings)
+        public MailRepository(IOptions<MailSettings> mailSettings)
         {
             _mailSettings = mailSettings.Value;
         }

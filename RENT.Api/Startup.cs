@@ -81,7 +81,7 @@ namespace RENT.Api
                 o.TokenLifespan = TimeSpan.FromHours(3));
 
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
-            services.AddTransient<IMailReposidory, MailReposidory>();
+            services.AddTransient<IMailReposidory, MailRepository>();
 
             services.AddScoped(typeof(DbContext), typeof(AppDbContext));
             services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
@@ -93,7 +93,7 @@ namespace RENT.Api
             //services.AddScoped(typeof(IProgressPlanRepository), typeof(ProgressPlanRepository));
             //services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 
-            services.AddScoped<AuthService>();
+
             //services.AddScoped<ImagesService>();
             //services.AddScoped<ManagerService>();
             //services.AddScoped<EmployeeService>();

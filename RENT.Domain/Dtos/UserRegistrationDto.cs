@@ -1,7 +1,5 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-
-namespace RENT.Domain.Dtos.Requests
+﻿
+namespace RENT.Domain.Dtos
 {
     public class UserRegistrationDto
     {
