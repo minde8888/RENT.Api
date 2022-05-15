@@ -1,8 +1,6 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
-using WTP.Domain.Entities.Auth;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace WTP.Domain.Entities.Auth
+namespace RENT.Domain.Entities.Auth
 {
     public class RefreshToken
     {
@@ -19,6 +17,7 @@ namespace WTP.Domain.Entities.Auth
 
         [ForeignKey(nameof(UserId))]
         public ApplicationUser ApplicationUser { get; set; }
+
         public DateTime? Revoked { get; set; }
         public bool IsActive => Revoked == null && !IsExpired;
     }

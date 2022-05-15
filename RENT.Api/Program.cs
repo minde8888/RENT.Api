@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Identity;
-using WTP.Data.Context;
-using WTP.Domain.Entities.Auth;
-using WTP.Domain.Entities.Roles;
+using RENT.Api;
+using RENT.Data.Context;
+using RENT.Domain.Entities.Auth;
+using RENT.Domain.Entities.Roles;
 
-namespace WTP.Api
+namespace RENT.Api
 {
     public class Program
     {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 
-namespace WTP.Api.Configuration
+namespace RENT.Api.Configuration
 {
     public class AuthResult
     {

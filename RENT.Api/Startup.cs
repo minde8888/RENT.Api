@@ -8,14 +8,15 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using WTP.Api.Configuration;
-using WTP.Data.Context;
-using WTP.Data.Interfaces;
-using WTP.Data.Repositorys;
-using WTP.Domain.Entities.Auth;
-using WTP.Domain.Entities.Roles;
-using WTP.Domain.Entities.Settings;
-using WTP.Services.Services.AppMapper;
+using RENT.Api.Configuration;
+using RENT.Data.Context;
+using RENT.Data.Interfaces;
+using RENT.Data.Repositorys;
+using RENT.Domain.Entities.Auth;
+using RENT.Domain.Entities.Roles;
+using RENT.Domain.Entities.Settings;
+using RENT.Services.Services;
+using RENT.Services.Services.AppMapper;
 
 namespace RENT.Api
 {
@@ -82,28 +83,28 @@ namespace RENT.Api
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
             services.AddTransient<IMailReposidory, MailReposidory>();
 
-            //services.AddScoped(typeof(DbContext), typeof(AppDbContext));
+            services.AddScoped(typeof(DbContext), typeof(AppDbContext));
+            services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
+            services.AddScoped(typeof(IEmailPasswordService), typeof(EmailPassword));
             //services.AddScoped(typeof(IManagerRepository), typeof(ManagerRepository));
             //services.AddScoped(typeof(IEmployeesRepository), typeof(EmployeesRepository));
             //services.AddScoped(typeof(IPostRepository), typeof(PostRepository));
             //services.AddScoped(typeof(IProjectRepository), typeof(ProjectRepository));
-            //services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
-            //services.AddScoped(typeof(IEmailPassword), typeof(EmailPassword));
             //services.AddScoped(typeof(IProgressPlanRepository), typeof(ProgressPlanRepository));
             //services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 
-            //services.AddScoped<AuthService>();
+            services.AddScoped<AuthService>();
             //services.AddScoped<ImagesService>();
             //services.AddScoped<ManagerService>();
             //services.AddScoped<EmployeeService>();
             //services.AddScoped<ProjectService>();
             //services.AddScoped<ProgressPlanService>();
 
-            services.AddTransient<IAdminRepository, AdminRepository>();
+            //services.AddTransient<IAdminRepository, AdminRepository>();
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WTP.Api", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "RENT.Api", Version = "v1" });
             });
 
             services.AddControllers(options =>
@@ -136,7 +137,7 @@ namespace RENT.Api
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WTP.Api v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "RENT.Api v1"));
             }
 
             app.UseStaticFiles(new StaticFileOptions

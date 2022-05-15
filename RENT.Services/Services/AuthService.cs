@@ -3,35 +3,45 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
+using RENT.Api.Configuration;
+using RENT.Data.Context;
+using RENT.Data.Helpers;
+using RENT.Data.Interfaces;
+using RENT.Domain.Entities.Auth;
+using RENT.Services.Services.Dtos;
+using RENT.Services.Services.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
-using WTP.Api.Configuration;
-using WTP.Data.Context;
-using WTP.Data.Helpers;
-using WTP.Data.Interfaces;
-using WTP.Domain.Entities.Auth;
-using WTP.Services.Services.Dtos;
 
-namespace WTP.Services.Services
+namespace RENT.Services.Services
 {
-    public class AuthService
+    public class AuthService : IAuthService
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IEmailPassword _mail;
+        private readonly IEmailPasswordService _mail;
         private readonly JwtConfig _jwtConfig;
+
+        public AuthService(AppDbContext context, 
+            IMapper mapper, 
+            UserManager<ApplicationUser> userManager, 
+            IEmailPasswordService mail, 
+            JwtConfig jwtConfig)
+        {
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            _mail = mail ?? throw new ArgumentNullException(nameof(mail));
+            _jwtConfig = jwtConfig ?? throw new ArgumentNullException(nameof(jwtConfig));
+        }
 
         public AuthService(IMapper mapper,
             AppDbContext context,
             UserManager<ApplicationUser> userManager,
             IOptionsMonitor<JwtConfig> optionsMonitor,
-            IEmailPassword mail)
+            IEmailPasswordService mail)
         {
             _context = context;
             _mapper = mapper;
@@ -40,7 +50,7 @@ namespace WTP.Services.Services
             _jwtConfig = optionsMonitor.CurrentValue;
         }
 
-        public async Task<List<EmployeeInformationDto>> GetUserInfo(ApplicationUser user, AuthResult token, string ImageSrc)
+        public async Task<List<UserInformationDto>> GetUserInfo(ApplicationUser user, AuthResult token, string ImageSrc)
         {
             var role = await _userManager.GetRolesAsync(user);
 
@@ -48,60 +58,48 @@ namespace WTP.Services.Services
             {
                 switch (item)
                 {
-                    case "Manager":
+                    case "User":
 
                         string imgName = "";
 
-                        var manager = await _context.Manager
+                        var seller = await _context.Seller
                         .Include(address => address.Address)
-                        .Include(employee => employee.Employees)
-                        .ThenInclude(p => p.ProgressPlans)
-                        .OrderBy(e => e.Name)
-                        .Include(post => post.Posts)
                         .Where(u => u.UserId == new Guid(user.Id.ToString()))
                         .ToListAsync();
 
-                        var managerDto = _mapper.Map<List<EmployeeInformationDto>>(manager);
+                        var selerDto = _mapper.Map<List<UserInformationDto>>(seller);
 
-                        managerDto.Where(t => t.Token == null).ToList().ForEach(t => t.Token = token.Token);
-                        managerDto.Where(t => t.RefreshToken == null).ToList().ForEach(t => t.RefreshToken = token.RefreshToken);
+                        selerDto.Where(t => t.Token == null).ToList().ForEach(t => t.Token = token.Token);
+                        selerDto.Where(t => t.RefreshToken == null).ToList().ForEach(t => t.RefreshToken = token.RefreshToken);
 
-                        foreach (var managerImage in managerDto)
+                        foreach (var sellerImage in selerDto)
                         {
-                            imgName = managerImage.ImageName;
-                            managerImage.ImageSrc = string.Format("{0}/Images/{1}", ImageSrc, imgName);
-
-                            var employees = managerImage.Employees.Where(i => i.IsDeleted == false);
-                            foreach (var employeeImage in employees)
-                            {
-                                imgName = employeeImage.ImageName;
-                                employeeImage.ImageSrc = String.Format("{0}/Images/{1}", ImageSrc, imgName);
-                            }
+                            imgName = sellerImage.ImageName;
+                            sellerImage.ImageSrc = string.Format("{0}/Images/{1}", ImageSrc, imgName);
                         }
 
-                        if (managerDto != null)
-                            return managerDto;
+                        if (selerDto != null)
+                            return selerDto;
 
                         throw new Exception("User does not exist");
 
-                    case "Employee":
-                        var employee = await _context.Employee
+                    case "Client":
+                        var client = await _context.Customers
                             .Include(address => address.Address)
-                            .Include(post => post.Posts)
                             .Where(u => u.UserId == new Guid(user.Id.ToString()))
                             .ToListAsync();
-                        var employeeDto = _mapper.Map<List<EmployeeInformationDto>>(employee);
+                        var clientDto = _mapper.Map<List<UserInformationDto>>(client);
 
-                        employeeDto.Where(t => t.Token == null).ToList().ForEach(t => t.Token = token.Token);
+                        clientDto.Where(t => t.Token == null).ToList().ForEach(t => t.Token = token.Token);
 
-                        foreach (var image in employeeDto)
+                        foreach (var image in clientDto)
                         {
                             imgName = image.ImageName;
                             image.ImageSrc = string.Format("{0}/Images/{1}", ImageSrc, imgName);
                         }
 
-                        if (employeeDto != null)
-                            return employeeDto;
+                        if (clientDto != null)
+                            return clientDto;
 
                         throw new ArgumentException("User does not exist");
 
@@ -143,7 +141,7 @@ namespace WTP.Services.Services
 
         public async Task<bool> SendEmailPasswordReset(ForgotPassword model, string origin, string token)
         {
-            var user = await _userManager.FindByEmailAsync(model.email);
+            var user = await _userManager.FindByEmailAsync(model.Email);
             if (token != null)
             {
                 user.ResetToken = token;

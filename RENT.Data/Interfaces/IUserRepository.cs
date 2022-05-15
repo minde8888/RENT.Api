@@ -1,10 +1,6 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Threading.Tasks;
-using WTP.Domain.Dtos.Requests;
-using WTP.Domain.Entities.Auth;
+﻿using RENT.Domain.Dtos.Requests;
 
-namespace WTP.Data.Interfaces
+namespace RENT.Data.Interfaces
 {
     public interface IUserRepository
     {

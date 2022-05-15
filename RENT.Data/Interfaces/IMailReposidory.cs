@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WTP.Domain.Entities;
+﻿using RENT.Domain.Entities;
 
-namespace WTP.Data.Repositorys
+namespace RENT.Data.Repositorys
 {
     public interface IMailReposidory
     {

@@ -1,4 +1,4 @@
-﻿namespace WTP.Domain.Entities.Settings
+﻿namespace RENT.Domain.Entities.Settings
 {
     public class MailSettings
     {

@@ -1,4 +1,4 @@
-﻿using WTP.Domain.Entities;
+﻿using RENT.Domain.Entities;
 
 namespace RENT.Domain.Entities
 {

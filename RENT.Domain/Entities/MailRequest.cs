@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 
-namespace WTP.Domain.Entities
+namespace RENT.Domain.Entities
 {
     public class MailRequest
     {

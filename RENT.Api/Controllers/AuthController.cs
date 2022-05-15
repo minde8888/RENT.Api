@@ -2,28 +2,37 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Threading.Tasks;
-using WTP.Api.Configuration.Requests;
-using WTP.Data.Interfaces;
-using WTP.Domain.Dtos.Requests;
-using WTP.Domain.Dtos.Responses;
-using WTP.Domain.Entities.Auth;
-using WTP.Services.Services;
+using RENT.Api.Configuration.Requests;
+using RENT.Data.Interfaces;
+using RENT.Domain.Dtos.Requests;
+using RENT.Domain.Dtos.Responses;
+using RENT.Domain.Entities.Auth;
+using RENT.Services.Services;
+using RENT.Services.Services.Dtos;
+using RENT.Services.Services.Interfaces;
 
-namespace WTP.Api.Controllers
+namespace RENT.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly TokenValidationParameters _tokenValidationParams;
         private readonly IUserRepository _userRepository;
-        private readonly AuthService _authService;
+        private readonly IAuthService _authService;
+
+        public AuthController(UserManager<ApplicationUser> userManager, 
+            TokenValidationParameters tokenValidationParams, 
+            IUserRepository userRepository, 
+            IAuthService authService)
+        {
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            _tokenValidationParams = tokenValidationParams ?? throw new ArgumentNullException(nameof(tokenValidationParams));
+            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            _authService = authService ?? throw new ArgumentNullException(nameof(authService));
+        }
 
         public AuthController(UserManager<ApplicationUser> userManager,
             TokenValidationParameters tokenValidationsParams,
@@ -113,7 +122,7 @@ namespace WTP.Api.Controllers
 
         [HttpPost]
         [Route("Login")]
-        public async Task<IActionResult> Login([FromBody] UserLoginRequest user)
+        public async Task<ActionResult<List<UserInformationDto>>> Login([FromBody] UserLoginRequest user)
         {
             if (ModelState.IsValid)
             {
@@ -187,7 +196,7 @@ namespace WTP.Api.Controllers
         {
             try
             {
-                var user = await _userManager.FindByEmailAsync(model.email);
+                var user = await _userManager.FindByEmailAsync(model.Email);
                 string token = await _userManager.GeneratePasswordResetTokenAsync(user);
                 bool emailHelper = await _authService.SendEmailPasswordReset(model, Request.Headers["origin"], token);
                 if (emailHelper)

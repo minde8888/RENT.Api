@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using WTP.Domain.Entities;
-using WTP.Domain.Entities.Auth;
-using WTP.Domain.Entities.Roles;
+using RENT.Domain.Entities;
+using RENT.Domain.Entities.Auth;
+using RENT.Domain.Entities.Roles;
 
-namespace WTP.Data.Context
+namespace RENT.Data.Context
 {
     public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
     {
@@ -16,15 +15,14 @@ namespace WTP.Data.Context
             AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
         }
 
-        public DbSet<Manager> Manager { get; set; }
-        public DbSet<Employee> Employee { get; set; }
+        public DbSet<Categories> Categories { get; set; }
+        public DbSet<Customers> Customers { get; set; }
         public DbSet<Address> Address { get; set; }
-        public DbSet<Post> Posts { get; set; }
-        public DbSet<Project> Project { get; set; }
-        public DbSet<ProgressPlan> ProgressPlan { get; set; }
+        public DbSet<Goods> Goods { get; set; }
+        public DbSet<Seller> Seller { get; set; }
+        public DbSet<Shop> Shop { get; set; }
         public DbSet<RefreshToken> RefreshToken { get; set; }
-        public DbSet<EmployeeProgressPlan> EmployeeProgressPlan { get; set; }
-        public DbSet<Rent> Rent { get; set; }
+        public DbSet<GoodsCategories> GoodsCategories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -33,12 +31,13 @@ namespace WTP.Data.Context
             // For example, you can rename the ASP.NET Core Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
             builder.HasDefaultSchema("Identity");
-
             //Global Query Filters
-            builder.Entity<Manager>().HasQueryFilter(p => p.IsDeleted == false);
-            builder.Entity<Employee>().HasQueryFilter(p => p.IsDeleted == false);
-            builder.Entity<Project>().HasQueryFilter(p => p.IsDeleted == false);
-            builder.Entity<ProgressPlan>().HasQueryFilter(p => p.IsDeleted == false);
+            builder.Entity<Categories>().HasQueryFilter(p => p.IsDeleted == false);
+            builder.Entity<Customers>().HasQueryFilter(p => p.IsDeleted == false);
+            builder.Entity<Address>().HasQueryFilter(p => p.IsDeleted == false);
+            builder.Entity<Goods>().HasQueryFilter(p => p.IsDeleted == false);
+            builder.Entity<Seller>().HasQueryFilter(p => p.IsDeleted == false);
+            builder.Entity<Shop>().HasQueryFilter(p => p.IsDeleted == false);
             builder.Entity<ApplicationUser>().HasQueryFilter(p => p.IsDeleted == false);
 
             builder.Entity<IdentityUserLogin<string>>(entity =>
@@ -47,17 +46,32 @@ namespace WTP.Data.Context
                 entity.ToTable("UserLogins");
             });
 
-            builder.Entity<EmployeeProgressPlan>()
-                .HasKey(i => new { i.EmployeesId, i.ProgressPlanId });
+            builder.Entity<GoodsCategories>()
+                .HasKey(i => new { i.GoodsId, i.CategoriesId });
 
-            builder.Entity<Employee>()
-           .HasMany(x => x.ProgressPlans)
-           .WithMany(x => x.Employees)
-           .UsingEntity<EmployeeProgressPlan>(
-               x => x.HasOne(x => x.ProgressPlans)
-               .WithMany().HasForeignKey(x => x.ProgressPlanId),
-               x => x.HasOne(x => x.Employees)
-              .WithMany().HasForeignKey(x => x.EmployeesId));
+            builder.Entity<Categories>()
+           .HasMany(x => x.Goods)
+           .WithMany(x => x.Categories)
+           .UsingEntity<GoodsCategories>(
+               x => x.HasOne(x => x.Goods)
+               .WithMany().HasForeignKey(x => x.GoodsId),
+               x => x.HasOne(x => x.Categories)
+              .WithMany().HasForeignKey(x => x.CategoriesId));
+
+            builder.Entity<Customers>()
+            .HasOne(b => b.Address)
+            .WithOne(i => i.Customers)
+            .HasForeignKey<Customers>(b => b.CustomersId);
+
+            builder.Entity<Seller>()
+            .HasOne(b => b.Address)
+            .WithOne(i => i.Seller)
+            .HasForeignKey<Seller>(b => b.SellerId);
+
+            builder.Entity<Shop>()
+            .HasOne(b => b.Address)
+            .WithOne(i => i.Shop)
+            .HasForeignKey<Shop>(b => b.ShopId);
         }
     }
 }

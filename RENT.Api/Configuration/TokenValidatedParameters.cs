@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WTP.Api.Configuration
+namespace RENT.Api.Configuration
 {
     public class TokenValidatedParameters : TokenValidationParameters
     {

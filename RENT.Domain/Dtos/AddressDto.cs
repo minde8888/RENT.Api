@@ -1,14 +1,14 @@
 ﻿using System;
 
-namespace WTP.Domain.Dtos
+namespace RENT.Domain.Dtos
 {
     public class AddressDto
     {
-        public string Street { get; set; } = "Kleiva";
-        public string City { get; set; } = "Fauske";
-        public string Country { get; set; } = "Norway";
-        public string Zip { get; set; } = "8200";
-        public Guid? ManagerId { get; set; }
-        public Guid? EmployeeId { get; set; }
+        public Guid AddressId { get; set; }
+        public string? Street { get; set; }
+        public string? City { get; set; }
+        public string? Zip { get; set; }
+        public string? Country { get; set; }
+        public string? CompanyCode { get; set; }
     }
 }

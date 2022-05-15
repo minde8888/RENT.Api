@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace WTP.Data.Interfaces
+namespace RENT.Data.Interfaces
 {
     public interface IBaseRepository<T>
     {

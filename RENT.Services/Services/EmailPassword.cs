@@ -1,14 +1,19 @@
 ﻿using Microsoft.Extensions.Options;
 using System.Net.Mail;
-using WTP.Data.Interfaces;
-using WTP.Domain.Entities.Auth;
-using WTP.Domain.Entities.Settings;
+using RENT.Data.Interfaces;
+using RENT.Domain.Entities.Auth;
+using RENT.Domain.Entities.Settings;
 
-namespace WTP.Services.Services
+namespace RENT.Services.Services
 {
-    public class EmailPassword : IEmailPassword
+    public class EmailPassword : IEmailPasswordService
     {
         private readonly MailSettings _mailSettings;
+
+        public EmailPassword(MailSettings mailSettings)
+        {
+            _mailSettings = mailSettings ?? throw new ArgumentNullException(nameof(mailSettings));
+        }
 
         public EmailPassword(IOptions<MailSettings> mailSettings)
         {
@@ -17,9 +22,11 @@ namespace WTP.Services.Services
 
         public bool SendEmailPasswordReset(ForgotPassword model, string link)
         {
-            MailMessage mailMessage = new();
-            mailMessage.From = new MailAddress(_mailSettings.Mail);
-            mailMessage.To.Add(new MailAddress(model.email));
+            MailMessage mailMessage = new()
+            {
+                From = new MailAddress(_mailSettings.Mail)
+            };
+            mailMessage.To.Add(new MailAddress(model.Email));
 
             mailMessage.Subject = "Password Reset";
             mailMessage.IsBodyHtml = true;
@@ -28,11 +35,11 @@ namespace WTP.Services.Services
 
             SmtpClient client = new()
             {
-                EnableSsl = true
+                EnableSsl = true,
+                Credentials = new System.Net.NetworkCredential(_mailSettings.Mail, _mailSettings.Password),
+                Host = _mailSettings.Host,
+                Port = _mailSettings.Port
             };
-            client.Credentials = new System.Net.NetworkCredential(_mailSettings.Mail, _mailSettings.Password);
-            client.Host = _mailSettings.Host;
-            client.Port = _mailSettings.Port;
 
             client.Send(mailMessage);
             return true;

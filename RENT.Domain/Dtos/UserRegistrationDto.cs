@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace WTP.Domain.Dtos.Requests
+namespace RENT.Domain.Dtos.Requests
 {
     public class UserRegistrationDto
     {
@@ -14,7 +14,7 @@ namespace WTP.Domain.Dtos.Requests
         public string PhoneNumber { get; set; }
         public string Occupation { get; set; }
         public AddressDto Address { get; set; }
-        public Guid? ManagerId { get; set; }
-        public Guid? EmployeeId { get; set; }
+        public Guid? SellerId { get; set; }
+        public Guid? CustomersId { get; set; }
     }
 }

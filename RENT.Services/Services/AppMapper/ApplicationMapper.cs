@@ -1,45 +1,46 @@
 ﻿using AutoMapper;
-using WTP.Domain.Dtos;
-using WTP.Domain.Dtos.Requests;
-using WTP.Domain.Dtos.UpdateDto;
-using WTP.Domain.Entities;
-using WTP.Services.Services.Dtos;
+using RENT.Domain.Dtos;
+using RENT.Domain.Dtos.Requests;
+using RENT.Domain.Dtos.UpdateDto;
+using RENT.Domain.Entities;
+using RENT.Services.Services.Dtos;
 
-namespace WTP.Services.Services.AppMapper
+namespace RENT.Services.Services.AppMapper
 {
     public class ApplicationMapper : Profile
     {
         public ApplicationMapper()
         {
-            CreateMap<Manager, ManagerDto>().ReverseMap();
-            CreateMap<Manager, RequestManagerDto>().ReverseMap();
-            CreateMap<Manager, UserRegistrationDto>().ReverseMap();
-            CreateMap<RequestManagerDto, ReturnEmployeeDto>().ReverseMap()
-            .ForMember(m => m.Address, opt =>
-            opt.MapFrom(m => m.Address));
-            CreateMap<Manager, EmployeeInformationDto>().ReverseMap();
-            CreateMap<Manager, ReturnManagerDto>().ReverseMap().
-                ForMember(m => m.Address, opt =>
-                opt.MapFrom(m => m.Address));
+            CreateMap<Seller, UserRegistrationDto>().ReverseMap();
+            CreateMap<Seller, UserInformationDto>().ReverseMap();
 
-            CreateMap<Employee, EmployeeInformationDto>().ReverseMap();
-            CreateMap<UserRegistrationDto, Employee>().ReverseMap();
-            CreateMap<RequestEmployeeDto, ReturnEmployeeDto>().ReverseMap()
-                .ForMember(m => m.Address, opt =>
-                opt.MapFrom(m => m.Address)); ;
+            CreateMap<Customers, UserRegistrationDto>().ReverseMap();
+            CreateMap<Customers, UserInformationDto>().ReverseMap();
+            //.ForMember(m => m.Address, opt =>
+            //opt.MapFrom(m => m.Address));
+            //CreateMap<Manager, SellerInformationDto>().ReverseMap();
+            //CreateMap<Manager, ReturnManagerDto>().ReverseMap().
+            //    ForMember(m => m.Address, opt =>
+            //    opt.MapFrom(m => m.Address));
 
-            CreateMap<AddressDto, Address>().ReverseMap();
+            //CreateMap<Employee, SellerInformationDto>().ReverseMap();
+            //CreateMap<UserRegistrationDto, Employee>().ReverseMap();
+            //CreateMap<RequestEmployeeDto, ReturnEmployeeDto>().ReverseMap()
+            //    .ForMember(m => m.Address, opt =>
+            //    opt.MapFrom(m => m.Address)); ;
 
-            CreateMap<Employee, EmployeeDto>().ReverseMap();
+            //CreateMap<AddressDto, Address>().ReverseMap();
 
-            CreateMap<Post, PostDto>().ReverseMap();
+            //CreateMap<Employee, EmployeeDto>().ReverseMap();
 
-            CreateMap<Project, ProjectDto>().ReverseMap();
+            //CreateMap<Post, PostDto>().ReverseMap();
 
-            CreateMap<ProgressPlan, ProgressPlanDto>().ReverseMap();
-            CreateMap<ProgressPlan, ProgressPlanReturnDto>().ReverseMap();
+            //CreateMap<Project, ProjectDto>().ReverseMap();
 
-            CreateMap<Rent, RentDto>().ReverseMap();
+            //CreateMap<ProgressPlan, ProgressPlanDto>().ReverseMap();
+            //CreateMap<ProgressPlan, ProgressPlanReturnDto>().ReverseMap();
+
+            //CreateMap<Rent, RentDto>().ReverseMap();
         }
     }
 }

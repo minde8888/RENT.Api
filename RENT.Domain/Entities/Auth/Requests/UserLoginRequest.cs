@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WTP.Api.Configuration.Requests
+namespace RENT.Api.Configuration.Requests
 {
     public class UserLoginRequest
     {

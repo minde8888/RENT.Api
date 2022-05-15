@@ -1,4 +1,4 @@
-﻿namespace WTP.Domain.Entities
+﻿namespace RENT.Domain.Entities
 {
     public class WelcomeRequest
     {

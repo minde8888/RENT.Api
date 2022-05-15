@@ -1,14 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System;
+using RENT.Data.Interfaces;
 using System.Drawing;
-using System.IO;
-using System.Linq;
 using System.Runtime.Versioning;
 
-namespace WTP.Services.Services
+namespace RENT.Services.Services
 {
     [SupportedOSPlatform("windows")]
-    public class ImagesService
+    public class ImagesService: IImagesService
     {
         public string SaveImage(IFormFile imageFile, string height, string width )
         {
@@ -30,7 +28,7 @@ namespace WTP.Services.Services
             }
             throw new Exception();
         }
-        private void ResizeImage(string imagePath, IFormFile imageFile, int height, int width)
+        public void ResizeImage(string imagePath, IFormFile imageFile, int height, int width)
         {
             Image image = Image.FromStream(imageFile.OpenReadStream(), true, true);
             var newImage = new Bitmap(width, height);

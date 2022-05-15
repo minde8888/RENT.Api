@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32421.90
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RENT.Api", "RENT.Api\RENT.Api.csproj", "{38CA2F02-694D-483F-9235-E16A0D1EF737}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RENT.Api", "RENT.Api\RENT.Api.csproj", "{38CA2F02-694D-483F-9235-E16A0D1EF737}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RENT.Data", "RENT.Data\RENT.Data.csproj", "{0C9776AC-9F91-4CD1-AEE7-30D136724E2B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RENT.Data", "RENT.Data\RENT.Data.csproj", "{0C9776AC-9F91-4CD1-AEE7-30D136724E2B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RENT.Domain", "RENT.Domain\RENT.Domain.csproj", "{F527E947-E336-410D-890C-5816E6463237}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RENT.Domain", "RENT.Domain\RENT.Domain.csproj", "{F527E947-E336-410D-890C-5816E6463237}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RENT.Services", "RENT.Services\RENT.Services.csproj", "{2920B408-05A2-4E9E-AB88-C0CEA97E60A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RENT.Services", "RENT.Services\RENT.Services.csproj", "{2920B408-05A2-4E9E-AB88-C0CEA97E60A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RENT.UniTest", "RENT.UniTest\RENT.UniTest.csproj", "{10E1192C-D7BC-4079-8CC2-FBFEBC6AEBC5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rent.Xunit", "Xunit\Rent.Xunit.csproj", "{75DF3F29-ECB5-4E0B-A1D0-45BDDF054E71}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{2920B408-05A2-4E9E-AB88-C0CEA97E60A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2920B408-05A2-4E9E-AB88-C0CEA97E60A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2920B408-05A2-4E9E-AB88-C0CEA97E60A5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{10E1192C-D7BC-4079-8CC2-FBFEBC6AEBC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{10E1192C-D7BC-4079-8CC2-FBFEBC6AEBC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{10E1192C-D7BC-4079-8CC2-FBFEBC6AEBC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{10E1192C-D7BC-4079-8CC2-FBFEBC6AEBC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75DF3F29-ECB5-4E0B-A1D0-45BDDF054E71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75DF3F29-ECB5-4E0B-A1D0-45BDDF054E71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75DF3F29-ECB5-4E0B-A1D0-45BDDF054E71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75DF3F29-ECB5-4E0B-A1D0-45BDDF054E71}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

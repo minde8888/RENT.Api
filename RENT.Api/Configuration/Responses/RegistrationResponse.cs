@@ -1,6 +1,6 @@
-﻿using WTP.Api.Configuration;
+﻿using RENT.Api.Configuration;
 
-namespace WTP.Domain.Dtos.Responses
+namespace RENT.Domain.Dtos.Responses
 {
     public class RegistrationResponse : AuthResult
     {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
 
-namespace WTP.Domain.Entities.Roles
+namespace RENT.Domain.Entities.Roles
 {
     public class ApplicationRole : IdentityRole<Guid>
     {
