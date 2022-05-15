@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using System.Text;
 using RENT.Domain.Dtos;
+using Microsoft.Extensions.Options;
 
 namespace RENT.Data.Repositorys
 {
@@ -27,13 +28,13 @@ namespace RENT.Data.Repositorys
             IMapper mapper,
             UserManager<ApplicationUser> userManager,
             IEmailPasswordService mail,
-            JwtConfig jwtConfig)
+            IOptionsMonitor<JwtConfig> optionsMonitor)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _mail = mail ?? throw new ArgumentNullException(nameof(mail));
-            _jwtConfig = jwtConfig ?? throw new ArgumentNullException(nameof(jwtConfig));
+            _jwtConfig = optionsMonitor.CurrentValue;
         }
 
         public async Task AddUserAsync(UserRegistrationDto user)
