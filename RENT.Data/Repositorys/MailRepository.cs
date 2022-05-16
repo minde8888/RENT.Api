@@ -11,11 +11,6 @@ namespace RENT.Data.Repositorys
     {
         private readonly MailSettings _mailSettings;
 
-        public MailRepository(MailSettings mailSettings)
-        {
-            _mailSettings = mailSettings ?? throw new ArgumentNullException(nameof(mailSettings));
-        }
-
         public MailRepository(IOptions<MailSettings> mailSettings)
         {
             _mailSettings = mailSettings.Value;

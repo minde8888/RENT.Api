@@ -5,9 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using RENT.Api.Configuration;
 using RENT.Data.Context;
 using RENT.Data.Interfaces;
@@ -17,6 +14,9 @@ using RENT.Domain.Entities.Roles;
 using RENT.Domain.Entities.Settings;
 using RENT.Services.Services;
 using RENT.Services.Services.AppMapper;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace RENT.Api
 {

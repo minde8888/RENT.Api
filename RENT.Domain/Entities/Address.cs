@@ -1,6 +1,4 @@
-﻿using RENT.Domain.Entities;
-using System.ComponentModel.DataAnnotations.Schema;
-
+﻿
 namespace RENT.Domain.Entities
 {
     public class Address

@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
+﻿
 namespace RENT.Domain.Entities.Auth
 {
     public class ForgotPassword

@@ -1,15 +1,9 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using RENT.Api.Configuration;
 using RENT.Data.Interfaces;
-using RENT.Domain.Dtos.Requests;
+using RENT.Domain.Dtos;
 using RENT.Domain.Entities.Auth;
-using RENT.Services.Services.Dtos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Rent.Xunit.Auth
 {

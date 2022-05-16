@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using RENT.Domain.Entities.Auth;
+﻿using RENT.Domain.Entities.Auth;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RENT.Domain.Entities
 {
     public class BaseEntity
     {
+        public Guid Id { get; set; }
         public Guid UserId { get; set; }
         public DateTime DateCreated { get; set; } = DateTime.Now;
         public DateTime DateUpdated { get; set; }

@@ -1,18 +1,18 @@
 ﻿using AutoMapper;
-using RENT.Domain.Entities;
-using RENT.Data.Context;
-using RENT.Data.Interfaces;
-using RENT.Domain.Entities.Auth;
-using RENT.Data.Helpers;
-using System.IdentityModel.Tokens.Jwt;
-using RENT.Api.Configuration;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using RENT.Api.Configuration;
+using RENT.Data.Context;
+using RENT.Data.Helpers;
+using RENT.Data.Interfaces;
+using RENT.Domain.Dtos;
+using RENT.Domain.Entities;
+using RENT.Domain.Entities.Auth;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using RENT.Domain.Dtos;
-using Microsoft.Extensions.Options;
 
 namespace RENT.Data.Repositorys
 {

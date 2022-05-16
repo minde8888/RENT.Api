@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using RENT.Domain.Entities;
 
 namespace RENT.Domain.Entities.Auth
 {
