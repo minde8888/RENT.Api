@@ -1,7 +1,6 @@
-﻿
-namespace RENT.Domain.Dtos
+﻿namespace RENT.Domain.Dtos
 {
-    public class CustomersDto
+    public class CustomersDto : BaseEntityDto
     {
     }
 }

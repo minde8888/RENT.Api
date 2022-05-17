@@ -45,7 +45,7 @@ namespace RENT.Data.Repositorys
                 _context.Seller.Add(seller);
                 Address addres = new()
                 {
-                    SellerId = seller.SellerId
+                    SellerId = seller.Id
                 };
                 _context.Address.Add(addres);
 
@@ -57,7 +57,7 @@ namespace RENT.Data.Repositorys
                 _context.Add(customers);
                 Address addres = new()
                 {
-                    CustomerId = customers.CustomersId
+                    CustomerId = customers.Id
                 };
                 _context.Add(addres);
 

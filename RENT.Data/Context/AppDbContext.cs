@@ -61,12 +61,12 @@ namespace RENT.Data.Context
             builder.Entity<Customers>()
             .HasOne(b => b.Address)
             .WithOne(i => i.Customers)
-            .HasForeignKey<Customers>(b => b.CustomersId);
+            .HasForeignKey<Customers>(b => b.Id);
 
             builder.Entity<Seller>()
             .HasOne(b => b.Address)
             .WithOne(i => i.Seller)
-            .HasForeignKey<Seller>(b => b.SellerId);
+            .HasForeignKey<Seller>(b => b.Id);
 
             builder.Entity<Shop>()
             .HasOne(b => b.Address)

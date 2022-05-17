@@ -86,21 +86,8 @@ namespace RENT.Api
             services.AddScoped(typeof(DbContext), typeof(AppDbContext));
             services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
             services.AddScoped(typeof(IEmailPasswordService), typeof(EmailPassword));
-            //services.AddScoped(typeof(IManagerRepository), typeof(ManagerRepository));
-            //services.AddScoped(typeof(IEmployeesRepository), typeof(EmployeesRepository));
-            //services.AddScoped(typeof(IPostRepository), typeof(PostRepository));
-            //services.AddScoped(typeof(IProjectRepository), typeof(ProjectRepository));
-            //services.AddScoped(typeof(IProgressPlanRepository), typeof(ProgressPlanRepository));
-            //services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
-
-
-            //services.AddScoped<ImagesService>();
-            //services.AddScoped<ManagerService>();
-            //services.AddScoped<EmployeeService>();
-            //services.AddScoped<ProjectService>();
-            //services.AddScoped<ProgressPlanService>();
-
-            //services.AddTransient<IAdminRepository, AdminRepository>();
+            services.AddScoped(typeof(IBaseSerrvice<>), typeof(BaseSerrvice<>));
+            services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 
             services.AddSwaggerGen(c =>
             {

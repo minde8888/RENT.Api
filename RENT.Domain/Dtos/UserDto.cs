@@ -1,6 +1,6 @@
 ﻿namespace RENT.Domain.Dtos
 {
-    public class SellerDto : BaseEntityDto
+    public class UserDto : BaseEntityDto
     {
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using RENT.Data.Context;
 using RENT.Data.Interfaces;
 using RENT.Domain.Dtos;
+using RENT.Domain.Dtos.RequestDto;
 using RENT.Domain.Entities;
 using RENT.Domain.Entities.Auth;
 
@@ -24,21 +25,80 @@ namespace RENT.Data.Repositorys
             _mapper = mapper;
         }
 
-        public async Task AddItemAsync(T t)
+        public async Task AddItemAsync(T t, string UserId)
         {
+            var user = await _userManager.FindByIdAsync(UserId);
+            t.UserId = new Guid(user.Id.ToString());
             await _context.AddAsync(t);
             await _context.SaveChangesAsync();
-
         }
-        public async Task<BaseEntityDto> GetItemIdAsync(string Id)
+
+        public async Task<List<UserDto>> GetAllItems()
+        {
+            var item = await _context.Set<T>()
+               .Include(a => a.Address)
+               .ToListAsync();
+
+            var allItems = _mapper.Map<List<UserDto>>(item);
+            return allItems;            
+        }
+
+        public async Task<List<T>> GetItemIdAsync(string Id)
         {
             var itemToMap = await _context.Set<T>().
                 Include(t => t.Address).
                 Where(x => x.Id == Guid.Parse(Id)).
                 ToListAsync();
-
-            return _mapper.Map<BaseEntityDto>(itemToMap);
+          
+            return itemToMap;
         }
+
+        public async Task<RequestUserDto> UpdateItemAsync(RequestUserDto userDto)
+        {
+            var item = _context.Set<T>().
+                Include(manager => manager.Address).
+                Where(m => m.Id == userDto.Id).FirstOrDefault();
+
+            item.Name = userDto.Name;
+            item.Surname = userDto.Surname;
+            item.Occupation = userDto.Occupation;
+            item.PhoneNumber = userDto.PhoneNumber;
+            item.DateUpdated = DateTime.UtcNow;
+
+            if (userDto.ImageName != null)
+            {
+                item.ImageName = userDto.ImageName;
+            }
+            if (userDto.Address != null)
+            {
+                item.Address.City = userDto.Address.City;
+                item.Address.Country = userDto.Address.Country;
+                item.Address.Street = userDto.Address.Street;
+                item.Address.Zip = userDto.Address.Zip;
+                item.Address.CompanyCode = userDto.Address.CompanyCode; 
+                _context.Entry(item.Address).State = EntityState.Modified;
+            }
+            else
+            {
+                Address address = new()
+                {
+                    City = userDto.Address.City,
+                    Country = userDto.Address.Country,
+                    Street = userDto.Address.Street,
+                    Zip = userDto.Address.Zip,
+                    CompanyCode = userDto.Address.CompanyCode,
+                };
+                _context.Address.Add(address);
+            }
+
+            _context.Entry(item).State = EntityState.Modified;
+
+            await _context.SaveChangesAsync();
+            var result = _mapper.Map<RequestUserDto>(item);
+
+            return result;
+        }
+
 
         public async Task RemoveItemAsync(string Id)
         {
