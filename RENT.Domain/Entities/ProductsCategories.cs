@@ -2,12 +2,12 @@
 
 namespace RENT.Domain.Entities
 {
-    public class GoodsCategories
+    public class ProductsCategories
     {
         public Guid CategoriesId { get; set; }
         public Categories Categories { get; set; }
-        public Guid GoodsId { get; set; }
-        public Goods Goods { get; set; }
+        public Guid ProductsId { get; set; }
+        public Products Products { get; set; }
 
     }
 }

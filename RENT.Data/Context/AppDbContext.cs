@@ -18,11 +18,11 @@ namespace RENT.Data.Context
         public DbSet<Categories> Categories { get; set; }
         public DbSet<Customers> Customers { get; set; }
         public DbSet<Address> Address { get; set; }
-        public DbSet<Goods> Goods { get; set; }
+        public DbSet<Products> Products { get; set; }
         public DbSet<Seller> Seller { get; set; }
         public DbSet<Shop> Shop { get; set; }
         public DbSet<RefreshToken> RefreshToken { get; set; }
-        public DbSet<GoodsCategories> GoodsCategories { get; set; }
+        public DbSet<ProductsCategories> ProductsCategories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -35,7 +35,7 @@ namespace RENT.Data.Context
             builder.Entity<Categories>().HasQueryFilter(p => p.IsDeleted == false);
             builder.Entity<Customers>().HasQueryFilter(p => p.IsDeleted == false);
             builder.Entity<Address>().HasQueryFilter(p => p.IsDeleted == false);
-            builder.Entity<Goods>().HasQueryFilter(p => p.IsDeleted == false);
+            builder.Entity<Products>().HasQueryFilter(p => p.IsDeleted == false);
             builder.Entity<Seller>().HasQueryFilter(p => p.IsDeleted == false);
             builder.Entity<Shop>().HasQueryFilter(p => p.IsDeleted == false);
             builder.Entity<ApplicationUser>().HasQueryFilter(p => p.IsDeleted == false);
@@ -46,15 +46,15 @@ namespace RENT.Data.Context
                 entity.ToTable("UserLogins");
             });
 
-            builder.Entity<GoodsCategories>()
-                .HasKey(i => new { i.GoodsId, i.CategoriesId });
+            builder.Entity<ProductsCategories>()
+                .HasKey(i => new { i.ProductsId, i.CategoriesId });
 
             builder.Entity<Categories>()
-           .HasMany(x => x.Goods)
+           .HasMany(x => x.Products)
            .WithMany(x => x.Categories)
-           .UsingEntity<GoodsCategories>(
-               x => x.HasOne(x => x.Goods)
-               .WithMany().HasForeignKey(x => x.GoodsId),
+           .UsingEntity<ProductsCategories>(
+               x => x.HasOne(x => x.Products)
+               .WithMany().HasForeignKey(x => x.ProductsId),
                x => x.HasOne(x => x.Categories)
               .WithMany().HasForeignKey(x => x.CategoriesId));
 
