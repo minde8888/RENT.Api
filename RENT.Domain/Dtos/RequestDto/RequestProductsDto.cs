@@ -6,6 +6,7 @@ namespace RENT.Domain.Dtos.RequestDto
     {
         public Guid ProductsId { get; set; }
         public IFormFile ImageFile { get; set; }
+        public string ImageName { get; set; }
         public string Height { get; set; }
         public string Width { get; set; }
         public string ProductName { get; set; }
