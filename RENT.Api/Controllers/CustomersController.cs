@@ -3,10 +3,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RENT.Data.Interfaces;
-using RENT.Domain.Dtos;
 using RENT.Domain.Entities;
 using RENT.Services.Services;
-using System.Security.Claims;
 
 namespace RENT.Api.Controllers
 {
@@ -15,11 +13,11 @@ namespace RENT.Api.Controllers
     [ApiController]
     public class CustomersController : BaseController<BaseEntity>
     {
-        public CustomersController(IBaseRepository<BaseEntity> baseRepository, 
-            IBaseSerrvice<BaseEntity> baseSerrvice, 
-            IMapper mapper, 
-            ImagesService imagesService, 
-            IWebHostEnvironment hostEnvironment) : 
+        public CustomersController(IBaseRepository<BaseEntity> baseRepository,
+            IBaseSerrvice<BaseEntity> baseSerrvice,
+            IMapper mapper,
+            ImagesService imagesService,
+            IWebHostEnvironment hostEnvironment) :
             base(baseRepository, baseSerrvice, mapper, imagesService, hostEnvironment)
         {
 

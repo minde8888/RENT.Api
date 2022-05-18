@@ -145,210 +145,6 @@ namespace RENT.Data.Migrations
                     b.ToTable("AspNetUserTokens", "Identity");
                 });
 
-            modelBuilder.Entity("RENT.Domain.Entities.Categories", b =>
-                {
-                    b.Property<Guid>("CategoriesId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.HasKey("CategoriesId");
-
-                    b.ToTable("Categories", "Identity");
-                });
-
-            modelBuilder.Entity("RENT.Domain.Entities.Customers", b =>
-                {
-                    b.Property<Guid>("CustomersId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<DateTime>("DateUpdated")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("GoodsId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("ImageName")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Occupation")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Role")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Surname")
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("CustomersId");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Customers", "Identity");
-                });
-
-            modelBuilder.Entity("RENT.Domain.Entities.Goods", b =>
-                {
-                    b.Property<Guid>("GoodsId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("CustomersId")
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<Guid>("SellerId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("GoodsId");
-
-                    b.ToTable("Goods", "Identity");
-                });
-
-            modelBuilder.Entity("RENT.Domain.Entities.GoodsCategories", b =>
-                {
-                    b.Property<Guid>("GoodsId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("CategoriesId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("GoodsId", "CategoriesId");
-
-                    b.HasIndex("CategoriesId");
-
-                    b.ToTable("GoodsCategories", "Identity");
-                });
-
-            modelBuilder.Entity("RENT.Domain.Entities.Seller", b =>
-                {
-                    b.Property<Guid>("SellerId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("AddressId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("CustomersId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<DateTime>("DateUpdated")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("GoodsId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("ImageName")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Occupation")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Role")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Surname")
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("SellerId");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Seller", "Identity");
-                });
-
-            modelBuilder.Entity("RENT.Domain.Entities.Shop", b =>
-                {
-                    b.Property<Guid>("ShopId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("AddressId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<DateTime>("DateUpdated")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ImageName")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Occupation")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Role")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ShopName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Surname")
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("ShopId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Shop", "Identity");
-                });
-
             modelBuilder.Entity("RENT.Domain.Entities.Address", b =>
                 {
                     b.Property<Guid>("AddressId")
@@ -364,16 +160,16 @@ namespace RENT.Data.Migrations
                     b.Property<string>("Country")
                         .HasColumnType("text");
 
-                    b.Property<Guid>("CustomerId")
+                    b.Property<Guid?>("CustomerId")
                         .HasColumnType("uuid");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<Guid>("SellerId")
+                    b.Property<Guid?>("SellerId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("ShopId")
+                    b.Property<Guid?>("ShopId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Street")
@@ -506,14 +302,12 @@ namespace RENT.Data.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("JwtId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("Revoked")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Token")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<Guid>("UserId")
@@ -524,6 +318,213 @@ namespace RENT.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("RefreshToken", "Identity");
+                });
+
+            modelBuilder.Entity("RENT.Domain.Entities.Categories", b =>
+                {
+                    b.Property<Guid>("CategoriesId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CategoriesName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Decription")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ImageName")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("CategoriesId");
+
+                    b.ToTable("Categories", "Identity");
+                });
+
+            modelBuilder.Entity("RENT.Domain.Entities.Customers", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ImageName")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Occupation")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Role")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Surname")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Customers", "Identity");
+                });
+
+            modelBuilder.Entity("RENT.Domain.Entities.Posts", b =>
+                {
+                    b.Property<Guid>("PostsId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid?>("ProductsId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("PostsId");
+
+                    b.HasIndex("ProductsId")
+                        .IsUnique();
+
+                    b.ToTable("Posts", "Identity");
+                });
+
+            modelBuilder.Entity("RENT.Domain.Entities.Products", b =>
+                {
+                    b.Property<Guid>("ProductsId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("CustomersId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ImageName")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("ProductName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProductNumber")
+                        .HasColumnType("text");
+
+                    b.Property<int>("QuantityPerUnit")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("SellerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ShopId")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("UnitsInStock")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ProductsId");
+
+                    b.HasIndex("CustomersId");
+
+                    b.HasIndex("SellerId");
+
+                    b.HasIndex("ShopId");
+
+                    b.ToTable("Products", "Identity");
+                });
+
+            modelBuilder.Entity("RENT.Domain.Entities.ProductsCategories", b =>
+                {
+                    b.Property<Guid>("ProductsId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CategoriesId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("ProductsId", "CategoriesId");
+
+                    b.HasIndex("CategoriesId");
+
+                    b.ToTable("ProductsCategories", "Identity");
+                });
+
+            modelBuilder.Entity("RENT.Domain.Entities.ProductsSpecifications", b =>
+                {
+                    b.Property<Guid>("ProductsSpecificationsId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Capacity")
+                        .HasColumnType("text");
+
+                    b.Property<string>("EnergySource")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Height")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Length")
+                        .HasColumnType("text");
+
+                    b.Property<string>("LiftingHeight")
+                        .HasColumnType("text");
+
+                    b.Property<string>("MaxLoad")
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("ProductsId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Speed")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Weight")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Width")
+                        .HasColumnType("text");
+
+                    b.HasKey("ProductsSpecificationsId");
+
+                    b.HasIndex("ProductsId")
+                        .IsUnique();
+
+                    b.ToTable("Specifications", "Identity");
                 });
 
             modelBuilder.Entity("RENT.Domain.Entities.Roles.ApplicationRole", b =>
@@ -551,6 +552,100 @@ namespace RENT.Data.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", "Identity");
+                });
+
+            modelBuilder.Entity("RENT.Domain.Entities.Seller", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ImageName")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Occupation")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Role")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Surname")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Seller", "Identity");
+                });
+
+            modelBuilder.Entity("RENT.Domain.Entities.Shop", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ImageName")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Occupation")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Role")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ShopName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Surname")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Shop", "Identity");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -604,11 +699,22 @@ namespace RENT.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("RENT.Domain.Entities.Auth.RefreshToken", b =>
+                {
+                    b.HasOne("RENT.Domain.Entities.Auth.ApplicationUser", "ApplicationUser")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+                });
+
             modelBuilder.Entity("RENT.Domain.Entities.Customers", b =>
                 {
                     b.HasOne("RENT.Domain.Entities.Address", "Address")
                         .WithOne("Customers")
-                        .HasForeignKey("RENT.Domain.Entities.Customers", "CustomersId")
+                        .HasForeignKey("RENT.Domain.Entities.Customers", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -623,7 +729,35 @@ namespace RENT.Data.Migrations
                     b.Navigation("ApplicationUser");
                 });
 
-            modelBuilder.Entity("RENT.Domain.Entities.GoodsCategories", b =>
+            modelBuilder.Entity("RENT.Domain.Entities.Posts", b =>
+                {
+                    b.HasOne("RENT.Domain.Entities.Products", "Products")
+                        .WithOne("Posts")
+                        .HasForeignKey("RENT.Domain.Entities.Posts", "ProductsId");
+
+                    b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("RENT.Domain.Entities.Products", b =>
+                {
+                    b.HasOne("RENT.Domain.Entities.Customers", "Customers")
+                        .WithMany("Products")
+                        .HasForeignKey("CustomersId");
+
+                    b.HasOne("RENT.Domain.Entities.Seller", "Seller")
+                        .WithMany("Products")
+                        .HasForeignKey("SellerId");
+
+                    b.HasOne("RENT.Domain.Entities.Shop", null)
+                        .WithMany("Products")
+                        .HasForeignKey("ShopId");
+
+                    b.Navigation("Customers");
+
+                    b.Navigation("Seller");
+                });
+
+            modelBuilder.Entity("RENT.Domain.Entities.ProductsCategories", b =>
                 {
                     b.HasOne("RENT.Domain.Entities.Categories", "Categories")
                         .WithMany()
@@ -631,22 +765,31 @@ namespace RENT.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RENT.Domain.Entities.Goods", "Goods")
+                    b.HasOne("RENT.Domain.Entities.Products", "Products")
                         .WithMany()
-                        .HasForeignKey("GoodsId")
+                        .HasForeignKey("ProductsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Categories");
 
-                    b.Navigation("Goods");
+                    b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("RENT.Domain.Entities.ProductsSpecifications", b =>
+                {
+                    b.HasOne("RENT.Domain.Entities.Products", "Products")
+                        .WithOne("Specifications")
+                        .HasForeignKey("RENT.Domain.Entities.ProductsSpecifications", "ProductsId");
+
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("RENT.Domain.Entities.Seller", b =>
                 {
                     b.HasOne("RENT.Domain.Entities.Address", "Address")
                         .WithOne("Seller")
-                        .HasForeignKey("RENT.Domain.Entities.Seller", "SellerId")
+                        .HasForeignKey("RENT.Domain.Entities.Seller", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -665,7 +808,7 @@ namespace RENT.Data.Migrations
                 {
                     b.HasOne("RENT.Domain.Entities.Address", "Address")
                         .WithOne("Shop")
-                        .HasForeignKey("RENT.Domain.Entities.Shop", "ShopId")
+                        .HasForeignKey("RENT.Domain.Entities.Shop", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -676,17 +819,6 @@ namespace RENT.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Address");
-
-                    b.Navigation("ApplicationUser");
-                });
-
-            modelBuilder.Entity("RENT.Domain.Entities.Auth.RefreshToken", b =>
-                {
-                    b.HasOne("RENT.Domain.Entities.Auth.ApplicationUser", "ApplicationUser")
-                        .WithMany("RefreshTokens")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("ApplicationUser");
                 });
@@ -707,6 +839,28 @@ namespace RENT.Data.Migrations
                     b.Navigation("RefreshTokens");
 
                     b.Navigation("Seller");
+                });
+
+            modelBuilder.Entity("RENT.Domain.Entities.Customers", b =>
+                {
+                    b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("RENT.Domain.Entities.Products", b =>
+                {
+                    b.Navigation("Posts");
+
+                    b.Navigation("Specifications");
+                });
+
+            modelBuilder.Entity("RENT.Domain.Entities.Seller", b =>
+                {
+                    b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("RENT.Domain.Entities.Shop", b =>
+                {
+                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }

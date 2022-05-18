@@ -18,6 +18,7 @@ namespace RENT.Domain.Entities
         public string ImageName { get; set; }
         public bool IsDeleted { get; set; } = false;
         public virtual Address Address { get; set; }
+        public ICollection<Products> Products { get; set; }
 
         [ForeignKey(nameof(UserId))]
         public ApplicationUser ApplicationUser { get; set; }

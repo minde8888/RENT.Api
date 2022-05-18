@@ -67,15 +67,13 @@ namespace RENT.Data.Repositorys
         public async Task<List<UserInformationDto>> GetUserInfo(ApplicationUser user, AuthResult token, string ImageSrc)
         {
             var role = await _userManager.GetRolesAsync(user);
+            string imgName = "";
 
             foreach (var item in role)
             {
                 switch (item)
                 {
                     case "User":
-
-                        string imgName = "";
-
                         var seller = await _context.Seller
                         .Include(address => address.Address)
                         .Where(u => u.UserId == new Guid(user.Id.ToString()))
@@ -91,9 +89,7 @@ namespace RENT.Data.Repositorys
                             imgName = sellerImage.ImageName;
                             sellerImage.ImageSrc = string.Format("{0}/Images/{1}", ImageSrc, imgName);
                         }
-
-                        if (selerDto != null)
-                            return selerDto;
+                        return selerDto;
 
                         throw new Exception("User does not exist");
 
@@ -105,15 +101,14 @@ namespace RENT.Data.Repositorys
                         var clientDto = _mapper.Map<List<UserInformationDto>>(client);
 
                         clientDto.Where(t => t.Token == null).ToList().ForEach(t => t.Token = token.Token);
+                        clientDto.Where(t => t.RefreshToken == null).ToList().ForEach(t => t.RefreshToken = token.RefreshToken);
 
                         foreach (var image in clientDto)
                         {
                             imgName = image.ImageName;
                             image.ImageSrc = string.Format("{0}/Images/{1}", ImageSrc, imgName);
                         }
-
-                        if (clientDto != null)
-                            return clientDto;
+                        return clientDto;
 
                         throw new ArgumentException("User does not exist");
 

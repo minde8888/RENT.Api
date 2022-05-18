@@ -88,6 +88,7 @@ namespace RENT.Api
             services.AddScoped(typeof(IEmailPasswordService), typeof(EmailPassword));
             services.AddScoped(typeof(IBaseSerrvice<>), typeof(BaseSerrvice<>));
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+            services.AddScoped(typeof(IImagesService), typeof(ImagesService));
 
             services.AddSwaggerGen(c =>
             {

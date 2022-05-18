@@ -9,6 +9,7 @@ using RENT.Domain.Dtos.RequestDto;
 using RENT.Domain.Dtos.ResponseDto;
 using RENT.Domain.Entities;
 using RENT.Services.Services;
+using System.Runtime.Versioning;
 using System.Security.Claims;
 
 namespace RENT.Api.Controllers
@@ -94,8 +95,10 @@ namespace RENT.Api.Controllers
             }
         }
 
+
         [HttpPut("Update/{id}")]
         [Authorize(Roles = "Admin, Employee")]
+        [SupportedOSPlatform("windows")]
         public async Task<ActionResult<List<UserResponseDto>>> UpdateAddressAsync(string id, [FromForm] RequestUserDto userDto)
         {
             try

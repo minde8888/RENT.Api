@@ -19,6 +19,8 @@ namespace RENT.Data.Context
         public DbSet<Customers> Customers { get; set; }
         public DbSet<Address> Address { get; set; }
         public DbSet<Products> Products { get; set; }
+        public DbSet<Posts> Posts { get; set; }
+        public DbSet<ProductsSpecifications> Specifications { get; set; }
         public DbSet<Seller> Seller { get; set; }
         public DbSet<Shop> Shop { get; set; }
         public DbSet<RefreshToken> RefreshToken { get; set; }
@@ -36,6 +38,8 @@ namespace RENT.Data.Context
             builder.Entity<Customers>().HasQueryFilter(p => p.IsDeleted == false);
             builder.Entity<Address>().HasQueryFilter(p => p.IsDeleted == false);
             builder.Entity<Products>().HasQueryFilter(p => p.IsDeleted == false);
+            builder.Entity<Posts>().HasQueryFilter(p => p.IsDeleted == false);
+            builder.Entity<ProductsSpecifications>().HasQueryFilter(p => p.IsDeleted == false);
             builder.Entity<Seller>().HasQueryFilter(p => p.IsDeleted == false);
             builder.Entity<Shop>().HasQueryFilter(p => p.IsDeleted == false);
             builder.Entity<ApplicationUser>().HasQueryFilter(p => p.IsDeleted == false);
@@ -63,15 +67,24 @@ namespace RENT.Data.Context
             .WithOne(i => i.Customers)
             .HasForeignKey<Customers>(b => b.Id);
 
+            builder.Entity<Customers>()
+            .HasMany(c => c.Products)
+            .WithOne(e => e.Customers);
+
             builder.Entity<Seller>()
             .HasOne(b => b.Address)
             .WithOne(i => i.Seller)
             .HasForeignKey<Seller>(b => b.Id);
 
+            builder.Entity<Seller>()
+            .HasMany(c => c.Products)
+            .WithOne(e => e.Seller);
+
+
             builder.Entity<Shop>()
             .HasOne(b => b.Address)
             .WithOne(i => i.Shop)
-            .HasForeignKey<Shop>(b => b.ShopId);
+            .HasForeignKey<Shop>(b => b.Id);
         }
     }
 }
