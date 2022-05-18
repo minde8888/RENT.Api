@@ -7,7 +7,7 @@
         public int QuantityPerUnit { get; set; }
         public decimal UnitPrice { get; set; }
         public int UnitsInStock { get; set; }
-        public string ImageName { get; set; }
+        public IList<string> ImageName { get; set; }
         public string ProductNumber { get; set; }
         public bool IsDeleted { get; set; } = false;
         public ICollection<Categories> Categories { get; set; }

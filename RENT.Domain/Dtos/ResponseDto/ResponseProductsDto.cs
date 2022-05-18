@@ -11,7 +11,7 @@ namespace RENT.Domain.Dtos.ResponseDto
         public int QuantityPerUnit { get; set; }
         public decimal UnitPrice { get; set; }
         public int UnitsInStock { get; set; }
-        public string ImageName { get; set; }
+        public IList<string> ImageName { get; set; }
         public string ProductNumber { get; set; }
         public Seller Seller { get; set; }
         public Customers Customers { get; set; }

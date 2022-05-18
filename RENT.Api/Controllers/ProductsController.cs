@@ -27,11 +27,12 @@ namespace RENT.Api.Controllers
         public async Task<ActionResult<ResponseProductsDto>> AddNewproduct([FromForm] RequestProductsDto product)
         {
             try
-            {
-                if (!String.IsNullOrEmpty(product.ImageName))
+            {                
+                if (product.ImageName != null && !product.ImageName.Any())
                 {
                     string path = _hostEnvironment.ContentRootPath;
-                    var imageName = _imagesService.SaveImage(product.ImageFile, product.Height, product.Width);
+                   _imagesService.SaveImage(product.Attachments, product.Height, product.Width);
+                  
                 }
                 await _productsRepository.AddProductsAsync(product);
 
