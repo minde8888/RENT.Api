@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RENT.Data.Interfaces;
 using RENT.Domain.Dtos.RequestDto;
-using RENT.Domain.Dtos.ResponseDto;
 using RENT.Services.Services;
 
 namespace RENT.Api.Controllers
@@ -24,7 +23,7 @@ namespace RENT.Api.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Seller, Admin")]
-        public async Task<ActionResult<ResponseProductsDto>> AddNewproduct([FromForm] RequestProductsDto product)
+        public async Task<ActionResult> AddNewproduct([FromForm] RequestProductsDto product)
         {
             try
             {                
@@ -36,7 +35,7 @@ namespace RENT.Api.Controllers
                 }
                 await _productsRepository.AddProductsAsync(product);
 
-                return CreatedAtAction("Get", new { product.ProductsId }, product);
+                return Ok();
             }
             catch (Exception)
             {

@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
 using RENT.Data.Context;
+using RENT.Data.Interfaces;
 using RENT.Domain.Dtos.RequestDto;
 using RENT.Domain.Entities;
 
 namespace RENT.Data.Repositorys
 {
-    public class ProductsRepository
+    public class ProductsRepository:IProductsRepository
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
