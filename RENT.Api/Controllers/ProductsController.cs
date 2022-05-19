@@ -1,49 +1,145 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RENT.Data.Interfaces;
 using RENT.Domain.Dtos.RequestDto;
-using RENT.Domain.Dtos.ResponseDto;
 using RENT.Services.Services;
+using System.Runtime.Versioning;
 
 namespace RENT.Api.Controllers
 {
-    public class ProductsController
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [ApiController]
+    [Route("v1/api/[controller]")]
+    public class ProductsController : Controller
     {
         private readonly IWebHostEnvironment _hostEnvironment;
         private readonly ImagesService _imagesService;
         private readonly IMapper _mapper;
         private readonly IProductsRepository _productsRepository;
+        private readonly IProductsService _productsService;
 
-        public ProductsController(IMapper mapper, ImagesService imagesService, IWebHostEnvironment hostEnvironment)
+        public ProductsController(IMapper mapper,
+            ImagesService imagesService,
+            IWebHostEnvironment hostEnvironment,
+            IProductsService productsService,
+            IProductsRepository productsRepository)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(_mapper));
             _imagesService = imagesService ?? throw new ArgumentNullException(nameof(_imagesService));
             _hostEnvironment = hostEnvironment ?? throw new ArgumentNullException(nameof(_hostEnvironment));
+            _productsRepository = productsRepository ?? throw new ArgumentNullException(nameof(_productsRepository));
+            _productsService = productsService ?? throw new ArgumentNullException(nameof(_productsService));
         }
 
         [HttpPost]
+        [SupportedOSPlatform("windows")]
         [Authorize(Roles = "Seller, Admin")]
-        public async Task<ActionResult<ResponseProductsDto>> AddNewproduct([FromForm] RequestProductsDto product)
+        public async Task<IActionResult> AddNewProduct([FromForm] ProductDto product)
         {
             try
-            {                
+            {
+
                 if (product.ImageName != null && !product.ImageName.Any())
                 {
                     string path = _hostEnvironment.ContentRootPath;
-                   _imagesService.SaveImage(product.Attachments, product.Height, product.Width);
-                  
+                    _imagesService.SaveImage(product.Attachments, product.Height, product.Width);
+
                 }
                 await _productsRepository.AddProductsAsync(product);
-
-                return CreatedAtAction("Get", new { product.ProductsId }, product);
+                return Ok();
             }
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                "Error Get data from the database -> AddNewEmployee");
+                "Error Get data from the database -> AddNewProduct");
             }
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult<List<ProductDto>>> GetAll()
+        {
+            try
+            {
+                String ImageSrc = String.Format("{0}://{1}{2}", Request.Scheme, Request.Host, Request.PathBase);
+                return Ok(await _productsRepository.GetProductsAsync(ImageSrc));
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                  "Error Get data from the database");
+            }
+        }
+
+        [HttpGet("id")]
+        [AllowAnonymous]
+        public async Task<ActionResult<List<ProductDto>>> Get(String id)
+        {
+            try
+            {
+                if (String.IsNullOrEmpty(id))
+                    return BadRequest();
+                var userId = new Guid(id);
+
+                var product = await _productsRepository.GetProductIdAsync(userId);
+                if (product == null)
+                    return NotFound();
+
+                String ImageSrc = String.Format("{0}://{1}{2}", Request.Scheme, Request.Host, Request.PathBase);
+
+                var productsToReturn = _productsService.GetProductImageAsync(product, ImageSrc);
+
+                return Ok(productsToReturn);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Could not find web user account");
+            }
+        }
+
+        //[HttpPut("Update")]
+        //[Authorize(Roles = "Manager, Admin")]
+        //public IActionResult<List<ResponseProductsDto>> Update([FormData] ProjectDto project)
+        //{
+        //    if (project.ProjectId == Guid.Empty)
+        //        return BadRequest("This project can not by updated");
+
+        //    if (!ModelState.IsValid)
+        //        return BadRequest(ModelState);
+        //    try
+        //    {
+        //        _projectRepository.UpdateProjectAsync(project);
+        //        var projectToReturn = _projectService.GetOneProject(project.ProjectId);
+        //        return Ok(projectToReturn);
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        return StatusCode(StatusCodes.Status500InternalServerError,
+        //           "Error save DB");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(StatusCodes.Status500InternalServerError,
+        //           ex);
+        //    }
+        //}
+
+        [HttpPost("Delete")]
+        [Authorize(Roles = "Seller, Admin")]
+        public async Task<ActionResult> DeleteProduct([FromBody] List<object> ids)
+        {
+            foreach (var p in ids)
+            {
+                var id = new Guid(p.ToString());
+                if (id == Guid.Empty)
+                    return BadRequest();
+
+                await _productsRepository.RemoveProductsAsync(id);
+            }
+            return Ok();
+        }
     }
 }

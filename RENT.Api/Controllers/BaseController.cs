@@ -113,15 +113,23 @@ namespace RENT.Api.Controllers
 
                 if (userDto.ImageFile != null && userDto.ImageName != null)
                 {
-                    string imagePath = Path.Combine(_hostEnvironment.ContentRootPath, "Images", userDto.ImageName);
-                    _imagesService.DeleteImage(imagePath);
+                    foreach (var image in userDto.ImageName)
+                    {
+                        string imagePath = Path.Combine(_hostEnvironment.ContentRootPath, "Images", image);
+                        _imagesService.DeleteImage(imagePath);
+                    }
+
                     userDto.ImageName = _imagesService.SaveImage(userDto.ImageFile, userDto.Height, userDto.Width);
                 }
 
                 var item = await _baseRepository.UpdateItemAsync(userDto);
 
                 String ImageSrc = String.Format("{0}://{1}{2}", Request.Scheme, Request.Host, Request.PathBase);
-                item.ImageSrc = String.Format("{0}/Images/{1}", ImageSrc, item.ImageName);
+                foreach (var img in item.ImageName)
+                {
+                    item.ImageSrc.Add(String.Format("{0}/Images/{1}", ImageSrc, img));
+                }
+
 
                 return Ok(item);
             }

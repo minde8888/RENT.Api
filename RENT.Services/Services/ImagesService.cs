@@ -8,10 +8,12 @@ namespace RENT.Services.Services
     [SupportedOSPlatform("windows")]
     public class ImagesService : IImagesService
     {
-        public void SaveImage(IList<IFormFile> imageFile, string height, string width)
+        public IList<string> SaveImage(IList<IFormFile> imageFile, string height, string width)
         {
             if (imageFile != null)
             {
+                IList<string> list = new List<string>();
+
                 foreach (IFormFile file in imageFile)
                 {
                     string imageName = new String(Path.GetFileNameWithoutExtension(file.FileName).Take(10).ToArray()).Replace(' ', '-');
@@ -25,7 +27,9 @@ namespace RENT.Services.Services
                     int widthInt = (int)Int64.Parse(width);
 
                     ResizeImage(imagePath, imageFile, heightInt, widthInt);
+                    list.Add(imageName);
                 }
+                return list;
             }
 
             throw new Exception();

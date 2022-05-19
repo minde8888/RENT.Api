@@ -2,12 +2,12 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 using RENT.Api.Configuration.Requests;
 using RENT.Data.Interfaces;
+using RENT.Domain.Dtos;
 using RENT.Domain.Dtos.Responses;
 using RENT.Domain.Entities.Auth;
-using RENT.Domain.Dtos;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace RENT.Api.Controllers
 {
@@ -20,25 +20,26 @@ namespace RENT.Api.Controllers
         private readonly IUserRepository _userRepository;
 
 
-        public AuthController(UserManager<ApplicationUser> userManager, 
-            TokenValidationParameters tokenValidationParams, 
+        public AuthController(UserManager<ApplicationUser> userManager,
+            TokenValidationParameters tokenValidationParams,
             IUserRepository userRepository)
         {
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _tokenValidationParams = tokenValidationParams ?? throw new ArgumentNullException(nameof(tokenValidationParams));
-            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));           
+            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
         }
 
+        [AllowAnonymous]
         [HttpPost]
         [Route("Register")]
         public async Task<IActionResult> Register([FromBody] UserRegistrationDto user)
         {
             if (ModelState.IsValid)
             {
-                var exist = _userManager.Users.Any(u => 
-                u.PhoneNumber == 
-                user.PhoneNumber || 
-                u.Email == 
+                var exist = _userManager.Users.Any(u =>
+                u.PhoneNumber ==
+                user.PhoneNumber ||
+                u.Email ==
                 user.Email);
 
                 if (exist)
@@ -103,6 +104,7 @@ namespace RENT.Api.Controllers
             });
         }
 
+        [AllowAnonymous]
         [HttpPost]
         [Route("Login")]
         public async Task<ActionResult<List<UserInformationDto>>> Login([FromBody] UserLoginRequest user)
