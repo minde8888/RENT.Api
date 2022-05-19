@@ -40,7 +40,7 @@ namespace RENT.Data.Repositorys
                .ToListAsync();
 
             var allItems = _mapper.Map<List<UserDto>>(item);
-            return allItems;            
+            return allItems;
         }
 
         public async Task<List<T>> GetItemIdAsync(string Id)
@@ -49,7 +49,7 @@ namespace RENT.Data.Repositorys
                 Include(t => t.Address).
                 Where(x => x.Id == Guid.Parse(Id)).
                 ToListAsync();
-          
+
             return itemToMap;
         }
 
@@ -65,7 +65,7 @@ namespace RENT.Data.Repositorys
             item.PhoneNumber = userDto.PhoneNumber;
             item.DateUpdated = DateTime.UtcNow;
 
-            if (userDto.ImageName != null)
+            if (userDto.ImageName?.Any() ?? false)
             {
                 item.ImageName = userDto.ImageName;
             }
@@ -75,7 +75,7 @@ namespace RENT.Data.Repositorys
                 item.Address.Country = userDto.Address.Country;
                 item.Address.Street = userDto.Address.Street;
                 item.Address.Zip = userDto.Address.Zip;
-                item.Address.CompanyCode = userDto.Address.CompanyCode; 
+                item.Address.CompanyCode = userDto.Address.CompanyCode;
                 _context.Entry(item.Address).State = EntityState.Modified;
             }
             else

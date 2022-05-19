@@ -67,7 +67,8 @@ namespace RENT.Data.Repositorys
         public async Task<List<UserInformationDto>> GetUserInfo(ApplicationUser user, AuthResult token, string ImageSrc)
         {
             var role = await _userManager.GetRolesAsync(user);
-            string imgName = "";
+
+            IList<string> imgNameIlist = new List<string>();
 
             foreach (var item in role)
             {
@@ -84,11 +85,15 @@ namespace RENT.Data.Repositorys
                         selerDto.Where(t => t.Token == null).ToList().ForEach(t => t.Token = token.Token);
                         selerDto.Where(t => t.RefreshToken == null).ToList().ForEach(t => t.RefreshToken = token.RefreshToken);
 
-                        foreach (var sellerImage in selerDto)
+                        foreach (var image in selerDto)
                         {
-                            imgName = sellerImage.ImageName;
-                            sellerImage.ImageSrc = string.Format("{0}/Images/{1}", ImageSrc, imgName);
+                            imgNameIlist = image.ImageName;
+                            foreach (var img in imgNameIlist)
+                            {
+                                image.ImageSrc.Add(string.Format("{0}/Images/{1}", ImageSrc, img));
+                            }
                         }
+
                         return selerDto;
 
                         throw new Exception("User does not exist");
@@ -105,8 +110,12 @@ namespace RENT.Data.Repositorys
 
                         foreach (var image in clientDto)
                         {
-                            imgName = image.ImageName;
-                            image.ImageSrc = string.Format("{0}/Images/{1}", ImageSrc, imgName);
+                            imgNameIlist = image.ImageName;
+
+                            foreach (var imgname in imgNameIlist)
+                            {
+                                image.ImageSrc.Add(string.Format("{0}/Images/{1}", ImageSrc, imgname));
+                            }
                         }
                         return clientDto;
 

@@ -15,6 +15,5 @@
         public Customers Customers { get; set; }
         public Posts Posts { get; set; }
         public ProductsSpecifications Specifications { get; set; }
-
     }
 }
