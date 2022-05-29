@@ -8,8 +8,8 @@ namespace RENT.Domain.Entities
         public string Content { get; set; }
         public bool IsDeleted { get; set; } = false;
         public DateTime DateCreated { get; set; } = DateTime.Now;
-        public DateTime DateUpdated { get; set; }
         public Guid? ProductsId { get; set; }
         public virtual Products Products { get; set; }
+
     }
 }

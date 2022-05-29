@@ -15,5 +15,6 @@
         public bool IsDeleted { get; set; } = false;
         public Guid? ProductsId { get; set; }
         public virtual Products Products { get; set; }
+        public DateTime DateCreated { get; set; } = DateTime.Now;
     }
 }

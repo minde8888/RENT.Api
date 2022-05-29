@@ -2,40 +2,40 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RENT.Data.Interfaces;
 using RENT.Domain.Dtos.RequestDto;
-using RENT.Services.Services;
 using System.Runtime.Versioning;
 
 namespace RENT.Api.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     [Route("v1/api/[controller]")]
     public class ProductsController : Controller
     {
         private readonly IWebHostEnvironment _hostEnvironment;
-        private readonly ImagesService _imagesService;
+        private readonly IImagesService _imagesService;
         private readonly IMapper _mapper;
         private readonly IProductsRepository _productsRepository;
         private readonly IProductsService _productsService;
 
         public ProductsController(IMapper mapper,
-            ImagesService imagesService,
+            IImagesService imagesService,
             IWebHostEnvironment hostEnvironment,
             IProductsService productsService,
             IProductsRepository productsRepository)
         {
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(_mapper));
-            _imagesService = imagesService ?? throw new ArgumentNullException(nameof(_imagesService));
-            _hostEnvironment = hostEnvironment ?? throw new ArgumentNullException(nameof(_hostEnvironment));
-            _productsRepository = productsRepository ?? throw new ArgumentNullException(nameof(_productsRepository));
-            _productsService = productsService ?? throw new ArgumentNullException(nameof(_productsService));
+            _mapper = mapper;
+            _imagesService = imagesService;
+            _hostEnvironment = hostEnvironment;
+            _productsRepository = productsRepository;
+            _productsService = productsService;
         }
 
         [HttpPost]
         [SupportedOSPlatform("windows")]
-        [Authorize(Roles = "Seller, Admin")]
+        //[Authorize(Roles = "Seller, Admin")]
         public async Task<IActionResult> AddNewProduct([FromForm] ProductDto product)
         {
             try
@@ -100,32 +100,51 @@ namespace RENT.Api.Controllers
             }
         }
 
-        //[HttpPut("Update")]
+        [HttpPut("Update")]
+        [SupportedOSPlatform("windows")]
         //[Authorize(Roles = "Manager, Admin")]
-        //public IActionResult<List<ResponseProductsDto>> Update([FormData] ProjectDto project)
-        //{
-        //    if (project.ProjectId == Guid.Empty)
-        //        return BadRequest("This project can not by updated");
+        public async Task<ActionResult<IList<ProductDto>>> Update([FromForm] ProductDto product)
+        {
+            if (product.ProductsId == Guid.Empty)
+                return BadRequest("This project can not by updated");
 
-        //    if (!ModelState.IsValid)
-        //        return BadRequest(ModelState);
-        //    try
-        //    {
-        //        _projectRepository.UpdateProjectAsync(project);
-        //        var projectToReturn = _projectService.GetOneProject(project.ProjectId);
-        //        return Ok(projectToReturn);
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        return StatusCode(StatusCodes.Status500InternalServerError,
-        //           "Error save DB");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(StatusCodes.Status500InternalServerError,
-        //           ex);
-        //    }
-        //}
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            try
+            {                
+                var productToReturn = await _productsRepository.UpdateProductAsync(product);
+
+                String ImageSrc = String.Format("{0}://{1}{2}", Request.Scheme, Request.Host, Request.PathBase);
+
+                foreach (var item in productToReturn)
+                {
+                    if (!item.Attachments.Any() && !item.ImageName.Any())
+                    {
+                        string[] imagesNames = item.ImageName.Split(',');
+                        foreach (var ImageName in imagesNames)
+                        {
+                            string imagePath = Path.Combine(_hostEnvironment.ContentRootPath, "Images", ImageName);
+                            _imagesService.DeleteImage(imagePath);
+
+                            item.ImageName =  _imagesService.SaveImage(product.Attachments, product.Height, product.Width);
+
+                            item.ImageSrc.Add(String.Format("{0}/Images/{1}", ImageSrc, ImageName));
+                        }
+                    }          
+                }
+                return Ok(productToReturn);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                   "Error update DB");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                   ex);
+            }
+        }
 
         [HttpPost("Delete")]
         [Authorize(Roles = "Seller, Admin")]

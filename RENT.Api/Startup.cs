@@ -119,7 +119,7 @@ namespace RENT.Api
                 await next();
             });
 
-            app.UseCors(options => options.WithOrigins("http://localhost:3000")
+            app.UseCors(options => options.WithOrigins("http://localhost:4000")
             .AllowAnyMethod()
             .AllowAnyHeader());
 

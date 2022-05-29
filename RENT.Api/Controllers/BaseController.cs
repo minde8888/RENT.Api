@@ -21,7 +21,7 @@ namespace RENT.Api.Controllers
         private readonly IBaseRepository<BaseEntity> _baseRepository;
         private readonly IBaseSerrvice<BaseEntity> _baseSerrvice;
         private readonly IMapper _mapper;
-        private readonly ImagesService _imagesService;
+        private readonly IImagesService _imagesService;
         private readonly IWebHostEnvironment _hostEnvironment;
 
         public BaseController(IBaseRepository<BaseEntity> baseRepository,
@@ -113,7 +113,8 @@ namespace RENT.Api.Controllers
 
                 if (userDto.ImageFile != null && userDto.ImageName != null)
                 {
-                    foreach (var image in userDto.ImageName)
+                    string[] imagesNames = userDto.ImageName.Split(',');
+                    foreach (var image in imagesNames)
                     {
                         string imagePath = Path.Combine(_hostEnvironment.ContentRootPath, "Images", image);
                         _imagesService.DeleteImage(imagePath);

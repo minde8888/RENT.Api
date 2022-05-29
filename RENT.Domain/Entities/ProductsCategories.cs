@@ -8,6 +8,5 @@ namespace RENT.Domain.Entities
         public Categories Categories { get; set; }
         public Guid ProductsId { get; set; }
         public Products Products { get; set; }
-
     }
 }

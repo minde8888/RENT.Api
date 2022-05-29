@@ -31,7 +31,7 @@ namespace RENT.Api.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        [Route("Register")]
+        [Route("Signup")]
         public async Task<IActionResult> Register([FromBody] UserRegistrationDto user)
         {
             if (ModelState.IsValid)
@@ -56,7 +56,7 @@ namespace RENT.Api.Controllers
 
                 var newUser = new ApplicationUser()
                 {
-                    Roles = user.Role,
+                    Roles = user.Roles,
                     Email = user.Email,
                     UserName = _userRepository.StringRandom(),
                     PhoneNumber = user.PhoneNumber
@@ -68,7 +68,7 @@ namespace RENT.Api.Controllers
                 {
                     try
                     {
-                        await _userManager.AddToRoleAsync(newUser, user.Role.ToString());
+                        await _userManager.AddToRoleAsync(newUser, user.Roles);
                         user.UserId = newUser.Id;
                         await _userRepository.AddUserAsync(user);
 
@@ -104,7 +104,7 @@ namespace RENT.Api.Controllers
             });
         }
 
-        [AllowAnonymous]
+        //[AllowAnonymous]
         [HttpPost]
         [Route("Login")]
         public async Task<ActionResult<List<UserInformationDto>>> Login([FromBody] UserLoginRequest user)

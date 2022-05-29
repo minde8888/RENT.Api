@@ -4,7 +4,7 @@ namespace RENT.Data.Interfaces
 {
     public interface IImagesService
     {
-        IList<string> SaveImage(IList<IFormFile> imageFile, string height, string width);
+        public string SaveImage(IList<IFormFile> imageFile, IList<string> height, IList<string> width);
         public void ResizeImage(string imagePath, IList<IFormFile> imageFile, int height, int width);
         public void DeleteImage(string imagePath);
     }

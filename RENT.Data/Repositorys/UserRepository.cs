@@ -39,19 +39,17 @@ namespace RENT.Data.Repositorys
 
         public async Task AddUserAsync(UserRegistrationDto user)
         {
-            if (user.Role == "User")
+            if (user.Roles == "User")
             {
                 Seller seller = _mapper.Map<Seller>(user);
                 _context.Seller.Add(seller);
-                Address addres = new()
-                {
-                    SellerId = seller.Id
-                };
+                Address addres = new();
+                addres.SellerId = seller.Id;
                 _context.Address.Add(addres);
 
                 await _context.SaveChangesAsync();
             }
-            if (user.Role == "Client")
+            if (user.Roles == "Client")
             {
                 Customers customers = _mapper.Map<Customers>(user);
                 _context.Add(customers);
@@ -87,8 +85,8 @@ namespace RENT.Data.Repositorys
 
                         foreach (var image in selerDto)
                         {
-                            imgNameIlist = image.ImageName;
-                            foreach (var img in imgNameIlist)
+                            string[] imagesNames = image.ImageName.Split(',');                   
+                            foreach (var img in imagesNames)
                             {
                                 image.ImageSrc.Add(string.Format("{0}/Images/{1}", ImageSrc, img));
                             }
@@ -110,9 +108,8 @@ namespace RENT.Data.Repositorys
 
                         foreach (var image in clientDto)
                         {
-                            imgNameIlist = image.ImageName;
-
-                            foreach (var imgname in imgNameIlist)
+                            string[] imagesNames = image.ImageName.Split(',');
+                            foreach (var imgname in imagesNames)
                             {
                                 image.ImageSrc.Add(string.Format("{0}/Images/{1}", ImageSrc, imgname));
                             }

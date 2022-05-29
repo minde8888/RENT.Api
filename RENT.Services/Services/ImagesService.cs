@@ -8,28 +8,28 @@ namespace RENT.Services.Services
     [SupportedOSPlatform("windows")]
     public class ImagesService : IImagesService
     {
-        public IList<string> SaveImage(IList<IFormFile> imageFile, string height, string width)
+        public string SaveImage(IList<IFormFile> imageFile, IList<string> height, IList<string> width)
         {
             if (imageFile != null)
             {
-                IList<string> list = new List<string>();
+                var imaneName = "";
 
-                foreach (IFormFile file in imageFile)
+                for (int i = 0; i < imageFile.Count; i++)
                 {
-                    string imageName = new String(Path.GetFileNameWithoutExtension(file.FileName).Take(10).ToArray()).Replace(' ', '-');
-                    imageName = imageName + DateTime.Now.ToString("yymmssfff") + Path.GetExtension(file.FileName);
+                    string imageName = new String(Path.GetFileNameWithoutExtension(imageFile[i].FileName).Take(10).ToArray()).Replace(' ', '-');
+                    imageName = imageName + DateTime.Now.ToString("yymmssfff") + Path.GetExtension(imageFile[i].FileName);
                     var imagePath = Path.Combine("Images", imageName);
                     using (var stream = new FileStream(imagePath, FileMode.Create))
                     {
-                        file.CopyTo(stream);
+                        imageFile[i].CopyTo(stream);
                     }
-                    int heightInt = (int)Int64.Parse(height);
-                    int widthInt = (int)Int64.Parse(width);
+                    int heightInt = (int)Int64.Parse(height[i]);
+                    int widthInt = (int)Int64.Parse(width[i]);
 
                     ResizeImage(imagePath, imageFile, heightInt, widthInt);
-                    list.Add(imageName);
+                    imaneName += imageName+",";
                 }
-                return list;
+                return imaneName;
             }
 
             throw new Exception();

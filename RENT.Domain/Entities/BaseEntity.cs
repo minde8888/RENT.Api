@@ -13,9 +13,9 @@ namespace RENT.Domain.Entities
         public string Surname { get; set; }
         public string Occupation { get; set; }
         public string Email { get; set; }
-        public string Role { get; set; }
+        public string Roles { get; set; }
         public string PhoneNumber { get; set; }
-        public IList<string> ImageName { get; set; }
+        public string ImageName { get; set; }
         public bool IsDeleted { get; set; } = false;
         public virtual Address Address { get; set; }
         public ICollection<Products> Products { get; set; }
