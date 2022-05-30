@@ -154,12 +154,12 @@ namespace RENT.Api.Controllers
 
                     return Ok(result);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     return BadRequest(new RegistrationResponse()
                     {
                         Errors = new List<string>() {
-                                "Server Error. Please contact support."
+                                "Server Error. Please contact support." + ex
                             },
                         Success = false
                     });

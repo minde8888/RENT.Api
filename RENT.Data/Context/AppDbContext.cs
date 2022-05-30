@@ -65,7 +65,7 @@ namespace RENT.Data.Context
             builder.Entity<Customers>()
             .HasOne(b => b.Address)
             .WithOne(i => i.Customers)
-            .HasForeignKey<Customers>(b => b.Id);
+            .HasForeignKey<Address>(b => b.CustomerId);
 
             builder.Entity<Customers>()
             .HasMany(c => c.Products)
@@ -74,7 +74,7 @@ namespace RENT.Data.Context
             builder.Entity<Seller>()
             .HasOne(b => b.Address)
             .WithOne(i => i.Seller)
-            .HasForeignKey<Seller>(b => b.Id);
+            .HasForeignKey<Address>(b => b.SellerId);
 
             builder.Entity<Seller>()
             .HasMany(c => c.Products)
@@ -84,7 +84,7 @@ namespace RENT.Data.Context
             builder.Entity<Shop>()
             .HasOne(b => b.Address)
             .WithOne(i => i.Shop)
-            .HasForeignKey<Shop>(b => b.Id);
+            .HasForeignKey<Address>(b => b.ShopId);
         }
     }
 }
