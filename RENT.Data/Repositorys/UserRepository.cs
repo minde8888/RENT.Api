@@ -43,9 +43,12 @@ namespace RENT.Data.Repositorys
             {
                 Seller seller = _mapper.Map<Seller>(user);
                 _context.Seller.Add(seller);
-                Address addres = new();
-                addres.SellerId = seller.Id;
-                _context.Address.Add(addres);
+                //Address addres = new()
+                //{
+                //    SellerId = seller.Id
+                //};
+
+                //_context.Address.Add(addres);
 
                 await _context.SaveChangesAsync();
             }
@@ -57,7 +60,7 @@ namespace RENT.Data.Repositorys
                 {
                     CustomerId = customers.Id
                 };
-                _context.Add(addres);
+                _context.Address.Add(addres);
 
                 await _context.SaveChangesAsync();
             }
@@ -85,7 +88,7 @@ namespace RENT.Data.Repositorys
 
                         foreach (var image in selerDto)
                         {
-                            string[] imagesNames = image.ImageName.Split(',');                   
+                            string[] imagesNames = image.ImageName.Split(',');
                             foreach (var img in imagesNames)
                             {
                                 image.ImageSrc.Add(string.Format("{0}/Images/{1}", ImageSrc, img));

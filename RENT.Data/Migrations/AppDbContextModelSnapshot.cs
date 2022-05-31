@@ -161,15 +161,18 @@ namespace RENT.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<Guid?>("CustomerId")
+                        .IsRequired()
                         .HasColumnType("uuid");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
                     b.Property<Guid?>("SellerId")
+                        .IsRequired()
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("ShopId")
+                        .IsRequired()
                         .HasColumnType("uuid");
 
                     b.Property<string>("Street")
@@ -179,6 +182,15 @@ namespace RENT.Data.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("AddressId");
+
+                    b.HasIndex("CustomerId")
+                        .IsUnique();
+
+                    b.HasIndex("SellerId")
+                        .IsUnique();
+
+                    b.HasIndex("ShopId")
+                        .IsUnique();
 
                     b.ToTable("Address", "Identity");
                 });
@@ -346,6 +358,7 @@ namespace RENT.Data.Migrations
             modelBuilder.Entity("RENT.Domain.Entities.Customers", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("DateCreated")
@@ -372,7 +385,7 @@ namespace RENT.Data.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("text");
 
-                    b.Property<string>("Role")
+                    b.Property<string>("Roles")
                         .HasColumnType("text");
 
                     b.Property<string>("Surname")
@@ -401,9 +414,6 @@ namespace RENT.Data.Migrations
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<DateTime>("DateUpdated")
-                        .HasColumnType("timestamp without time zone");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
@@ -427,6 +437,12 @@ namespace RENT.Data.Migrations
                     b.Property<Guid?>("CustomersId")
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("timestamp without time zone");
+
                     b.Property<string>("ImageName")
                         .HasColumnType("text");
 
@@ -439,8 +455,8 @@ namespace RENT.Data.Migrations
                     b.Property<string>("ProductNumber")
                         .HasColumnType("text");
 
-                    b.Property<int>("QuantityPerUnit")
-                        .HasColumnType("integer");
+                    b.Property<string>("QuantityPerUnit")
+                        .HasColumnType("text");
 
                     b.Property<Guid?>("SellerId")
                         .HasColumnType("uuid");
@@ -448,11 +464,14 @@ namespace RENT.Data.Migrations
                     b.Property<Guid?>("ShopId")
                         .HasColumnType("uuid");
 
-                    b.Property<decimal>("UnitPrice")
-                        .HasColumnType("numeric");
+                    b.Property<string>("UnitPrice")
+                        .HasColumnType("text");
 
-                    b.Property<int>("UnitsInStock")
-                        .HasColumnType("integer");
+                    b.Property<string>("UnitsInStock")
+                        .HasColumnType("text");
+
+                    b.Property<string>("WarehousePlace")
+                        .HasColumnType("text");
 
                     b.HasKey("ProductsId");
 
@@ -488,6 +507,9 @@ namespace RENT.Data.Migrations
 
                     b.Property<string>("Capacity")
                         .HasColumnType("text");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("EnergySource")
                         .HasColumnType("text");
@@ -557,6 +579,7 @@ namespace RENT.Data.Migrations
             modelBuilder.Entity("RENT.Domain.Entities.Seller", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("DateCreated")
@@ -583,7 +606,7 @@ namespace RENT.Data.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("text");
 
-                    b.Property<string>("Role")
+                    b.Property<string>("Roles")
                         .HasColumnType("text");
 
                     b.Property<string>("Surname")
@@ -603,6 +626,7 @@ namespace RENT.Data.Migrations
             modelBuilder.Entity("RENT.Domain.Entities.Shop", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("DateCreated")
@@ -629,7 +653,7 @@ namespace RENT.Data.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("text");
 
-                    b.Property<string>("Role")
+                    b.Property<string>("Roles")
                         .HasColumnType("text");
 
                     b.Property<string>("ShopName")
@@ -699,6 +723,33 @@ namespace RENT.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("RENT.Domain.Entities.Address", b =>
+                {
+                    b.HasOne("RENT.Domain.Entities.Customers", "Customers")
+                        .WithOne("Address")
+                        .HasForeignKey("RENT.Domain.Entities.Address", "CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RENT.Domain.Entities.Seller", "Seller")
+                        .WithOne("Address")
+                        .HasForeignKey("RENT.Domain.Entities.Address", "SellerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RENT.Domain.Entities.Shop", "Shop")
+                        .WithOne("Address")
+                        .HasForeignKey("RENT.Domain.Entities.Address", "ShopId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customers");
+
+                    b.Navigation("Seller");
+
+                    b.Navigation("Shop");
+                });
+
             modelBuilder.Entity("RENT.Domain.Entities.Auth.RefreshToken", b =>
                 {
                     b.HasOne("RENT.Domain.Entities.Auth.ApplicationUser", "ApplicationUser")
@@ -712,19 +763,11 @@ namespace RENT.Data.Migrations
 
             modelBuilder.Entity("RENT.Domain.Entities.Customers", b =>
                 {
-                    b.HasOne("RENT.Domain.Entities.Address", "Address")
-                        .WithOne("Customers")
-                        .HasForeignKey("RENT.Domain.Entities.Customers", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("RENT.Domain.Entities.Auth.ApplicationUser", "ApplicationUser")
                         .WithOne("Customers")
                         .HasForeignKey("RENT.Domain.Entities.Customers", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Address");
 
                     b.Navigation("ApplicationUser");
                 });
@@ -787,49 +830,24 @@ namespace RENT.Data.Migrations
 
             modelBuilder.Entity("RENT.Domain.Entities.Seller", b =>
                 {
-                    b.HasOne("RENT.Domain.Entities.Address", "Address")
-                        .WithOne("Seller")
-                        .HasForeignKey("RENT.Domain.Entities.Seller", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("RENT.Domain.Entities.Auth.ApplicationUser", "ApplicationUser")
                         .WithOne("Seller")
                         .HasForeignKey("RENT.Domain.Entities.Seller", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Address");
-
                     b.Navigation("ApplicationUser");
                 });
 
             modelBuilder.Entity("RENT.Domain.Entities.Shop", b =>
                 {
-                    b.HasOne("RENT.Domain.Entities.Address", "Address")
-                        .WithOne("Shop")
-                        .HasForeignKey("RENT.Domain.Entities.Shop", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("RENT.Domain.Entities.Auth.ApplicationUser", "ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Address");
-
                     b.Navigation("ApplicationUser");
-                });
-
-            modelBuilder.Entity("RENT.Domain.Entities.Address", b =>
-                {
-                    b.Navigation("Customers");
-
-                    b.Navigation("Seller");
-
-                    b.Navigation("Shop");
                 });
 
             modelBuilder.Entity("RENT.Domain.Entities.Auth.ApplicationUser", b =>
@@ -843,6 +861,8 @@ namespace RENT.Data.Migrations
 
             modelBuilder.Entity("RENT.Domain.Entities.Customers", b =>
                 {
+                    b.Navigation("Address");
+
                     b.Navigation("Products");
                 });
 
@@ -855,11 +875,15 @@ namespace RENT.Data.Migrations
 
             modelBuilder.Entity("RENT.Domain.Entities.Seller", b =>
                 {
+                    b.Navigation("Address");
+
                     b.Navigation("Products");
                 });
 
             modelBuilder.Entity("RENT.Domain.Entities.Shop", b =>
                 {
+                    b.Navigation("Address");
+
                     b.Navigation("Products");
                 });
 #pragma warning restore 612, 618

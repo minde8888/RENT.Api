@@ -62,29 +62,29 @@ namespace RENT.Data.Context
                x => x.HasOne(x => x.Categories)
               .WithMany().HasForeignKey(x => x.CategoriesId));
 
-            builder.Entity<Customers>()
-            .HasOne(b => b.Address)
-            .WithOne(i => i.Customers)
-            .HasForeignKey<Customers>(b => b.Id);
+            //builder.Entity<Customers>()
+            //.HasOne(b => b.Address)
+            //.WithOne(i => i.Customers)
+            //.HasForeignKey<Address>(b => b.CustomerId).IsRequired();
 
             builder.Entity<Customers>()
             .HasMany(c => c.Products)
             .WithOne(e => e.Customers);
 
-            builder.Entity<Seller>()
-            .HasOne(b => b.Address)
-            .WithOne(i => i.Seller)
-            .HasForeignKey<Seller>(b => b.Id);
+            //builder.Entity<Seller>()
+            //.HasOne(b => b.Address)
+            //.WithOne(i => i.Seller)
+            //.HasForeignKey<Address>(b => b.SellerId).IsRequired();
 
             builder.Entity<Seller>()
             .HasMany(c => c.Products)
             .WithOne(e => e.Seller);
 
 
-            builder.Entity<Shop>()
-            .HasOne(b => b.Address)
-            .WithOne(i => i.Shop)
-            .HasForeignKey<Shop>(b => b.Id);
+            //builder.Entity<Shop>()
+            //.HasOne(b => b.Address)
+            //.WithOne(i => i.Shop)
+            //.HasForeignKey<Address>(b => b.ShopId).IsRequired();
         }
     }
 }
