@@ -78,7 +78,7 @@ namespace RENT.Data.Repositorys
                         .Where(u => u.UserId == new Guid(user.Id.ToString()))
                         .ToListAsync();
 
-                        var selerDto = _mapper.Map<List<Temp>>(seller);
+                        var sellerDto = _mapper.Map<List<UserInformationDto>>(seller);
 
                         sellerDto.Where(t => t.Token == null).ToList().ForEach(t => t.Token = token.Token);
                         sellerDto.Where(t => t.RefreshToken == null).ToList().ForEach(t => t.RefreshToken = token.RefreshToken);
