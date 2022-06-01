@@ -59,12 +59,12 @@ namespace RENT.Data.Repositorys
                 {
                     CustomerId = customers.Id
                 };
-                _context.Add(addres);
+                _context.Address.Add(addres);
 
                 await _context.SaveChangesAsync();
             }
         }
-        public async Task<List<Temp>> GetUserInfo(ApplicationUser user, AuthResult token, string ImageSrc)
+        public async Task<List<UserInformationDto>> GetUserInfo(ApplicationUser user, AuthResult token, string ImageSrc)
         {
             var role = await _userManager.GetRolesAsync(user);
 
@@ -80,48 +80,57 @@ namespace RENT.Data.Repositorys
 
                         var selerDto = _mapper.Map<List<Temp>>(seller);
 
-                        selerDto.Where(t => t.Token == null).ToList().ForEach(t => t.Token = token.Token);
-                        selerDto.Where(t => t.RefreshToken == null).ToList().ForEach(t => t.RefreshToken = token.RefreshToken);
-                     
-                        //foreach (var image in selerDto)
-                        //{
-                        //    if (image.ImageName != null)
-                        //    {
-                        //        string[] imagesNames = image.ImageName.Split(',');
-                        //        foreach (var img in imagesNames)
-                        //        {
-                        //            image.ImageSrc.Add(string.Format("{0}/Images/{1}", ImageSrc, img));
-                        //        }
+                        sellerDto.Where(t => t.Token == null).ToList().ForEach(t => t.Token = token.Token);
+                        sellerDto.Where(t => t.RefreshToken == null).ToList().ForEach(t => t.RefreshToken = token.RefreshToken);
 
-                        //    }
+                        var address = new AddressDto();
+                        foreach (var a in seller)
+                        {
+                            var newAddress = _mapper.Map<AddressDto>(a.Address);
+                            address = newAddress;
+                        }
+                        foreach (var b in sellerDto)
+                        {
+                            b.AddressDto = address;
+                        }
 
-                        //}
+                        foreach (var image in sellerDto)
+                        {
+                            if (image.ImageName != null)
+                            {
+                                string[] imagesNames = image.ImageName.Split(',');
+                                foreach (var img in imagesNames)
+                                {
+                                    image.ImageSrc.Add(string.Format("{0}/Images/{1}", ImageSrc, img));
+                                }
+                            }
+                        }
 
-                        return selerDto;
+                        return sellerDto;
 
-                        throw new Exception("User does not exist");
+                    //throw new Exception("User does not exist");
 
-                    //case "Client":
-                    //    var client = await _context.Customers
-                    //        .Include(address => address.Address)
-                    //        .Where(u => u.UserId == new Guid(user.Id.ToString()))
-                    //        .ToListAsync();
-                    //    var clientDto = _mapper.Map<List<UserInformationDto>>(client);
+                    case "Client":
+                        var client = await _context.Customers
+                            .Include(address => address.Address)
+                            .Where(u => u.UserId == new Guid(user.Id.ToString()))
+                            .ToListAsync();
+                        var clientDto = _mapper.Map<List<UserInformationDto>>(client);
 
-                    //    clientDto.Where(t => t.Token == null).ToList().ForEach(t => t.Token = token.Token);
-                    //    clientDto.Where(t => t.RefreshToken == null).ToList().ForEach(t => t.RefreshToken = token.RefreshToken);
+                        clientDto.Where(t => t.Token == null).ToList().ForEach(t => t.Token = token.Token);
+                        clientDto.Where(t => t.RefreshToken == null).ToList().ForEach(t => t.RefreshToken = token.RefreshToken);
 
-                    //    foreach (var image in clientDto)
-                    //    {
-                    //        string[] imagesNames = image.ImageName.Split(',');
-                    //        foreach (var imgname in imagesNames)
-                    //        {
-                    //            image.ImageSrc.Add(string.Format("{0}/Images/{1}", ImageSrc, imgname));
-                    //        }
-                    //    }
-                    //    return clientDto;
+                        foreach (var image in clientDto)
+                        {
+                            string[] imagesNames = image.ImageName.Split(',');
+                            foreach (var imgname in imagesNames)
+                            {
+                                image.ImageSrc.Add(string.Format("{0}/Images/{1}", ImageSrc, imgname));
+                            }
+                        }
+                        return clientDto;
 
-                        throw new ArgumentException("User does not exist");
+                    //throw new ArgumentException("User does not exist");
 
                     default:
                         throw new Exception();

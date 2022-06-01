@@ -8,7 +8,10 @@ namespace RENT.Services.Services.AppMapper
     {
         public ApplicationMapper()
         {
-            CreateMap<Seller, Temp>().ReverseMap();
+            CreateMap<Seller, UserRegistrationDto>().ReverseMap().
+                ForMember(m => m.Address, opt =>
+               opt.MapFrom(m => m.AddressDto));
+
             CreateMap<Address, AddressDto>().ReverseMap();
 
             CreateMap<Seller, UserRegistrationDto>().ReverseMap();
