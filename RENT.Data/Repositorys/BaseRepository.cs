@@ -69,24 +69,24 @@ namespace RENT.Data.Repositorys
             {
                 item.ImageName = userDto.ImageName;
             }
-            if (userDto.Address != null)
+            if (userDto.AddressDto != null)
             {
-                item.Address.City = userDto.Address.City;
-                item.Address.Country = userDto.Address.Country;
-                item.Address.Street = userDto.Address.Street;
-                item.Address.Zip = userDto.Address.Zip;
-                item.Address.CompanyCode = userDto.Address.CompanyCode;
+                item.Address.City = userDto.AddressDto.City;
+                item.Address.Country = userDto.AddressDto.Country;
+                item.Address.Street = userDto.AddressDto.Street;
+                item.Address.Zip = userDto.AddressDto.Zip;
+                item.Address.CompanyCode = userDto.AddressDto.CompanyCode;
                 _context.Entry(item.Address).State = EntityState.Modified;
             }
             else
             {
                 Address address = new()
                 {
-                    City = userDto.Address.City,
-                    Country = userDto.Address.Country,
-                    Street = userDto.Address.Street,
-                    Zip = userDto.Address.Zip,
-                    CompanyCode = userDto.Address.CompanyCode,
+                    City = userDto.AddressDto.City,
+                    Country = userDto.AddressDto.Country,
+                    Street = userDto.AddressDto.Street,
+                    Zip = userDto.AddressDto.Zip,
+                    CompanyCode = userDto.AddressDto.CompanyCode,
                 };
                 _context.Address.Add(address);
             }

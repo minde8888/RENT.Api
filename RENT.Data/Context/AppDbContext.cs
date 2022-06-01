@@ -1,11 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using RENT.Domain.Entities;
-using RENT.Domain.Entities.Auth;
-using RENT.Domain.Entities.Roles;
-
-namespace RENT.Data.Context
+﻿namespace RENT.Data.Context
 {
     public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
     {
@@ -62,29 +55,29 @@ namespace RENT.Data.Context
                x => x.HasOne(x => x.Categories)
               .WithMany().HasForeignKey(x => x.CategoriesId));
 
-            //builder.Entity<Customers>()
-            //.HasOne(b => b.Address)
-            //.WithOne(i => i.Customers)
-            //.HasForeignKey<Address>(b => b.CustomerId).IsRequired();
+            builder.Entity<Customers>()
+            .HasOne(b => b.Address)
+            .WithOne(i => i.Customers)
+            .HasForeignKey<Address>(b => b.CustomerId);
 
             builder.Entity<Customers>()
             .HasMany(c => c.Products)
             .WithOne(e => e.Customers);
 
-            //builder.Entity<Seller>()
-            //.HasOne(b => b.Address)
-            //.WithOne(i => i.Seller)
-            //.HasForeignKey<Address>(b => b.SellerId).IsRequired();
+            builder.Entity<Seller>()
+            .HasOne(b => b.Address)
+            .WithOne(i => i.Seller)
+            .HasForeignKey<Address>(b => b.SellerId);
 
             builder.Entity<Seller>()
             .HasMany(c => c.Products)
             .WithOne(e => e.Seller);
 
 
-            //builder.Entity<Shop>()
-            //.HasOne(b => b.Address)
-            //.WithOne(i => i.Shop)
-            //.HasForeignKey<Address>(b => b.ShopId).IsRequired();
+            builder.Entity<Shop>()
+            .HasOne(b => b.Address)
+            .WithOne(i => i.Shop)
+            .HasForeignKey<Address>(b => b.ShopId);
         }
     }
 }

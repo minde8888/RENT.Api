@@ -1,20 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using RENT.Api.Configuration;
-using RENT.Data.Context;
-using RENT.Data.Helpers;
-using RENT.Data.Interfaces;
-using RENT.Domain.Dtos;
-using RENT.Domain.Entities;
-using RENT.Domain.Entities.Auth;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-
-namespace RENT.Data.Repositorys
+﻿namespace RENT.Data.Repositorys
 {
     public class UserRepository : IUserRepository
     {
@@ -43,6 +27,11 @@ namespace RENT.Data.Repositorys
             {
                 Seller seller = _mapper.Map<Seller>(user);
                 _context.Seller.Add(seller);
+                Address addres = new()
+                {
+                    SellerId = seller.Id
+                };
+                _context.Address.Add(addres);
                 //Address addres = new()
                 //{
                 //    SellerId = seller.Id
@@ -65,11 +54,9 @@ namespace RENT.Data.Repositorys
                 await _context.SaveChangesAsync();
             }
         }
-        public async Task<List<UserInformationDto>> GetUserInfo(ApplicationUser user, AuthResult token, string ImageSrc)
+        public async Task<List<Temp>> GetUserInfo(ApplicationUser user, AuthResult token, string ImageSrc)
         {
             var role = await _userManager.GetRolesAsync(user);
-
-            IList<string> imgNameIlist = new List<string>();
 
             foreach (var item in role)
             {
@@ -81,7 +68,7 @@ namespace RENT.Data.Repositorys
                         .Where(u => u.UserId == new Guid(user.Id.ToString()))
                         .ToListAsync();
 
-                        var selerDto = _mapper.Map<List<UserInformationDto>>(seller);
+                        List<Temp> selerDto = _mapper.Map<List<Temp>>(seller);
 
                         selerDto.Where(t => t.Token == null).ToList().ForEach(t => t.Token = token.Token);
                         selerDto.Where(t => t.RefreshToken == null).ToList().ForEach(t => t.RefreshToken = token.RefreshToken);
@@ -95,29 +82,33 @@ namespace RENT.Data.Repositorys
                             }
                         }
 
+                        //    }
+
+                        //}
+
                         return selerDto;
 
                         throw new Exception("User does not exist");
 
-                    case "Client":
-                        var client = await _context.Customers
-                            .Include(address => address.Address)
-                            .Where(u => u.UserId == new Guid(user.Id.ToString()))
-                            .ToListAsync();
-                        var clientDto = _mapper.Map<List<UserInformationDto>>(client);
+                        //case "Client":
+                        //    var client = await _context.Customers
+                        //        .Include(address => address.Address)
+                        //        .Where(u => u.UserId == new Guid(user.Id.ToString()))
+                        //        .ToListAsync();
+                        //    var clientDto = _mapper.Map<List<UserInformationDto>>(client);
 
-                        clientDto.Where(t => t.Token == null).ToList().ForEach(t => t.Token = token.Token);
-                        clientDto.Where(t => t.RefreshToken == null).ToList().ForEach(t => t.RefreshToken = token.RefreshToken);
+                        //    clientDto.Where(t => t.Token == null).ToList().ForEach(t => t.Token = token.Token);
+                        //    clientDto.Where(t => t.RefreshToken == null).ToList().ForEach(t => t.RefreshToken = token.RefreshToken);
 
-                        foreach (var image in clientDto)
-                        {
-                            string[] imagesNames = image.ImageName.Split(',');
-                            foreach (var imgname in imagesNames)
-                            {
-                                image.ImageSrc.Add(string.Format("{0}/Images/{1}", ImageSrc, imgname));
-                            }
-                        }
-                        return clientDto;
+                        //    foreach (var image in clientDto)
+                        //    {
+                        //        string[] imagesNames = image.ImageName.Split(',');
+                        //        foreach (var imgname in imagesNames)
+                        //        {
+                        //            image.ImageSrc.Add(string.Format("{0}/Images/{1}", ImageSrc, imgname));
+                        //        }
+                        //    }
+                        //    return clientDto;
 
                         throw new ArgumentException("User does not exist");
 

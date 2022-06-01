@@ -750,6 +750,27 @@ namespace RENT.Data.Migrations
                     b.Navigation("Shop");
                 });
 
+            modelBuilder.Entity("RENT.Domain.Entities.Address", b =>
+                {
+                    b.HasOne("RENT.Domain.Entities.Customers", "Customers")
+                        .WithOne("Address")
+                        .HasForeignKey("RENT.Domain.Entities.Address", "CustomerId");
+
+                    b.HasOne("RENT.Domain.Entities.Seller", "Seller")
+                        .WithOne("Address")
+                        .HasForeignKey("RENT.Domain.Entities.Address", "SellerId");
+
+                    b.HasOne("RENT.Domain.Entities.Shop", "Shop")
+                        .WithOne("Address")
+                        .HasForeignKey("RENT.Domain.Entities.Address", "ShopId");
+
+                    b.Navigation("Customers");
+
+                    b.Navigation("Seller");
+
+                    b.Navigation("Shop");
+                });
+
             modelBuilder.Entity("RENT.Domain.Entities.Auth.RefreshToken", b =>
                 {
                     b.HasOne("RENT.Domain.Entities.Auth.ApplicationUser", "ApplicationUser")
