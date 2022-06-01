@@ -106,7 +106,7 @@ namespace RENT.Api.Controllers
             });
         }
 
-        //[AllowAnonymous]
+        [AllowAnonymous]
         [HttpPost]
         [Route("Login")]
         public async Task<ActionResult<List<UserInformationDto>>> Login([FromBody] UserLoginRequest user)

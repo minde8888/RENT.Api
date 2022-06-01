@@ -1,4 +1,20 @@
-﻿namespace RENT.Data.Repositorys
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using RENT.Api.Configuration;
+using RENT.Data.Context;
+using RENT.Data.Helpers;
+using RENT.Data.Interfaces;
+using RENT.Domain.Dtos;
+using RENT.Domain.Entities;
+using RENT.Domain.Entities.Auth;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+
+namespace RENT.Data.Repositorys
 {
     public class UserRepository : IUserRepository
     {
@@ -32,12 +48,6 @@
                     SellerId = seller.Id
                 };
                 _context.Address.Add(addres);
-                //Address addres = new()
-                //{
-                //    SellerId = seller.Id
-                //};
-
-                //_context.Address.Add(addres);
 
                 await _context.SaveChangesAsync();
             }
@@ -54,7 +64,7 @@
                 await _context.SaveChangesAsync();
             }
         }
-        public async Task<List<Temp>> GetUserInfo(ApplicationUser user, AuthResult token, string ImageSrc)
+        public async Task<List<UserInformationDto>> GetUserInfo(ApplicationUser user, AuthResult token, string ImageSrc)
         {
             var role = await _userManager.GetRolesAsync(user);
 
@@ -68,49 +78,59 @@
                         .Where(u => u.UserId == new Guid(user.Id.ToString()))
                         .ToListAsync();
 
-                        List<Temp> selerDto = _mapper.Map<List<Temp>>(seller);
+                        List<UserInformationDto> sellerDto = _mapper.Map<List<UserInformationDto>>(seller);
 
-                        selerDto.Where(t => t.Token == null).ToList().ForEach(t => t.Token = token.Token);
-                        selerDto.Where(t => t.RefreshToken == null).ToList().ForEach(t => t.RefreshToken = token.RefreshToken);
+                        sellerDto.Where(t => t.Token == null).ToList().ForEach(t => t.Token = token.Token);
+                        sellerDto.Where(t => t.RefreshToken == null).ToList().ForEach(t => t.RefreshToken = token.RefreshToken);
 
-                        foreach (var image in selerDto)
+                        var address = new AddressDto();
+                        foreach (var a in seller)
                         {
-                            string[] imagesNames = image.ImageName.Split(',');
-                            foreach (var img in imagesNames)
+                            var newAddress = _mapper.Map<AddressDto>(a.Address);
+                            address = newAddress;
+                        }
+                        foreach (var b in sellerDto)
+                        {
+                            b.AddressDto = address;
+                        }
+
+                        foreach (var image in sellerDto)
+                        {
+                            if (image.ImageName != null)
                             {
-                                image.ImageSrc.Add(string.Format("{0}/Images/{1}", ImageSrc, img));
+                                string[] imagesNames = image.ImageName.Split(',');
+                                foreach (var img in imagesNames)
+                                {
+                                    image.ImageSrc.Add(string.Format("{0}/Images/{1}", ImageSrc, img));
+                                }
                             }
                         }
 
-                        //    }
+                        return sellerDto;
 
-                        //}
+                    //throw new Exception("User does not exist");
 
-                        return selerDto;
+                    case "Client":
+                        var client = await _context.Customers
+                            .Include(address => address.Address)
+                            .Where(u => u.UserId == new Guid(user.Id.ToString()))
+                            .ToListAsync();
+                        var clientDto = _mapper.Map<List<UserInformationDto>>(client);
 
-                        throw new Exception("User does not exist");
+                        clientDto.Where(t => t.Token == null).ToList().ForEach(t => t.Token = token.Token);
+                        clientDto.Where(t => t.RefreshToken == null).ToList().ForEach(t => t.RefreshToken = token.RefreshToken);
 
-                        //case "Client":
-                        //    var client = await _context.Customers
-                        //        .Include(address => address.Address)
-                        //        .Where(u => u.UserId == new Guid(user.Id.ToString()))
-                        //        .ToListAsync();
-                        //    var clientDto = _mapper.Map<List<UserInformationDto>>(client);
+                        foreach (var image in clientDto)
+                        {
+                            string[] imagesNames = image.ImageName.Split(',');
+                            foreach (var imgname in imagesNames)
+                            {
+                                image.ImageSrc.Add(string.Format("{0}/Images/{1}", ImageSrc, imgname));
+                            }
+                        }
+                        return clientDto;
 
-                        //    clientDto.Where(t => t.Token == null).ToList().ForEach(t => t.Token = token.Token);
-                        //    clientDto.Where(t => t.RefreshToken == null).ToList().ForEach(t => t.RefreshToken = token.RefreshToken);
-
-                        //    foreach (var image in clientDto)
-                        //    {
-                        //        string[] imagesNames = image.ImageName.Split(',');
-                        //        foreach (var imgname in imagesNames)
-                        //        {
-                        //            image.ImageSrc.Add(string.Format("{0}/Images/{1}", ImageSrc, imgname));
-                        //        }
-                        //    }
-                        //    return clientDto;
-
-                        throw new ArgumentException("User does not exist");
+                    //throw new ArgumentException("User does not exist");
 
                     default:
                         throw new Exception();

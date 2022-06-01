@@ -1,4 +1,11 @@
-﻿namespace RENT.Data.Context
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using RENT.Domain.Entities;
+using RENT.Domain.Entities.Auth;
+using RENT.Domain.Entities.Roles;
+
+namespace RENT.Data.Context
 {
     public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
     {

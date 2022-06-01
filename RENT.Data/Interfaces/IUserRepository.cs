@@ -9,7 +9,7 @@ namespace RENT.Data.Interfaces
     public interface IUserRepository
     {
         public Task AddUserAsync(UserRegistrationDto user);
-        public Task<List<Temp>> GetUserInfo(ApplicationUser user, AuthResult token, string ImageSrc);
+        public Task<List<UserInformationDto>> GetUserInfo(ApplicationUser user, AuthResult token, string ImageSrc);
         public Task<bool> NewPassword(ResetPasswordRequest model);
 
         public Task<bool> SendEmailPasswordReset(ForgotPassword model, string origin, string token);
