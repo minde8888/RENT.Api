@@ -48,5 +48,10 @@ namespace Rent.Xunit.Auth
         {
             throw new NotImplementedException();
         }
+
+        Task<List<Temp>> IUserRepository.GetUserInfo(ApplicationUser user, AuthResult token, string ImageSrc)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
