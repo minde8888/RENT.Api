@@ -9,6 +9,7 @@ using RENT.Domain.Dtos;
 using RENT.Domain.Dtos.Responses;
 using RENT.Domain.Entities.Auth;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Mail;
 
 namespace RENT.Api.Controllers
 {
@@ -120,7 +121,7 @@ namespace RENT.Api.Controllers
                     return BadRequest(new RegistrationResponse()
                     {
                         Errors = new List<string>() {
-                                "The email address is incorrect. Please retry..."
+                                "The email address is incorrect. Please retry."
                             },
                         Success = false
                     });
@@ -178,7 +179,7 @@ namespace RENT.Api.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("ForgotPassword")]
+        [HttpPost("Forgot-Password")]
         public async Task<IActionResult> ForgotPassword(ForgotPassword model)
         {
             try
@@ -191,11 +192,15 @@ namespace RENT.Api.Controllers
                     return Ok();
                 }
             }
-            catch (Exception)
+            catch (SmtpFailedRecipientException sx)
             {
-                return BadRequest(new { message = "Can’t find that email !!!" });
+                return BadRequest(new { message = "Email was not send " + sx });
             }
-            return BadRequest(new { message = "Problems with ForgotPasswordToken !!!" });
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = "Something is wrong " + ex });
+            }
+            return BadRequest(new { message = "Unknown error !!!" });
         }
 
         [AllowAnonymous]

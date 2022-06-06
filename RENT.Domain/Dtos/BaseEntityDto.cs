@@ -11,7 +11,7 @@ namespace RENT.Domain.Dtos
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
         public string Occupation { get; set; }
-        public string Role { get; set; }
+        public string Roles { get; set; }
         public string ImageName { get; set; }
         public IList<string> ImageSrc { get; set; }
         public AddressDto AddressDto { get; set; }

@@ -21,7 +21,7 @@ namespace RENT.Data.Repositorys
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IEmailPasswordService _mail;
+        private readonly IEmailPasswordService _mailService;
         private readonly JwtConfig _jwtConfig;
 
         public UserRepository(AppDbContext context,
@@ -33,7 +33,7 @@ namespace RENT.Data.Repositorys
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
-            _mail = mail ?? throw new ArgumentNullException(nameof(mail));
+            _mailService = mail ?? throw new ArgumentNullException(nameof(mail));
             _jwtConfig = optionsMonitor.CurrentValue;
         }
 
@@ -108,8 +108,6 @@ namespace RENT.Data.Repositorys
 
                         return sellerDto;
 
-                    //throw new Exception("User does not exist");
-
                     case "Client":
                         var client = await _context.Customers
                             .Include(address => address.Address)
@@ -129,8 +127,6 @@ namespace RENT.Data.Repositorys
                             }
                         }
                         return clientDto;
-
-                    //throw new ArgumentException("User does not exist");
 
                     default:
                         throw new Exception();
@@ -179,10 +175,10 @@ namespace RENT.Data.Repositorys
             }
             else
             {
-                throw new Exception();
+                throw new ArgumentException("Token is null");
             }
             var link = $"{origin}/api/Auth/NewPassword?token={token}&email={user.Email}";
-            bool sendEmail = _mail.SendEmailPasswordReset(model, link);
+            bool sendEmail = _mailService.SendEmailPasswordReset(model, link);
             return sendEmail;
         }
 

@@ -85,7 +85,7 @@ namespace RENT.Api
 
             services.AddScoped(typeof(DbContext), typeof(AppDbContext));
             services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
-            services.AddScoped(typeof(IEmailPasswordService), typeof(EmailPassword));
+            services.AddScoped(typeof(IEmailPasswordService), typeof(EmailPasswordService));
             services.AddScoped(typeof(IBaseSerrvice<>), typeof(BaseSerrvice<>));
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddScoped(typeof(IImagesService), typeof(ImagesService));
