@@ -7,13 +7,13 @@ namespace RENT.Data.Interfaces
     {
         Task<List<T>> GetItemIdAsync(string Id);
 
-        Task<List<UserDto>> GetAllItems();
+        //Task<List<UserDto>> GetAllItems();
 
-        Task AddItemAsync(T t, string UserId);
+        //Task AddItemAsync(T t, string UserId);
 
-        Task RemoveItemAsync(string Id);
+        //Task RemoveItemAsync(string Id);
 
-        Task<IEnumerable<T>> Search(string name);
-        Task<RequestUserDto> UpdateItemAsync(RequestUserDto userDto);
+        //Task<IEnumerable<T>> Search(string name);
+        //Task<RequestUserDto> UpdateItemAsync(RequestUserDto userDto);
     }
 }

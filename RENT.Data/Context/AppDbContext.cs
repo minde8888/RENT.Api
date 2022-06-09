@@ -15,6 +15,7 @@ namespace RENT.Data.Context
             AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
         }
 
+        public DbSet<IdentityUserClaim<Guid>>IdentityUserClaims { get; set; }
         public DbSet<Categories> Categories { get; set; }
         public DbSet<Customers> Customers { get; set; }
         public DbSet<Address> Address { get; set; }

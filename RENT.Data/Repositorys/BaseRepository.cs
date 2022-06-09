@@ -25,23 +25,23 @@ namespace RENT.Data.Repositorys
             _mapper = mapper;
         }
 
-        public async Task AddItemAsync(T t, string UserId)
-        {
-            var user = await _userManager.FindByIdAsync(UserId);
-            t.UserId = new Guid(user.Id.ToString());
-            await _context.AddAsync(t);
-            await _context.SaveChangesAsync();
-        }
+        //public async Task AddItemAsync(T t, string UserId)
+        //{
+        //    var user = await _userManager.FindByIdAsync(UserId);
+        //    t.UserId = new Guid(user.Id.ToString());
+        //    await _context.AddAsync(t);
+        //    await _context.SaveChangesAsync();
+        //}
 
-        public async Task<List<UserDto>> GetAllItems()
-        {
-            var item = await _context.Set<T>()
-               .Include(a => a.Address)
-               .ToListAsync();
+        //public async Task<List<UserDto>> GetAllItems()
+        //{
+        //    var item = await _context.Set<T>()
+        //       .Include(a => a.Address)
+        //       .ToListAsync();
 
-            var allItems = _mapper.Map<List<UserDto>>(item);
-            return allItems;
-        }
+        //    var allItems = _mapper.Map<List<UserDto>>(item);
+        //    return allItems;
+        //}
 
         public async Task<List<T>> GetItemIdAsync(string Id)
         {
@@ -53,76 +53,77 @@ namespace RENT.Data.Repositorys
             return itemToMap;
         }
 
-        public async Task<RequestUserDto> UpdateItemAsync(RequestUserDto userDto)
-        {
-            var item = _context.Set<T>().
-                Include(manager => manager.Address).
-                Where(m => m.Id == userDto.Id).FirstOrDefault();
 
-            item.Name = userDto.Name;
-            item.Surname = userDto.Surname;
-            item.Occupation = userDto.Occupation;
-            item.PhoneNumber = userDto.PhoneNumber;
-            item.DateUpdated = DateTime.UtcNow;
+        //public async Task<RequestUserDto> UpdateItemAsync(RequestUserDto userDto)
+        //{
+        //    var item = _context.Set<T>().
+        //        Include(manager => manager.Address).
+        //        Where(m => m.Id == userDto.Id).FirstOrDefault();
 
-            if (userDto.ImageName?.Any() ?? false)
-            {
-                item.ImageName = userDto.ImageName;
-            }
-            if (userDto.AddressDto != null)
-            {
-                item.Address.City = userDto.AddressDto.City;
-                item.Address.Country = userDto.AddressDto.Country;
-                item.Address.Street = userDto.AddressDto.Street;
-                item.Address.Zip = userDto.AddressDto.Zip;
-                item.Address.CompanyCode = userDto.AddressDto.CompanyCode;
-                _context.Entry(item.Address).State = EntityState.Modified;
-            }
-            else
-            {
-                Address address = new()
-                {
-                    City = userDto.AddressDto.City,
-                    Country = userDto.AddressDto.Country,
-                    Street = userDto.AddressDto.Street,
-                    Zip = userDto.AddressDto.Zip,
-                    CompanyCode = userDto.AddressDto.CompanyCode,
-                };
-                _context.Address.Add(address);
-            }
+        //    item.Name = userDto.Name;
+        //    item.Surname = userDto.Surname;
+        //    item.Occupation = userDto.Occupation;
+        //    item.PhoneNumber = userDto.PhoneNumber;
+        //    item.DateUpdated = DateTime.UtcNow;
 
-            _context.Entry(item).State = EntityState.Modified;
+        //    if (userDto.ImageName?.Any() ?? false)
+        //    {
+        //        item.ImageName = userDto.ImageName;
+        //    }
+        //    if (userDto.AddressDto != null)
+        //    {
+        //        item.Address.City = userDto.AddressDto.City;
+        //        item.Address.Country = userDto.AddressDto.Country;
+        //        item.Address.Street = userDto.AddressDto.Street;
+        //        item.Address.Zip = userDto.AddressDto.Zip;
+        //        item.Address.CompanyCode = userDto.AddressDto.CompanyCode;
+        //        _context.Entry(item.Address).State = EntityState.Modified;
+        //    }
+        //    else
+        //    {
+        //        Address address = new()
+        //        {
+        //            City = userDto.AddressDto.City,
+        //            Country = userDto.AddressDto.Country,
+        //            Street = userDto.AddressDto.Street,
+        //            Zip = userDto.AddressDto.Zip,
+        //            CompanyCode = userDto.AddressDto.CompanyCode,
+        //        };
+        //        _context.Address.Add(address);
+        //    }
 
-            await _context.SaveChangesAsync();
-            var result = _mapper.Map<RequestUserDto>(item);
+        //    _context.Entry(item).State = EntityState.Modified;
 
-            return result;
-        }
+        //    await _context.SaveChangesAsync();
+        //    var result = _mapper.Map<RequestUserDto>(item);
+
+        //    return result;
+        //}
 
 
-        public async Task RemoveItemAsync(string Id)
-        {
-            var item = _context.
-                Set<T>().
-                Where(x => x.Id == Guid.Parse(Id)).
-                FirstOrDefault();
+        //public async Task RemoveItemAsync(string Id)
+        //{
+        //    var item = _context.
+        //        Set<T>().
+        //        Where(x => x.Id == Guid.Parse(Id)).
+        //        FirstOrDefault();
 
-            var user = await _userManager.FindByEmailAsync(item.Email);
-            item.IsDeleted = true;
-            user.IsDeleted = true;
-            await _context.SaveChangesAsync();
-        }
+        //    var user = await _userManager.FindByEmailAsync(item.Email);
+        //    item.IsDeleted = true;
+        //    user.IsDeleted = true;
+        //    await _context.SaveChangesAsync();
+        //}
 
-        public async Task<IEnumerable<T>> Search(string name)
-        {
-            IQueryable<T> query = _context.Set<T>();
+        //public async Task<IEnumerable<T>> Search(string name)
+        //{
+        //    IQueryable<T> query = _context.Set<T>();
 
-            if (!string.IsNullOrEmpty(name))
-            {
-                query = query.Where(e => e.Name.Contains(name)
-                            || e.Surname.Contains(name));
-            }
-            return await query.ToListAsync();
-        }
+        //    if (!string.IsNullOrEmpty(name))
+        //    {
+        //        query = query.Where(e => e.Name.Contains(name)
+        //                    || e.Surname.Contains(name));
+        //    }
+        //    return await query.ToListAsync();
+        //}
     }
 }
