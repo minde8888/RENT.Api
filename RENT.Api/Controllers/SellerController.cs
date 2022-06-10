@@ -10,14 +10,13 @@ namespace RENT.Api.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class SellerController : BaseController<BaseEntity>
     {
-        public SellerController(IBaseRepository<BaseEntity> baseRepository,
-            IBaseSerrvice<BaseEntity> baseSerrvice,
-            IMapper mapper,
-            ImagesService imagesService,
-            IWebHostEnvironment hostEnvironment) :
-            base(baseRepository, baseSerrvice, mapper, imagesService, hostEnvironment)
+        public SellerController(IBaseRepository<BaseEntity> baseRepository, 
+            IBaseSerrvice<BaseEntity> baseSerrvice, 
+            IMapper mapper, 
+            //ImagesService imagesService, 
+            IWebHostEnvironment hostEnvironment) : 
+            base(baseRepository, baseSerrvice, mapper, hostEnvironment)
         {
-        }
-
+        }//, imagesService
     }
 }

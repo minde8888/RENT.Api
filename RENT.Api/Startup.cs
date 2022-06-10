@@ -84,13 +84,15 @@ namespace RENT.Api
             services.AddTransient<IMailReposidory, MailRepository>();
 
             services.AddScoped(typeof(DbContext), typeof(AppDbContext));
+
             services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
             services.AddScoped(typeof(IEmailPasswordService), typeof(EmailPasswordService));
-            services.AddScoped(typeof(IBaseSerrvice<>), typeof(BaseSerrvice<>));
-            services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddScoped(typeof(IImagesService), typeof(ImagesService));
             services.AddScoped(typeof(IProductsService), typeof(ProductsService));
             services.AddScoped(typeof(IProductsRepository), typeof(ProductsRepository));
+
+            services.AddScoped(typeof(IBaseSerrvice<>), typeof(BaseSerrvice<>));
+            services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 
             services.AddSwaggerGen(c =>
             {
