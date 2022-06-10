@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace RENT.Domain.Dtos
+﻿namespace RENT.Domain.Dtos
 {
     public class AddressDto
     {

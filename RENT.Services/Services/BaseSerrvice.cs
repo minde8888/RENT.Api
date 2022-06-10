@@ -1,22 +1,15 @@
 ﻿using RENT.Data.Interfaces;
 using RENT.Domain.Dtos;
-using RENT.Domain.Entities;
 
 namespace RENT.Services.Services
 {
-    public class BaseSerrvice<T> : IBaseSerrvice<T> where T : BaseEntity
+    public class BaseSerrvice<T> : IBaseSerrvice<T>
     {
-        public List<T> GetImagesAsync(List<T> t, string imageSrc)
+        public UserDto GetImagesAsync(UserDto userDto, string imageSrc)
         {
-
-            foreach (var baseImage in t)
-            {
-                //foreach (var img in baseImage.ImageName)
-                //{
-                //    baseImage.ImageSrc.Add(String.Format("{0}/Images/{1}", imageSrc, img));
-                //}
-            }
-            return t;
+            var imgName = userDto.ImageName;
+            userDto.ImageSrc.Add(string.Format("{0}/Images/{1}", imageSrc, imgName));
+            return userDto;
         }
     }
 }

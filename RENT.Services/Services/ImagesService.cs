@@ -27,7 +27,7 @@ namespace RENT.Services.Services
                     int widthInt = (int)Int64.Parse(width[i]);
 
                     ResizeImage(imagePath, imageFile, heightInt, widthInt);
-                    imaneName += imageName+",";
+                    imaneName += imageName + ",";
                 }
                 return imaneName;
             }

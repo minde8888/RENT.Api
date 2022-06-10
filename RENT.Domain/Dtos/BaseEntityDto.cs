@@ -1,7 +1,4 @@
-﻿
-using RENT.Domain.Dtos.RequestDto;
-
-namespace RENT.Domain.Dtos
+﻿namespace RENT.Domain.Dtos
 {
     public class BaseEntityDto
     {
@@ -15,6 +12,5 @@ namespace RENT.Domain.Dtos
         public string ImageName { get; set; }
         public IList<string> ImageSrc { get; set; }
         public AddressDto AddressDto { get; set; }
-        public ICollection<ProductDto> Products { get; set; }
     }
 }

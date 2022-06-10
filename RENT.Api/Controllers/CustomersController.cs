@@ -11,16 +11,16 @@ namespace RENT.Api.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
-    public class CustomersController : BaseController<BaseEntity>
+    public class CustomersController : BaseController<Customers>
     {
-        public CustomersController(IBaseRepository<BaseEntity> baseRepository,
-            IBaseSerrvice<BaseEntity> baseSerrvice,
+        public CustomersController(IBaseRepository<Customers> baseRepository,
+            IBaseSerrvice<Customers> baseSerrvice,
             IMapper mapper,
-            //ImagesService imagesService,
+            ImagesService imagesService,
             IWebHostEnvironment hostEnvironment) :
-            base(baseRepository, baseSerrvice, mapper,  hostEnvironment)
+            base(baseRepository, baseSerrvice, mapper, imagesService, hostEnvironment)
         {
 
-        }//imagesService,
+        }
     }
 }
