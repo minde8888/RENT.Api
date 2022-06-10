@@ -15,7 +15,7 @@ using System.Security.Claims;
 namespace RENT.Api.Controllers
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     public class BaseController<T> : ControllerBase where T : BaseEntity
     {
         private readonly IBaseRepository<BaseEntity> _baseRepository;
