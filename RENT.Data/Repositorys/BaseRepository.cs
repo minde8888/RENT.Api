@@ -33,21 +33,20 @@ namespace RENT.Data.Repositorys
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<UserDto>> GetAllItems()
+        public async Task<UserDto> GetAllItems()
         {
             var item = await _context.Set<T>()
                .Include(a => a.Address)
                .ToListAsync();
 
-            var allItems = _mapper.Map<List<UserDto>>(item);
-            return allItems;
+            return _mapper.Map<UserDto>(item);
         }
 
         public async Task<T> GetItemIdAsync(string Id)
         {
             var itemToMap = await _context.Set<T>().
                 Include(t => t.Address).
-                Where(x => x.Id == Guid.Parse(Id)).FirstOrDefaultAsync();
+                SingleOrDefaultAsync(x => x.Id == Guid.Parse(Id));
 
             return itemToMap;
         }
@@ -93,11 +92,9 @@ namespace RENT.Data.Repositorys
             _context.Entry(item).State = EntityState.Modified;
 
             await _context.SaveChangesAsync();
-            var result = _mapper.Map<RequestUserDto>(item);
-
-            return result;
+   
+            return _mapper.Map<RequestUserDto>(item);
         }
-
 
         public async Task RemoveItemAsync(string Id)
         {

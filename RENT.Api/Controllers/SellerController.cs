@@ -11,7 +11,7 @@ namespace RENT.Api.Controllers
         public SellerController(IBaseRepository<Seller> baseRepository,
             IBaseSerrvice<Seller> baseSerrvice,
             IMapper mapper,
-            ImagesService imagesService,
+            IImagesService imagesService,
             IWebHostEnvironment hostEnvironment) :
             base(baseRepository, baseSerrvice, mapper, imagesService, hostEnvironment)
         {

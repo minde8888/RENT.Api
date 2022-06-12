@@ -1,10 +1,14 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RENT.Data.Interfaces;
 using RENT.Domain.Dtos;
+using RENT.Domain.Dtos.RequestDto;
+using RENT.Domain.Dtos.ResponseDto;
 using RENT.Domain.Entities;
 using RENT.Services.Services;
+using System.Runtime.Versioning;
 using System.Security.Claims;
 
 namespace RENT.Api.Controllers
@@ -22,7 +26,7 @@ namespace RENT.Api.Controllers
         public BaseController(IBaseRepository<T> baseRepository,
             IBaseSerrvice<T> baseSerrvice,
             IMapper mapper,
-            ImagesService imagesService,
+            IImagesService imagesService,
             IWebHostEnvironment hostEnvironment)
         {
             _baseRepository = baseRepository;
@@ -51,7 +55,7 @@ namespace RENT.Api.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Manager, Admin")]
-        public async Task<ActionResult<List<UserDto>>> GetAll()
+        public async Task<ActionResult<UserDto>> GetAll()
         {
             try
             {
@@ -96,55 +100,55 @@ namespace RENT.Api.Controllers
         }
 
 
-        //[HttpPut("Update/{id}")]
-        //[Authorize(Roles = "Admin, Employee")]
-        //[SupportedOSPlatform("windows")]
-        //public async Task<ActionResult<List<ResponseUserDto>>> UpdateAddressAsync(string id, [FromForm] RequestUserDto userDto)
-        //{
-        //    try
-        //    {
-        //        if (id == null)
-        //            return BadRequest("This user can not by updated");
+        [HttpPut("Update/{id}")]
+        [Authorize(Roles = "Admin, Employee")]
+        [SupportedOSPlatform("windows")]
+        public async Task<ActionResult<List<ResponseUserDto>>> UpdateAddressAsync(string id, [FromForm] RequestUserDto userDto)
+        {
+            try
+            {
+                if (id == null)
+                    return BadRequest("This user can not by updated");
 
-        //        userDto.Id = new Guid(id);
+                userDto.Id = new Guid(id);
 
-        //        if (!ModelState.IsValid)
-        //            return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
 
-        //        if (userDto.ImageFile != null && userDto.ImageName != null)
-        //        {
-        //            string[] imagesNames = userDto.ImageName.Split(',');
-        //            foreach (var image in imagesNames)
-        //            {
-        //                string imagePath = Path.Combine(_hostEnvironment.ContentRootPath, "Images", image);
-        //                _imagesService.DeleteImage(imagePath);
-        //            }
+                if (userDto.ImageFile != null && userDto.ImageName != null)
+                {
+                    string[] imagesNames = userDto.ImageName.Split(',');
+                    foreach (var image in imagesNames)
+                    {
+                        string imagePath = Path.Combine(_hostEnvironment.ContentRootPath, "Images", image);
+                        _imagesService.DeleteImage(imagePath);
+                    }
 
-        //            userDto.ImageName = _imagesService.SaveImage(userDto.ImageFile, userDto.Height, userDto.Width);
-        //        }
+                    userDto.ImageName = _imagesService.SaveImage(userDto.ImageFile, userDto.Height, userDto.Width);
+                }
 
-        //        var item = await _baseRepository.UpdateItemAsync(userDto);
+                var item = await _baseRepository.UpdateItemAsync(userDto);
 
-        //        String ImageSrc = String.Format("{0}://{1}{2}", Request.Scheme, Request.Host, Request.PathBase);
-        //        foreach (var img in item.ImageName)
-        //        {
-        //            item.ImageSrc.Add(String.Format("{0}/Images/{1}", ImageSrc, img));
-        //        }
+                String ImageSrc = String.Format("{0}://{1}{2}", Request.Scheme, Request.Host, Request.PathBase);
+                foreach (var img in item.ImageName)
+                {
+                    item.ImageSrc.Add(String.Format("{0}/Images/{1}", ImageSrc, img));
+                }
 
 
-        //        return Ok(item);
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        return StatusCode(StatusCodes.Status500InternalServerError,
-        //           "Error save DB");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(StatusCodes.Status500InternalServerError,
-        //           ex);
-        //    }
-        //}
+                return Ok(item);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                   "Error save DB");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                   ex);
+            }
+        }
 
         [HttpGet("Search")]
         public async Task<ActionResult<IEnumerable<T>>> Search(string name)

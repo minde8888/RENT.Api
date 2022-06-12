@@ -1,4 +1,5 @@
 ﻿using RENT.Domain.Dtos;
+using RENT.Domain.Dtos.RequestDto;
 using RENT.Domain.Entities;
 
 namespace RENT.Data.Interfaces
@@ -7,13 +8,13 @@ namespace RENT.Data.Interfaces
     {
         Task<T> GetItemIdAsync(string Id);
 
-        Task<List<UserDto>> GetAllItems();
+        Task<UserDto> GetAllItems();
 
         Task AddItemAsync(T t, string UserId);
 
         Task RemoveItemAsync(string Id);
 
         Task<IEnumerable<T>> Search(string name);
-        //Task<RequestUserDto> UpdateItemAsync(RequestUserDto userDto);
+        Task<RequestUserDto> UpdateItemAsync(RequestUserDto userDto);
     }
 }

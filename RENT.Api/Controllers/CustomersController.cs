@@ -16,7 +16,7 @@ namespace RENT.Api.Controllers
         public CustomersController(IBaseRepository<Customers> baseRepository,
             IBaseSerrvice<Customers> baseSerrvice,
             IMapper mapper,
-            ImagesService imagesService,
+            IImagesService imagesService,
             IWebHostEnvironment hostEnvironment) :
             base(baseRepository, baseSerrvice, mapper, imagesService, hostEnvironment)
         {
