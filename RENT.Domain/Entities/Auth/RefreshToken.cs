@@ -9,7 +9,7 @@ namespace RENT.Domain.Entities.Auth
         public string Token { get; set; }
         public DateTime Expires { get; set; }
         public bool IsExpired => DateTime.UtcNow >= Expires;
-        public string JwtId { get; set; } // Map the token with jwtId
+        public string JwtId { get; set; } // Map the token with jwtIdF
         public bool IsUsed { get; set; } // if its used we dont want generate a new Jwt token with the same refresh token
         public bool IsRevoked { get; set; } // if it has been revoke for security reasons
         public DateTime AddedDate { get; set; }
