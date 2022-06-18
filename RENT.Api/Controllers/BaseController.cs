@@ -5,14 +5,12 @@ using Microsoft.EntityFrameworkCore;
 using RENT.Data.Interfaces;
 using RENT.Domain.Dtos;
 using RENT.Domain.Dtos.RequestDto;
-using RENT.Domain.Dtos.ResponseDto;
 using RENT.Domain.Entities;
 using System.Runtime.Versioning;
 using System.Security.Claims;
 
 namespace RENT.Api.Controllers
 {
-
     [Route("api/v1/[controller]")]
     public class BaseController<T> : ControllerBase where T : BaseEntity
     {
@@ -98,21 +96,22 @@ namespace RENT.Api.Controllers
             }
         }
 
-
         [HttpPut("Update/{id}")]
-        [Authorize(Roles = "Admin, Employee")]
+        //[Authorize(Roles = "Admin, Employee")]
         [SupportedOSPlatform("windows")]
-        public async Task<ActionResult<List<ResponseUserDto>>> UpdateAddressAsync(string id, [FromForm] RequestUserDto userDto)
+        public async Task<ActionResult<List<UserDto>>> UpdateAddressAsync(string id, [FromForm] RequestUserDto userDto)
         {
             try
             {
                 if (id == null)
                     return BadRequest("This user can not by updated");
 
-                userDto.Id = new Guid(id);
-
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
+
+                String src = String.Format("{0}://{1}{2}", Request.Scheme, Request.Host, Request.PathBase);
+
+               
 
                 if (userDto.ImageFile != null && userDto.ImageName != null)
                 {
@@ -122,20 +121,13 @@ namespace RENT.Api.Controllers
                         string imagePath = Path.Combine(_hostEnvironment.ContentRootPath, "Images", image);
                         _imagesService.DeleteImage(imagePath);
                     }
-
                     userDto.ImageName = _imagesService.SaveImage(userDto.ImageFile, userDto.Height, userDto.Width);
+                    var item = await _baseRepository.UpdateItemAsync(userDto);
+                   
+                    return Ok(await _baseSerrvice.GetImagesAsync(item, src));
                 }
-
-                var item = await _baseRepository.UpdateItemAsync(userDto);
-
-                String ImageSrc = String.Format("{0}://{1}{2}", Request.Scheme, Request.Host, Request.PathBase);
-                foreach (var img in item.ImageName)
-                {
-                    item.ImageSrc.Add(String.Format("{0}/Images/{1}", ImageSrc, img));
-                }
-
-
-                return Ok(item);
+                var itemReturn = await _baseRepository.UpdateItemAsync(userDto);
+                return Ok(itemReturn);
             }
             catch (DbUpdateConcurrencyException)
             {

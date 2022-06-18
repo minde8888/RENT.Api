@@ -15,6 +15,6 @@ namespace RENT.Data.Interfaces
         Task RemoveItemAsync(string Id);
 
         Task<IEnumerable<T>> Search(string name);
-        Task<RequestUserDto> UpdateItemAsync(RequestUserDto userDto);
+        Task<UserDto> UpdateItemAsync(RequestUserDto userDto);
     }
 }

@@ -10,7 +10,7 @@
         public string Occupation { get; set; }
         public string Roles { get; set; }
         public string ImageName { get; set; }
-        public IList<string> ImageSrc { get; set; }
+        public List<string> ImageSrc { get; set; }
         public AddressDto AddressDto { get; set; }
     }
 }

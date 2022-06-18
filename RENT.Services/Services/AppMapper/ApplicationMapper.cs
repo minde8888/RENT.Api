@@ -36,7 +36,6 @@ namespace RENT.Services.Services.AppMapper
             CreateMap<Customers, UserDto>().ReverseMap().
                 ForMember(m => m.Address, opt =>
                 opt.MapFrom(m => m.AddressDto));
-
         }
     }
 }

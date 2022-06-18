@@ -44,7 +44,7 @@ namespace RENT.Api.Controllers
                 if (product.ImageName != null && !product.ImageName.Any())
                 {
                     string path = _hostEnvironment.ContentRootPath;
-                    _imagesService.SaveImage(product.Attachments, product.Height, product.Width);
+                    //_imagesService.SaveImage(product.Attachments, product.Height, product.Width);
 
                 }
                 await _productsRepository.AddProductsAsync(product);
@@ -126,7 +126,7 @@ namespace RENT.Api.Controllers
                             string imagePath = Path.Combine(_hostEnvironment.ContentRootPath, "Images", ImageName);
                             _imagesService.DeleteImage(imagePath);
 
-                            item.ImageName =  _imagesService.SaveImage(product.Attachments, product.Height, product.Width);
+                            //item.ImageName =  _imagesService.SaveImage(product.Attachments, product.Height, product.Width);
 
                             item.ImageSrc.Add(String.Format("{0}/Images/{1}", ImageSrc, ImageName));
                         }

@@ -51,49 +51,33 @@ namespace RENT.Data.Repositorys
             return itemToMap;
         }
 
-        public async Task<RequestUserDto> UpdateItemAsync(RequestUserDto userDto)
+        public async Task<UserDto> UpdateItemAsync(RequestUserDto userDto)
         {
             var item = _context.Set<T>().
                 Include(manager => manager.Address).
                 Where(m => m.Id == userDto.Id).FirstOrDefault();
 
+            if (item == null && userDto == null) throw new Exception(); 
             item.Name = userDto.Name;
             item.Surname = userDto.Surname;
             item.Occupation = userDto.Occupation;
             item.PhoneNumber = userDto.PhoneNumber;
+            item.ImageName = userDto.ImageName;
             item.DateUpdated = DateTime.UtcNow;
 
-            if (userDto.ImageName?.Any() ?? false)
-            {
-                item.ImageName = userDto.ImageName;
-            }
-            if (userDto.AddressDto != null)
-            {
-                item.Address.City = userDto.AddressDto.City;
-                item.Address.Country = userDto.AddressDto.Country;
-                item.Address.Street = userDto.AddressDto.Street;
-                item.Address.Zip = userDto.AddressDto.Zip;
-                item.Address.CompanyCode = userDto.AddressDto.CompanyCode;
-                _context.Entry(item.Address).State = EntityState.Modified;
-            }
-            else
-            {
-                Address address = new()
-                {
-                    City = userDto.AddressDto.City,
-                    Country = userDto.AddressDto.Country,
-                    Street = userDto.AddressDto.Street,
-                    Zip = userDto.AddressDto.Zip,
-                    CompanyCode = userDto.AddressDto.CompanyCode,
-                };
-                _context.Address.Add(address);
-            }
+            item.Address.City = userDto.City;
+            item.Address.Country = userDto.Country;
+            item.Address.Street = userDto.Street;
+            item.Address.Zip = userDto.Zip;
+            item.Address.CompanyCode = userDto.CompanyCode;
 
+            _context.Entry(item.Address).State = EntityState.Modified;
             _context.Entry(item).State = EntityState.Modified;
-
             await _context.SaveChangesAsync();
-   
-            return _mapper.Map<RequestUserDto>(item);
+
+            var itemReturn = _mapper.Map<UserDto>(item);
+
+            return itemReturn;
         }
 
         public async Task RemoveItemAsync(string Id)

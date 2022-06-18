@@ -5,11 +5,18 @@ namespace RENT.Services.Services
 {
     public class BaseSerrvice<T> : IBaseSerrvice<T>
     {
-        public UserDto GetImagesAsync(UserDto userDto, string imageSrc)
+        public Task<UserDto>  GetImagesAsync(UserDto userDto, string imageSrc)
         {
-            var imgName = userDto.ImageName;
-            userDto.ImageSrc.Add(string.Format("{0}/Images/{1}", imageSrc, imgName));
-            return userDto;
+            List<string> imageList = new();
+
+            if (!string.IsNullOrEmpty(userDto.ImageName))
+
+                imageList.Add(string.Format("{0}/Images/{1}", imageSrc, userDto.ImageName));
+
+            userDto.ImageSrc = imageList;
+
+            return Task.FromResult(userDto);
         }
     }
 }
+

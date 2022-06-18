@@ -64,7 +64,8 @@ namespace RENT.Data.Repositorys
                 await _context.SaveChangesAsync();
             }
         }
-        public async Task<List<UserInformationDto>> GetUserInfo(ApplicationUser user, AuthResult token, string ImageSrc)
+
+        public async Task<UserInformationDto> GetUserInfo(ApplicationUser user, AuthResult token, string ImageSrc)
         {
             var role = await _userManager.GetRolesAsync(user);
 
@@ -76,32 +77,28 @@ namespace RENT.Data.Repositorys
                         var seller = await _context.Seller
                         .Include(address => address.Address)
                         .Where(u => u.UserId == new Guid(user.Id.ToString()))
-                        .ToListAsync();
+                        .FirstOrDefaultAsync();
 
-                        var sellerDto = _mapper.Map<List<UserInformationDto>>(seller);
+                        var sellerDto = new UserInformationDto();
+            
+                        var newAddress = _mapper.Map<AddressDto>(seller.Address);
+                        sellerDto.AddressDto = newAddress; 
 
-                        sellerDto.Where(t => t.Token == null).ToList().ForEach(t => t.Token = token.Token);
-                        sellerDto.Where(t => t.RefreshToken == null).ToList().ForEach(t => t.RefreshToken = token.RefreshToken);
+                        var sellerReturn = _mapper.Map(seller, sellerDto);
 
-                        var address = new AddressDto();
-                        foreach (var a in seller)
+                        sellerDto.Token = sellerDto.Token == null ? token.Token : null;
+                        sellerDto.RefreshToken = sellerDto.RefreshToken == null ? token.RefreshToken : null;
+
+                        if (!String.IsNullOrEmpty(sellerDto.ImageName))
                         {
-                            var newAddress = _mapper.Map<AddressDto>(a.Address);
-                            address = newAddress;
-                        }
-                        foreach (var b in sellerDto)
-                        {
-                            b.AddressDto = address;
-                        }
-
-                        foreach (var image in sellerDto)
-                        {
-                            if (image.ImageName != null)
+                            string[] imagesNames = sellerDto.ImageName.Split(',');
+                            var newImages = new List<string>();
+                            foreach (string img in imagesNames)
                             {
-                                string[] imagesNames = image.ImageName.Split(',');
-                                foreach (var img in imagesNames)
+                                if (!String.IsNullOrEmpty(img))
                                 {
-                                    image.ImageSrc.Add(string.Format("{0}/Images/{1}", ImageSrc, img));
+                                    newImages.Add(string.Format("{0}/Images/{1}", ImageSrc, img));
+                                    sellerDto.ImageSrc = newImages;
                                 }
                             }
                         }
@@ -112,20 +109,29 @@ namespace RENT.Data.Repositorys
                         var client = await _context.Customers
                             .Include(address => address.Address)
                             .Where(u => u.UserId == new Guid(user.Id.ToString()))
-                            .ToListAsync();
-                        var clientDto = _mapper.Map<List<UserInformationDto>>(client);
+                            .FirstOrDefaultAsync();
+                        var clientDto = _mapper.Map<UserInformationDto>(client);
 
-                        clientDto.Where(t => t.Token == null).ToList().ForEach(t => t.Token = token.Token);
-                        clientDto.Where(t => t.RefreshToken == null).ToList().ForEach(t => t.RefreshToken = token.RefreshToken);
+                        var addressNew = _mapper.Map<AddressDto>(client.Address);
 
-                        foreach (var image in clientDto)
+                        clientDto.AddressDto = addressNew;
+                        clientDto.Token = clientDto.Token != null ? token.Token : null;
+                        clientDto.RefreshToken = clientDto.RefreshToken != null ? token.RefreshToken : null;
+
+                        if (!String.IsNullOrEmpty(clientDto.ImageName))
                         {
-                            string[] imagesNames = image.ImageName.Split(',');
-                            foreach (var imgname in imagesNames)
+                            string[] imagesNames = clientDto.ImageName.Split(',');
+                            var newImages = new List<string>();
+                            foreach (string img in imagesNames)
                             {
-                                image.ImageSrc.Add(string.Format("{0}/Images/{1}", ImageSrc, imgname));
+                                if (!String.IsNullOrEmpty(img))
+                                {
+                                    newImages.Add(string.Format("{0}/Images/{1}", ImageSrc, img));
+                                    clientDto.ImageSrc = newImages;
+                                }
                             }
                         }
+
                         return clientDto;
 
                     default:
