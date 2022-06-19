@@ -57,7 +57,7 @@ namespace RENT.Data.Repositorys
                 Include(manager => manager.Address).
                 Where(m => m.Id == userDto.Id).FirstOrDefault();
 
-            if (item == null && userDto == null) throw new Exception(); 
+            if (item == null && userDto == null) throw new Exception();
             item.Name = userDto.Name;
             item.Surname = userDto.Surname;
             item.Occupation = userDto.Occupation;
@@ -75,7 +75,9 @@ namespace RENT.Data.Repositorys
             _context.Entry(item).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
+            var newAddress = _mapper.Map<AddressDto>(item.Address); 
             var itemReturn = _mapper.Map<UserDto>(item);
+            itemReturn.AddressDto = newAddress;
 
             return itemReturn;
         }
