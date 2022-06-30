@@ -10,6 +10,7 @@
         public string ImageName { get; set; }
         public string ProductNumber { get; set; }
         public string WarehousePlace { get; set; }
+        public string ProductCode { get; set; }
         public bool IsDeleted { get; set; } = false;
         public ICollection<Categories> Categories { get; set; }
         public Seller Seller { get; set; }

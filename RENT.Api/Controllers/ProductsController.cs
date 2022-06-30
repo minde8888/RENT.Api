@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -36,12 +35,12 @@ namespace RENT.Api.Controllers
         [HttpPost]
         [SupportedOSPlatform("windows")]
         //[Authorize(Roles = "Seller, Admin")]
-        public async Task<IActionResult> AddNewProduct([FromForm] ProductDto product)
+        public async Task<IActionResult> AddNewProduct([FromForm] ProducRequesttDto product)
         {
             try
             {
 
-                if (product.ImageName != null && !product.ImageName.Any())
+                if (product.ImageName != null)
                 {
                     string path = _hostEnvironment.ContentRootPath;
                     //_imagesService.SaveImage(product.Attachments, product.Height, product.Width);
@@ -111,7 +110,7 @@ namespace RENT.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             try
-            {                
+            {
                 var productToReturn = await _productsRepository.UpdateProductAsync(product);
 
                 String ImageSrc = String.Format("{0}://{1}{2}", Request.Scheme, Request.Host, Request.PathBase);
@@ -130,7 +129,7 @@ namespace RENT.Api.Controllers
 
                             item.ImageSrc.Add(String.Format("{0}/Images/{1}", ImageSrc, ImageName));
                         }
-                    }          
+                    }
                 }
                 return Ok(productToReturn);
             }

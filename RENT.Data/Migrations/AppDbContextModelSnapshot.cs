@@ -161,18 +161,15 @@ namespace RENT.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<Guid?>("CustomerId")
-                        .IsRequired()
                         .HasColumnType("uuid");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
                     b.Property<Guid?>("SellerId")
-                        .IsRequired()
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("ShopId")
-                        .IsRequired()
                         .HasColumnType("uuid");
 
                     b.Property<string>("Street")
@@ -449,6 +446,9 @@ namespace RENT.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("ProductCode")
+                        .HasColumnType("text");
+
                     b.Property<string>("ProductName")
                         .HasColumnType("text");
 
@@ -721,33 +721,6 @@ namespace RENT.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("RENT.Domain.Entities.Address", b =>
-                {
-                    b.HasOne("RENT.Domain.Entities.Customers", "Customers")
-                        .WithOne("Address")
-                        .HasForeignKey("RENT.Domain.Entities.Address", "CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RENT.Domain.Entities.Seller", "Seller")
-                        .WithOne("Address")
-                        .HasForeignKey("RENT.Domain.Entities.Address", "SellerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RENT.Domain.Entities.Shop", "Shop")
-                        .WithOne("Address")
-                        .HasForeignKey("RENT.Domain.Entities.Address", "ShopId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Customers");
-
-                    b.Navigation("Seller");
-
-                    b.Navigation("Shop");
                 });
 
             modelBuilder.Entity("RENT.Domain.Entities.Address", b =>

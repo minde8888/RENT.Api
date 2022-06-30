@@ -24,7 +24,7 @@ namespace Rent.Xunit.Auth
             throw new NotImplementedException();
         }
 
-        public Task<List<UserInformationDto>> GetUserInfo(ApplicationUser user, AuthResult token, string ImageSrc)
+        Task<UserInformationDto> IUserRepository.GetUserInfo(ApplicationUser user, AuthResult token, string ImageSrc)
         {
             throw new NotImplementedException();
         }
@@ -48,5 +48,6 @@ namespace Rent.Xunit.Auth
         {
             throw new NotImplementedException();
         }
+
     }
 }
