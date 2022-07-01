@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RENT.Data.Interfaces;
 using RENT.Domain.Entities;
-using RENT.Services.Services;
 
 namespace RENT.Api.Controllers
 {

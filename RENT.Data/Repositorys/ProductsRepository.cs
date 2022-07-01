@@ -18,7 +18,7 @@ namespace RENT.Data.Repositorys
             _mapper = mapper;
         }
 
-        public async Task AddProductsAsync(ProductDto product)
+        public async Task AddProductsAsync(ProducRequesttDto product)
         {
             var productsToSave = _mapper.Map<Products>(product);
             _context.Products.Add(productsToSave);
@@ -45,7 +45,7 @@ namespace RENT.Data.Repositorys
                     }
 
                 }
-    
+
             }
             return productsToReturn;
         }
@@ -130,5 +130,5 @@ namespace RENT.Data.Repositorys
             await _context.SaveChangesAsync();
         }
 
-     }
+    }
 }

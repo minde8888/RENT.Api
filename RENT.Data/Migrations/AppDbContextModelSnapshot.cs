@@ -446,6 +446,9 @@ namespace RENT.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("ProductCode")
+                        .HasColumnType("text");
+
                     b.Property<string>("ProductName")
                         .HasColumnType("text");
 

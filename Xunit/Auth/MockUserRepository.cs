@@ -24,6 +24,11 @@ namespace Rent.Xunit.Auth
             throw new NotImplementedException();
         }
 
+        Task<UserInformationDto> IUserRepository.GetUserInfo(ApplicationUser user, AuthResult token, string ImageSrc)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<bool> NewPassword(ResetPasswordRequest model)
         {
             throw new NotImplementedException();
