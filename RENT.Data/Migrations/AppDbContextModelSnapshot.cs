@@ -18,7 +18,7 @@ namespace RENT.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("Identity")
-                .HasAnnotation("ProductVersion", "7.0.0-preview.4.22229.2")
+                .HasAnnotation("ProductVersion", "7.0.0-preview.5.22302.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -71,25 +71,6 @@ namespace RENT.Data.Migrations
                     b.ToTable("AspNetUserClaims", "Identity");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
-                {
-                    b.Property<string>("LoginProvider")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ProviderKey")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
-
-                    b.ToTable("UserLogins", "Identity");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
                     b.Property<string>("LoginProvider")
@@ -109,6 +90,25 @@ namespace RENT.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("AspNetUserLogins", "Identity");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProviderKey")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.ToTable("UserLogins", "Identity");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
@@ -161,18 +161,15 @@ namespace RENT.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<Guid?>("CustomerId")
-                        .IsRequired()
                         .HasColumnType("uuid");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
                     b.Property<Guid?>("SellerId")
-                        .IsRequired()
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("ShopId")
-                        .IsRequired()
                         .HasColumnType("uuid");
 
                     b.Property<string>("Street")
@@ -721,33 +718,6 @@ namespace RENT.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("RENT.Domain.Entities.Address", b =>
-                {
-                    b.HasOne("RENT.Domain.Entities.Customers", "Customers")
-                        .WithOne("Address")
-                        .HasForeignKey("RENT.Domain.Entities.Address", "CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RENT.Domain.Entities.Seller", "Seller")
-                        .WithOne("Address")
-                        .HasForeignKey("RENT.Domain.Entities.Address", "SellerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RENT.Domain.Entities.Shop", "Shop")
-                        .WithOne("Address")
-                        .HasForeignKey("RENT.Domain.Entities.Address", "ShopId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Customers");
-
-                    b.Navigation("Seller");
-
-                    b.Navigation("Shop");
                 });
 
             modelBuilder.Entity("RENT.Domain.Entities.Address", b =>
