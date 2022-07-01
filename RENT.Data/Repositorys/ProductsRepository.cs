@@ -87,26 +87,26 @@ namespace RENT.Data.Repositorys
                 products.Specifications.Height = productDto.Specifications.Height ?? products.Specifications.Height;
             }
 
-            if (String.IsNullOrEmpty(productDto.Categories))
-            {
-                var toRemove = _context.ProductsCategories
-                    .Where(x => x.ProductsId == productDto.ProductsId);
-                _context.ProductsCategories.RemoveRange(toRemove);
-                _context.SaveChanges();
+            //if (String.IsNullOrEmpty(productDto.Categories))
+            //{
+            //    var toRemove = _context.ProductsCategories
+            //        .Where(x => x.ProductsId == productDto.ProductsId);
+            //    _context.ProductsCategories.RemoveRange(toRemove);
+            //    _context.SaveChanges();
 
-                string[] cat = productDto.Categories.Split(',');
+            //    string[] cat = productDto.Categories.Split(',');
 
-                foreach (var id in cat)
-                {
-                    var prodCat = new ProductsCategories
-                    {
-                        CategoriesId = new Guid(id.ToString()),
-                        ProductsId = productDto.ProductsId
-                    };
-                    _context.ProductsCategories.Add(prodCat);
-                    await _context.SaveChangesAsync();
-                }
-            }
+            //    foreach (var id in cat)
+            //    {
+            //        var prodCat = new ProductsCategories
+            //        {
+            //            CategoriesId = new Guid(id.ToString()),
+            //            ProductsId = productDto.ProductsId
+            //        };
+            //        _context.ProductsCategories.Add(prodCat);
+            //        await _context.SaveChangesAsync();
+            //    }
+            //}
 
             _context.Entry(products).State = EntityState.Modified;
             await _context.SaveChangesAsync();

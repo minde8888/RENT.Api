@@ -15,7 +15,6 @@ namespace RENT.Domain.Dtos.RequestDto
         public string UnitPrice { get; set; }
         public string UnitsInStock { get; set; }
         public string WarehousePlace { get; set; }
-        public string Categories { get; set; }
         public Guid SellerId { get; set; }
         public IList<string> Category { get; set; }
         public PostsDto Posts { get; set; }

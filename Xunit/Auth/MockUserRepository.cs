@@ -24,11 +24,6 @@ namespace Rent.Xunit.Auth
             throw new NotImplementedException();
         }
 
-        public Task<List<UserInformationDto>> GetUserInfo(ApplicationUser user, AuthResult token, string ImageSrc)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<bool> NewPassword(ResetPasswordRequest model)
         {
             throw new NotImplementedException();
@@ -45,6 +40,11 @@ namespace Rent.Xunit.Auth
         }
 
         public Task<AuthResult> VerifyToken(TokenRequests tokenRequest, ClaimsPrincipal principal, SecurityToken validatedToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<UserInformationDto> IUserRepository.GetUserInfo(ApplicationUser user, AuthResult token, string ImageSrc)
         {
             throw new NotImplementedException();
         }
