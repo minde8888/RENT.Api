@@ -10,7 +10,7 @@ namespace RENT.Api.Controllers
 {
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
-    [Route("v1/api/[controller]")]
+    [Route("api/v1/[controller]")]
     public class ProductsController : Controller
     {
         private readonly IWebHostEnvironment _hostEnvironment;
@@ -39,13 +39,28 @@ namespace RENT.Api.Controllers
         {
             try
             {
-
-                if (product.ImageName != null)
+                foreach (var items in product.Attachments)
                 {
-                    string path = _hostEnvironment.ContentRootPath;
-                    //_imagesService.SaveImage(product.Attachments, product.Height, product.Width);
-
+                    var b = items;
+                    var c = b.Files.ToList();
+                    var d = items.Keys.ToList();
+                    foreach (var key in d)
+                    {
+                        var f = items[key];
+                    }
+                    foreach (var item in items.ToList())
+                    {
+                        var a = item.Value;
+                        a.ToString();
+                    }
                 }
+
+                //if (product.ImageName != null)
+                //{
+                //    string path = _hostEnvironment.ContentRootPath;
+                //    //_imagesService.SaveImage(product.Attachments, product.Height, product.Width);
+
+                //}
                 await _productsRepository.AddProductsAsync(product);
                 return Ok();
             }
