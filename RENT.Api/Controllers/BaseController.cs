@@ -97,7 +97,7 @@ namespace RENT.Api.Controllers
         }
 
         [HttpPut("Update/{id}")]
-        //[Authorize(Roles = "Admin, Employee")]
+        [Authorize(Roles = "Admin, User")]
         [SupportedOSPlatform("windows")]
         public async Task<ActionResult<List<UserDto>>> UpdateAddressAsync(string id, [FromForm] RequestUserDto userDto)
         {
@@ -122,11 +122,11 @@ namespace RENT.Api.Controllers
                         _imagesService.DeleteImage(imagePath);
                     }
                     userDto.ImageName = _imagesService.SaveImage(userDto.ImageFile, userDto.Height, userDto.Width);
-                    var item = await _baseRepository.UpdateItemAsync(userDto);
-                   
-                    return Ok(await _baseSerrvice.GetImagesAsync(item, src));
+                     await _baseRepository.UpdateItemAsync(userDto);  
                 }
+               
                 var itemReturn = await _baseRepository.UpdateItemAsync(userDto);
+                await _baseSerrvice.GetImagesAsync(itemReturn, src);
                 return Ok(itemReturn);
             }
             catch (DbUpdateConcurrencyException)

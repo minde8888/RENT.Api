@@ -34,25 +34,31 @@ namespace RENT.Api.Controllers
 
         [HttpPost]
         [SupportedOSPlatform("windows")]
-        //[Authorize(Roles = "Seller, Admin")]
+        //[Authorize(Roles = "Admin, Moderator, User")]
         public async Task<IActionResult> AddNewProduct([FromForm] ProducRequesttDto product)
         {
             try
             {
                 foreach (var items in product.Attachments)
                 {
-                    var b = items;
-                    var c = b.Files.ToList();
-                    var d = items.Keys.ToList();
-                    foreach (var key in d)
+             
+                    var img = items.Files.ToArray();
+                    foreach (var item in img)
+                    {
+                        var imagesToSave = item;
+                        var ImageName = item.FileName;
+
+                    }
+                   
+                    foreach (var key in items.Keys.ToList())
                     {
                         var f = items[key];
                     }
-                    foreach (var item in items.ToList())
-                    {
-                        var a = item.Value;
-                        a.ToString();
-                    }
+                    //foreach (var item in items.ToList())
+                    //{
+                    //    var a = item.Value;
+                    //    a.ToString();
+                    //}
                 }
 
                 //if (product.ImageName != null)

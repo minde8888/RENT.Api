@@ -62,9 +62,11 @@ namespace RENT.Data.Repositorys
             item.Surname = userDto.Surname;
             item.Occupation = userDto.Occupation;
             item.PhoneNumber = userDto.PhoneNumber;
-            item.ImageName = userDto.ImageName;
+            if (userDto.ImageName != null)
+            {
+                item.ImageName = userDto.ImageName;
+            }           
             item.DateUpdated = DateTime.UtcNow;
-
             item.Address.City = userDto.City;
             item.Address.Country = userDto.Country;
             item.Address.Street = userDto.Street;
