@@ -20,8 +20,38 @@ namespace RENT.Data.Repositorys
 
         public async Task AddProductsAsync(ProducRequesttDto product)
         {
-            var productsToSave = _mapper.Map<Products>(product);
-            _context.Products.Add(productsToSave);
+            var products = new Products();
+            foreach (var items in product.Attachments)
+            {
+
+                var img = items.Files.ToArray();
+                foreach (var item in img)
+                {
+                    var imagesToSave = item;
+                    var ImageName = item.FileName;
+
+                }
+
+                foreach (var item in items.ToList())
+                {
+                    products.ProductName = item.Key == "productName" ? item.Value : item.Value;
+                    products.QuantityPerUnit = item.Key == "quantityPerUnit" ? item.Value : item.Value;
+                    products.UnitPrice = item.Key == "unitPrice" ? item.Value : item.Value;
+                    products.UnitsInStock = item.Key == "unitsInStock" ? item.Value : item.Value;
+                    products.ImageName = item.Key == "imageName" ? item.Value : item.Value;
+                    products.ProductNumber = item.Key == "productNumber" ? item.Value : item.Value;
+                    products.WarehousePlace = item.Key == "warehousePlace" ? item.Value : item.Value;
+                    products.ProductCode = item.Key == "productCode" ? item.Value : item.Value;
+                    products.ProductNumber = item.Key == "productNumber" ? item.Value : item.Value;
+                }
+                //foreach (var item in items.ToList())
+                //{
+                //    var a = item.Key;
+                //    a.ToString();
+                //}
+            }
+            //var productsToSave = _mapper.Map<Products>(product);
+            _context.Products.Add(products);
             await _context.SaveChangesAsync();
         }
 

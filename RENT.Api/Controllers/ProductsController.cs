@@ -35,13 +35,13 @@ namespace RENT.Api.Controllers
         [HttpPost]
         [SupportedOSPlatform("windows")]
         //[Authorize(Roles = "Admin, Moderator, User")]
-        public async Task<IActionResult> AddNewProduct([FromForm] ProducRequesttDto product)
+        public async Task<IActionResult> AddNewProduct(List<IFormFile> files, ProducRequesttDto product)
         {
             try
             {
                 foreach (var items in product.Attachments)
                 {
-             
+
                     var img = items.Files.ToArray();
                     foreach (var item in img)
                     {
@@ -49,7 +49,7 @@ namespace RENT.Api.Controllers
                         var ImageName = item.FileName;
 
                     }
-                   
+
                     foreach (var key in items.Keys.ToList())
                     {
                         var f = items[key];
