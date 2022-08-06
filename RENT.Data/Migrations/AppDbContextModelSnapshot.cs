@@ -18,7 +18,7 @@ namespace RENT.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("Identity")
-                .HasAnnotation("ProductVersion", "7.0.0-preview.5.22302.2")
+                .HasAnnotation("ProductVersion", "7.0.0-preview.6.22329.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -352,6 +352,21 @@ namespace RENT.Data.Migrations
                     b.ToTable("Categories", "Identity");
                 });
 
+            modelBuilder.Entity("RENT.Domain.Entities.CategoriesProduct", b =>
+                {
+                    b.Property<Guid>("ProductsId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CategoriesId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("ProductsId", "CategoriesId");
+
+                    b.HasIndex("CategoriesId");
+
+                    b.ToTable("CategoriesProduct", "Identity");
+                });
+
             modelBuilder.Entity("RENT.Domain.Entities.Customers", b =>
                 {
                     b.Property<Guid>("Id")
@@ -414,6 +429,9 @@ namespace RENT.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("ProductName")
+                        .HasColumnType("text");
+
                     b.Property<Guid?>("ProductsId")
                         .HasColumnType("uuid");
 
@@ -431,6 +449,9 @@ namespace RENT.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("CategoriesId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid?>("CustomersId")
                         .HasColumnType("uuid");
 
@@ -440,37 +461,34 @@ namespace RENT.Data.Migrations
                     b.Property<DateTime>("DateUpdated")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<string>("ImageHeight")
+                        .HasColumnType("text");
+
                     b.Property<string>("ImageName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ImageWidth")
                         .HasColumnType("text");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("Place")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Price")
+                        .HasColumnType("text");
+
                     b.Property<string>("ProductCode")
                         .HasColumnType("text");
 
-                    b.Property<string>("ProductName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ProductNumber")
-                        .HasColumnType("text");
-
-                    b.Property<string>("QuantityPerUnit")
-                        .HasColumnType("text");
-
-                    b.Property<Guid?>("SellerId")
+                    b.Property<Guid>("SellerId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("ShopId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("UnitPrice")
-                        .HasColumnType("text");
-
-                    b.Property<string>("UnitsInStock")
-                        .HasColumnType("text");
-
-                    b.Property<string>("WarehousePlace")
+                    b.Property<string>("Size")
                         .HasColumnType("text");
 
                     b.HasKey("ProductsId");
@@ -482,21 +500,6 @@ namespace RENT.Data.Migrations
                     b.HasIndex("ShopId");
 
                     b.ToTable("Products", "Identity");
-                });
-
-            modelBuilder.Entity("RENT.Domain.Entities.ProductsCategories", b =>
-                {
-                    b.Property<Guid>("ProductsId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("CategoriesId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("ProductsId", "CategoriesId");
-
-                    b.HasIndex("CategoriesId");
-
-                    b.ToTable("ProductsCategories", "Identity");
                 });
 
             modelBuilder.Entity("RENT.Domain.Entities.ProductsSpecifications", b =>
@@ -543,8 +546,7 @@ namespace RENT.Data.Migrations
 
                     b.HasKey("ProductsSpecificationsId");
 
-                    b.HasIndex("ProductsId")
-                        .IsUnique();
+                    b.HasIndex("ProductsId");
 
                     b.ToTable("Specifications", "Identity");
                 });
@@ -755,6 +757,25 @@ namespace RENT.Data.Migrations
                     b.Navigation("ApplicationUser");
                 });
 
+            modelBuilder.Entity("RENT.Domain.Entities.CategoriesProduct", b =>
+                {
+                    b.HasOne("RENT.Domain.Entities.Categories", "Categories")
+                        .WithMany()
+                        .HasForeignKey("CategoriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RENT.Domain.Entities.Products", "Products")
+                        .WithMany()
+                        .HasForeignKey("ProductsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Categories");
+
+                    b.Navigation("Products");
+                });
+
             modelBuilder.Entity("RENT.Domain.Entities.Customers", b =>
                 {
                     b.HasOne("RENT.Domain.Entities.Auth.ApplicationUser", "ApplicationUser")
@@ -783,7 +804,9 @@ namespace RENT.Data.Migrations
 
                     b.HasOne("RENT.Domain.Entities.Seller", "Seller")
                         .WithMany("Products")
-                        .HasForeignKey("SellerId");
+                        .HasForeignKey("SellerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("RENT.Domain.Entities.Shop", null)
                         .WithMany("Products")
@@ -794,30 +817,11 @@ namespace RENT.Data.Migrations
                     b.Navigation("Seller");
                 });
 
-            modelBuilder.Entity("RENT.Domain.Entities.ProductsCategories", b =>
-                {
-                    b.HasOne("RENT.Domain.Entities.Categories", "Categories")
-                        .WithMany()
-                        .HasForeignKey("CategoriesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RENT.Domain.Entities.Products", "Products")
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Categories");
-
-                    b.Navigation("Products");
-                });
-
             modelBuilder.Entity("RENT.Domain.Entities.ProductsSpecifications", b =>
                 {
                     b.HasOne("RENT.Domain.Entities.Products", "Products")
-                        .WithOne("Specifications")
-                        .HasForeignKey("RENT.Domain.Entities.ProductsSpecifications", "ProductsId");
+                        .WithMany()
+                        .HasForeignKey("ProductsId");
 
                     b.Navigation("Products");
                 });
@@ -863,8 +867,6 @@ namespace RENT.Data.Migrations
             modelBuilder.Entity("RENT.Domain.Entities.Products", b =>
                 {
                     b.Navigation("Posts");
-
-                    b.Navigation("Specifications");
                 });
 
             modelBuilder.Entity("RENT.Domain.Entities.Seller", b =>

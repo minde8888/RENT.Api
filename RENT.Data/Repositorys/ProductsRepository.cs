@@ -18,41 +18,52 @@ namespace RENT.Data.Repositorys
             _mapper = mapper;
         }
 
-        public async Task AddProductsAsync(ProducRequesttDto product)
+        public async Task<List<ProductDto>> AddProductsAsync(ProducRequesttDto product)
         {
-            var products = new Products();
-            foreach (var items in product.Attachments)
+
+            var cat = new Categories
             {
+                CategoriesName = product.Category
+            };
+            _context.Categories.Add(cat);
+            //await _context.SaveChangesAsync();
 
-                var img = items.Files.ToArray();
-                foreach (var item in img)
-                {
-                    var imagesToSave = item;
-                    var ImageName = item.FileName;
+            var products = new Products
+            {
+                ImageHeight = product.ImageHeight,
+                ImageWidth = product.ImageWidth,
+                ImageName = product.ImageName,
+                Price = product.Price,
+                Size = product.Size,
+                Place = product.Place,
+                ProductCode = product.ProductCode,
+                CategoriesId = cat.CategoriesId,
+                SellerId = product.SellerId
 
-                }
-
-                foreach (var item in items.ToList())
-                {
-                    products.ProductName = item.Key == "productName" ? item.Value : item.Value;
-                    products.QuantityPerUnit = item.Key == "quantityPerUnit" ? item.Value : item.Value;
-                    products.UnitPrice = item.Key == "unitPrice" ? item.Value : item.Value;
-                    products.UnitsInStock = item.Key == "unitsInStock" ? item.Value : item.Value;
-                    products.ImageName = item.Key == "imageName" ? item.Value : item.Value;
-                    products.ProductNumber = item.Key == "productNumber" ? item.Value : item.Value;
-                    products.WarehousePlace = item.Key == "warehousePlace" ? item.Value : item.Value;
-                    products.ProductCode = item.Key == "productCode" ? item.Value : item.Value;
-                    products.ProductNumber = item.Key == "productNumber" ? item.Value : item.Value;
-                }
-                //foreach (var item in items.ToList())
-                //{
-                //    var a = item.Key;
-                //    a.ToString();
-                //}
-            }
-            //var productsToSave = _mapper.Map<Products>(product);
+            };
             _context.Products.Add(products);
-            await _context.SaveChangesAsync();
+            //await _context.SaveChangesAsync();
+
+            var post = new Posts
+            {
+                Content = product.ProductDescription,
+                ProductName = product.ProductName,
+                ProductsId = products.ProductsId
+            };
+            _context.Posts.Add(post);
+            //await _context.SaveChangesAsync(); 
+
+            var categories = new CategoriesProduct
+            {
+                ProductsId = products.ProductsId,
+                CategoriesId = cat.CategoriesId
+            };
+            _context.CategoriesProduct.Add(categories);
+            //await _context.SaveChangesAsync();
+
+            var productReturn = _mapper.Map<List<ProductDto>>(products);
+
+            return productReturn;
         }
 
         public async Task<List<ProductDto>> GetProductsAsync(string ImageSrc)
@@ -60,7 +71,6 @@ namespace RENT.Data.Repositorys
             var products = await _context.Products.
                 Include(c => c.Categories).
                 Include(p => p.Posts).
-                Include(ps => ps.Specifications).
                 ToListAsync();
 
             var productsToReturn = _mapper.Map<List<ProductDto>>(products);
@@ -85,7 +95,6 @@ namespace RENT.Data.Repositorys
             return await _context.Products.
                 Include(c => c.Categories).
                 Include(p => p.Posts).
-                Include(ps => ps.Specifications).
                 Where(x => x.ProductsId == Id).ToListAsync();
         }
 
@@ -94,27 +103,26 @@ namespace RENT.Data.Repositorys
             var products = await _context.Products.
                  Include(c => c.Categories).
                  Include(p => p.Posts).
-                 Include(ps => ps.Specifications).
                  Where(x => x.ProductsId == productDto.ProductsId).FirstOrDefaultAsync();
 
             if (products != null)
             {
-                products.ProductName = productDto.ProductName ?? products.ProductName;
-                products.QuantityPerUnit = productDto.QuantityPerUnit ?? products.QuantityPerUnit;
-                products.UnitPrice = productDto.UnitPrice ?? products.UnitPrice;
-                products.UnitsInStock = productDto.UnitsInStock ?? products.UnitsInStock;
-                products.WarehousePlace = productDto.WarehousePlace ?? products.WarehousePlace;
+                //products.ProductName = productDto.ProductName ?? products.ProductName;
+                //products.QuantityPerUnit = productDto.QuantityPerUnit ?? products.QuantityPerUnit;
+                //products.UnitPrice = productDto.UnitPrice ?? products.UnitPrice;
+                //products.UnitsInStock = productDto.UnitsInStock ?? products.UnitsInStock;
+                //products.WarehousePlace = productDto.WarehousePlace ?? products.WarehousePlace;
                 products.DateUpdated = DateTime.UtcNow;
                 products.Posts.Content = productDto.Posts.Content ?? products.Posts.Content;
-                products.Specifications.MaxLoad = productDto.Specifications.MaxLoad ?? products.Specifications.MaxLoad;
-                products.Specifications.Weight = productDto.Specifications.Weight ?? products.Specifications.Weight;
-                products.Specifications.LiftingHeight = productDto.Specifications.LiftingHeight ?? products.Specifications.LiftingHeight;
-                products.Specifications.Capacity = productDto.Specifications.Capacity ?? products.Specifications.Capacity;
-                products.Specifications.EnergySource = productDto.Specifications.EnergySource ?? products.Specifications.EnergySource;
-                products.Specifications.Speed = productDto.Specifications.Speed ?? products.Specifications.Speed;
-                products.Specifications.Length = productDto.Specifications.Length ?? products.Specifications.Length;
-                products.Specifications.Width = productDto.Specifications.Width ?? products.Specifications.Width;
-                products.Specifications.Height = productDto.Specifications.Height ?? products.Specifications.Height;
+                //products.Specifications.MaxLoad = productDto.Specifications.MaxLoad ?? products.Specifications.MaxLoad;
+                //products.Specifications.Weight = productDto.Specifications.Weight ?? products.Specifications.Weight;
+                //products.Specifications.LiftingHeight = productDto.Specifications.LiftingHeight ?? products.Specifications.LiftingHeight;
+                //products.Specifications.Capacity = productDto.Specifications.Capacity ?? products.Specifications.Capacity;
+                //products.Specifications.EnergySource = productDto.Specifications.EnergySource ?? products.Specifications.EnergySource;
+                //products.Specifications.Speed = productDto.Specifications.Speed ?? products.Specifications.Speed;
+                //products.Specifications.Length = productDto.Specifications.Length ?? products.Specifications.Length;
+                //products.Specifications.Width = productDto.Specifications.Width ?? products.Specifications.Width;
+                //products.Specifications.Height = productDto.Specifications.Height ?? products.Specifications.Height;
             }
 
             //if (String.IsNullOrEmpty(productDto.Categories))
@@ -144,7 +152,6 @@ namespace RENT.Data.Repositorys
             var productsToReturn = _context.Products.
             Include(c => c.Categories).
             Include(p => p.Posts).
-            Include(ps => ps.Specifications).
             Single(x => x.ProductsId == productDto.ProductsId);
 
             var productReturn = _mapper.Map<IList<ProductDto>>(productsToReturn);

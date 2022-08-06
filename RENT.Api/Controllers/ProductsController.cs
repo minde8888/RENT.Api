@@ -34,41 +34,20 @@ namespace RENT.Api.Controllers
 
         [HttpPost]
         [SupportedOSPlatform("windows")]
-        //[Authorize(Roles = "Admin, Moderator, User")]
-        public async Task<IActionResult> AddNewProduct(List<IFormFile> files, ProducRequesttDto product)
+        public async Task<IActionResult> AddNewProduct([FromForm] ProducRequesttDto product)
         {
             try
             {
-                foreach (var items in product.Attachments)
-                {
-
-                    var img = items.Files.ToArray();
-                    foreach (var item in img)
-                    {
-                        var imagesToSave = item;
-                        var ImageName = item.FileName;
-
-                    }
-
-                    foreach (var key in items.Keys.ToList())
-                    {
-                        var f = items[key];
-                    }
-                    //foreach (var item in items.ToList())
-                    //{
-                    //    var a = item.Value;
-                    //    a.ToString();
-                    //}
-                }
-
-                //if (product.ImageName != null)
+                //if (product.Images != null)
                 //{
                 //    string path = _hostEnvironment.ContentRootPath;
-                //    //_imagesService.SaveImage(product.Attachments, product.Height, product.Width);
-
+                //    foreach (var item in product.Images)
+                //    {
+                //        _imagesService.SaveImage(item, product.ImageHeight, product.ImageWidth);
+                //    }
                 //}
-                await _productsRepository.AddProductsAsync(product);
-                return Ok();
+                var data = await _productsRepository.AddProductsAsync(product);
+                return Ok(data);
             }
             catch (Exception)
             {
@@ -122,7 +101,6 @@ namespace RENT.Api.Controllers
 
         [HttpPut("Update")]
         [SupportedOSPlatform("windows")]
-        //[Authorize(Roles = "Manager, Admin")]
         public async Task<ActionResult<IList<ProductDto>>> Update([FromForm] ProductDto product)
         {
             if (product.ProductsId == Guid.Empty)
@@ -136,22 +114,22 @@ namespace RENT.Api.Controllers
 
                 String ImageSrc = String.Format("{0}://{1}{2}", Request.Scheme, Request.Host, Request.PathBase);
 
-                foreach (var item in productToReturn)
-                {
-                    if (!item.Attachments.Any() && !item.ImageName.Any())
-                    {
-                        string[] imagesNames = item.ImageName.Split(',');
-                        foreach (var ImageName in imagesNames)
-                        {
-                            string imagePath = Path.Combine(_hostEnvironment.ContentRootPath, "Images", ImageName);
-                            _imagesService.DeleteImage(imagePath);
+                //foreach (var item in productToReturn)
+                //{
+                //    if (!item.Attachments.Any() && !item.ImageName.Any())
+                //    {
+                //        string[] imagesNames = item.ImageName.Split(',');
+                //        foreach (var ImageName in imagesNames)
+                //        {
+                //            string imagePath = Path.Combine(_hostEnvironment.ContentRootPath, "Images", ImageName);
+                //            _imagesService.DeleteImage(imagePath);
 
-                            //item.ImageName =  _imagesService.SaveImage(product.Attachments, product.Height, product.Width);
+                //            //item.ImageName =  _imagesService.SaveImage(product.Attachments, product.Height, product.Width);
 
-                            item.ImageSrc.Add(String.Format("{0}/Images/{1}", ImageSrc, ImageName));
-                        }
-                    }
-                }
+                //            item.ImageSrc.Add(String.Format("{0}/Images/{1}", ImageSrc, ImageName));
+                //        }
+                //    }
+                //}
                 return Ok(productToReturn);
             }
             catch (DbUpdateConcurrencyException)
