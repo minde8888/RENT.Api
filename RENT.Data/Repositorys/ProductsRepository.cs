@@ -18,15 +18,14 @@ namespace RENT.Data.Repositorys
             _mapper = mapper;
         }
 
-        public async Task<List<ProductDto>> AddProductsAsync(ProducRequesttDto product)
+        public async Task AddProductsAsync(ProducRequesttDto product)
         {
-
             var cat = new Categories
             {
                 CategoriesName = product.Category
             };
             _context.Categories.Add(cat);
-            //await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             var products = new Products
             {
@@ -39,10 +38,9 @@ namespace RENT.Data.Repositorys
                 ProductCode = product.ProductCode,
                 CategoriesId = cat.CategoriesId,
                 SellerId = product.SellerId
-
             };
             _context.Products.Add(products);
-            //await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             var post = new Posts
             {
@@ -51,7 +49,7 @@ namespace RENT.Data.Repositorys
                 ProductsId = products.ProductsId
             };
             _context.Posts.Add(post);
-            //await _context.SaveChangesAsync(); 
+            await _context.SaveChangesAsync();
 
             var categories = new CategoriesProduct
             {
@@ -59,11 +57,9 @@ namespace RENT.Data.Repositorys
                 CategoriesId = cat.CategoriesId
             };
             _context.CategoriesProduct.Add(categories);
-            //await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             var productReturn = _mapper.Map<List<ProductDto>>(products);
-
-            return productReturn;
         }
 
         public async Task<List<ProductDto>> GetProductsAsync(string ImageSrc)
@@ -83,9 +79,7 @@ namespace RENT.Data.Repositorys
                     {
                         item.ImageSrc.Add(String.Format("{0}/Images/{1}", ImageSrc, product));
                     }
-
                 }
-
             }
             return productsToReturn;
         }
@@ -166,6 +160,5 @@ namespace RENT.Data.Repositorys
             product.IsDeleted = true;
             await _context.SaveChangesAsync();
         }
-
     }
 }

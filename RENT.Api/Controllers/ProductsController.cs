@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +9,7 @@ using System.Runtime.Versioning;
 
 namespace RENT.Api.Controllers
 {
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     [Route("api/v1/[controller]")]
     public class ProductsController : Controller
@@ -38,16 +39,19 @@ namespace RENT.Api.Controllers
         {
             try
             {
-                //if (product.Images != null)
-                //{
-                //    string path = _hostEnvironment.ContentRootPath;
-                //    foreach (var item in product.Images)
-                //    {
-                //        _imagesService.SaveImage(item, product.ImageHeight, product.ImageWidth);
-                //    }
-                //}
-                var data = await _productsRepository.AddProductsAsync(product);
-                return Ok(data);
+                if (product.Images != null)
+                {
+                    string[] height = product.ImageHeight.Split(',');
+                    string[] width = product.ImageWidth.Split(',');
+                    string path = _hostEnvironment.ContentRootPath;
+
+                    for (int i = 0; i < height.Length; i++)
+                    {
+                        _imagesService.SaveImage(product.Images[i], height[i], width[i]);
+                    }
+                }
+                await _productsRepository.AddProductsAsync(product);
+                return Ok();
             }
             catch (Exception)
             {

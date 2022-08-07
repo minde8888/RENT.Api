@@ -12,11 +12,11 @@ namespace RENT.Services.Services
         {
             if (imageFile != null)
             {
-                var imaneName = "";
+                var imageName = "";
 
-                string imageName = new String(Path.GetFileNameWithoutExtension(imageFile.FileName).Take(10).ToArray()).Replace(' ', '-');
-                imageName = imageName + DateTime.Now.ToString("yymmssfff") + Path.GetExtension(imageFile.FileName);
-                var imagePath = Path.Combine("Images", imageName);
+                string imageNames = new String(Path.GetFileNameWithoutExtension(imageFile.FileName).Take(10).ToArray()).Replace(' ', '-');
+                imageNames = imageNames + DateTime.Now.ToString("yymmssfff") + Path.GetExtension(imageFile.FileName);
+                var imagePath = Path.Combine("Images", imageNames);
                 using (var stream = new FileStream(imagePath, FileMode.Create))
                 {
                     imageFile.CopyTo(stream);
@@ -25,9 +25,9 @@ namespace RENT.Services.Services
                 int widthInt = (int)Int64.Parse(width);
 
                 ResizeImage(imagePath, imageFile, heightInt, widthInt);
-                imaneName += imageName + ",";
+                imageName += imageNames + ",";
 
-                return imaneName;
+                return imageName;
             }
             throw new Exception();
         }

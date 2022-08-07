@@ -11,7 +11,7 @@ namespace RENT.Domain.Entities.Auth
         public bool AcceptTerms { get; set; }
         public string VerificationToken { get; set; }
         public DateTime Verified { get; set; }
-        public bool IsVerified => Verified == DateTime.MinValue || PasswordReset == DateTime.MinValue;
+        public bool IsVerified => Verified.ToString() != null  || PasswordReset.ToString() != null;
         public string ResetToken { get; set; }
         public DateTime? ResetTokenExpires { get; set; }
         public DateTime PasswordReset { get; set; }

@@ -99,7 +99,7 @@ namespace RENT.Api.Controllers
         [HttpPut("Update/{id}")]
         [Authorize(Roles = "Admin, User")]
         [SupportedOSPlatform("windows")]
-        public async Task<ActionResult<List<UserDto>>> UpdateAddressAsync(string id, [FromForm] RequestUserDto userDto)
+        public async Task<ActionResult<List<UserDto>>> UpdateUserAsync(string id, [FromForm] RequestUserDto userDto)
         {
             try
             {
