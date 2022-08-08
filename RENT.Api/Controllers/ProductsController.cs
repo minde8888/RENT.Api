@@ -39,6 +39,7 @@ namespace RENT.Api.Controllers
         {
             try
             {
+                var imageName = "";
                 if (product.Images != null)
                 {
                     string[] height = product.ImageHeight.Split(',');
@@ -47,16 +48,17 @@ namespace RENT.Api.Controllers
 
                     for (int i = 0; i < height.Length; i++)
                     {
-                        _imagesService.SaveImage(product.Images[i], height[i], width[i]);
+                        imageName += _imagesService.SaveImage(product.Images[i], height[i], width[i]);
                     }
                 }
+                product.ImageName = imageName;
                 await _productsRepository.AddProductsAsync(product);
                 return Ok();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                "Error Get data from the database -> AddNewProduct");
+                "Error Get data from the database -> AddNewProduct" + ex);
             }
         }
 

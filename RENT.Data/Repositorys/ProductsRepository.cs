@@ -44,8 +44,8 @@ namespace RENT.Data.Repositorys
 
             var post = new Posts
             {
-                Content = product.ProductDescription,
                 ProductName = product.ProductName,
+                Content = product.ProductDescription,
                 ProductsId = products.ProductsId
             };
             _context.Posts.Add(post);
@@ -59,7 +59,7 @@ namespace RENT.Data.Repositorys
             _context.CategoriesProduct.Add(categories);
             await _context.SaveChangesAsync();
 
-            var productReturn = _mapper.Map<List<ProductDto>>(products);
+            //var productReturn = _mapper.Map<List<ProductDto>>(products);
         }
 
         public async Task<List<ProductDto>> GetProductsAsync(string ImageSrc)

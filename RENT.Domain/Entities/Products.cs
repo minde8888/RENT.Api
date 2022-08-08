@@ -10,7 +10,7 @@
         public string Size { get; set; }
         public string Place { get; set; }
         public string ProductCode { get; set; }
-          public bool IsDeleted { get; set; } = false;
+        public bool IsDeleted { get; set; } = false;
         public Guid SellerId { get; set; }
         public Seller Seller { get; set; }
         public Customers Customers { get; set; }
