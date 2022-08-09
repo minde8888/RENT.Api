@@ -3,6 +3,7 @@
     public class PostsDto
     {
         public Guid PostsId { get; set; }
+        public string ProductName { get; set; }
         public string Content { get; set; }
     }
 }

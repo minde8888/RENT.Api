@@ -8,6 +8,5 @@ namespace RENT.Domain.Dtos
         public string CategoriesName { get; set; }
         public string Decription { get; set; }
         public string ImageName { get; set; }
-        public ICollection<ProductDto> Products { get; set; }
     }
 }

@@ -38,9 +38,10 @@ namespace RENT.Services.Services.AppMapper
                 ForMember(m => m.Address, opt =>
                 opt.MapFrom(m => m.AddressDto));
 
-            CreateMap<Products, ProductDto>().ReverseMap().
-                ForMember(c => c.Posts, opt => opt.MapFrom(d => d.PostsDto)).
-                ForMember(c => c.Categories, opt => opt.MapFrom(d => d.CategoriesDto));
+            CreateMap<Products, ProductDto>()
+                  .ForMember(dest => dest.CategoriesDto, opt => opt.MapFrom(src => src.ProductCode)).ReverseMap();
+            //.ForMember(dest => dest.CategoriesDto, opt => opt.MapFrom(src => string.IsNullOrEmpty(src.Categories));
+            //.ForMember(x => x.CategoriesDto, a => a.MapFrom(y => y.Categories.FirstOrDefault(b =>b.CategoriesId )).ReverseMap();
         }
     }
 }
