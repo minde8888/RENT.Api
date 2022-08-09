@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +8,7 @@ using System.Runtime.Versioning;
 
 namespace RENT.Api.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     [Route("api/v1/[controller]")]
     public class ProductsController : Controller
@@ -55,10 +54,10 @@ namespace RENT.Api.Controllers
                 await _productsRepository.AddProductsAsync(product);
                 return Ok();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                "Error Get data from the database -> AddNewProduct" + ex);
+                "Error Get data from the database -> AddNewProduct");
             }
         }
 
@@ -71,10 +70,10 @@ namespace RENT.Api.Controllers
                 String ImageSrc = String.Format("{0}://{1}{2}", Request.Scheme, Request.Host, Request.PathBase);
                 return Ok(await _productsRepository.GetProductsAsync(ImageSrc));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                  "Error Get data from the database");
+                  "Error Get data from the database" + ex);
             }
         }
 

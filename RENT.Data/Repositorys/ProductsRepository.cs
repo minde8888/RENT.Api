@@ -58,8 +58,6 @@ namespace RENT.Data.Repositorys
             };
             _context.CategoriesProduct.Add(categories);
             await _context.SaveChangesAsync();
-
-            //var productReturn = _mapper.Map<List<ProductDto>>(products);
         }
 
         public async Task<List<ProductDto>> GetProductsAsync(string ImageSrc)
@@ -73,14 +71,19 @@ namespace RENT.Data.Repositorys
 
             foreach (var item in productsToReturn)
             {
-                if (!item.ImageName.Any())
+                string[] name = item.ImageName.Split(','); ;
+                var newImages = new List<string>();
+
+                foreach (var img in name)
                 {
-                    foreach (var product in item.ImageName)
+                    if (!String.IsNullOrEmpty(img))
                     {
-                        item.ImageSrc.Add(String.Format("{0}/Images/{1}", ImageSrc, product));
+                        newImages.Add(string.Format("{0}/Images/{1}", ImageSrc, img));
+                        item.ImageSrc = newImages;
                     }
                 }
             }
+
             return productsToReturn;
         }
 
@@ -107,7 +110,7 @@ namespace RENT.Data.Repositorys
                 //products.UnitsInStock = productDto.UnitsInStock ?? products.UnitsInStock;
                 //products.WarehousePlace = productDto.WarehousePlace ?? products.WarehousePlace;
                 products.DateUpdated = DateTime.UtcNow;
-                products.Posts.Content = productDto.Posts.Content ?? products.Posts.Content;
+                //products.Posts.Content = productDto.Posts.Content ?? products.Posts.Content;
                 //products.Specifications.MaxLoad = productDto.Specifications.MaxLoad ?? products.Specifications.MaxLoad;
                 //products.Specifications.Weight = productDto.Specifications.Weight ?? products.Specifications.Weight;
                 //products.Specifications.LiftingHeight = productDto.Specifications.LiftingHeight ?? products.Specifications.LiftingHeight;
