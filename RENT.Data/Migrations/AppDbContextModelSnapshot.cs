@@ -476,6 +476,9 @@ namespace RENT.Data.Migrations
                     b.Property<string>("Place")
                         .HasColumnType("text");
 
+                    b.Property<Guid>("PostsId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Price")
                         .HasColumnType("text");
 

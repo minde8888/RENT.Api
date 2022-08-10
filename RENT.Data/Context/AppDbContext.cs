@@ -86,6 +86,11 @@ namespace RENT.Data.Context
             .HasOne(b => b.Address)
             .WithOne(i => i.Shop)
             .HasForeignKey<Address>(b => b.ShopId);
+
+            builder.Entity<Products>()
+             .HasOne(c => c.Posts)
+             .WithOne(e => e.Products)
+              .HasForeignKey<Posts>(b => b.ProductsId); ;
         }
     }
 }
