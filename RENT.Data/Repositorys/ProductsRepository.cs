@@ -67,8 +67,7 @@ namespace RENT.Data.Repositorys
                 Include(p => p.Posts).
                 ToListAsync();
 
-
-            var productsToReturn = _mapper.Map<List<Products>, List<ProductDto>>(products);          
+            var productsToReturn = _mapper.Map<List<ProductDto>>(products);
 
             foreach (var item in productsToReturn)
             {
