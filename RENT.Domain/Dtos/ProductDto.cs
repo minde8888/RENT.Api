@@ -3,8 +3,6 @@
     public class ProductDto
     {
         public Guid ProductsId { get; set; }
-        public string ImageHeight { get; set; }
-        public string ImageWidth { get; set; }
         public string ImageName { get; set; }
         public string Price { get; set; }
         public string Size { get; set; }

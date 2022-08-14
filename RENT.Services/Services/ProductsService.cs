@@ -18,13 +18,20 @@ namespace RENT.Services.Services
         {
             var productsToReturn = _mapper.Map<List<ProductDto>>(products);
 
+            var newImages = new List<string>();
+
             foreach (var item in productsToReturn)
             {
-                foreach (var product in item.ImageName)
+                string[] ImageName = item.ImageName.Split(',');
+          
+                foreach (var img in ImageName)
                 {
-                    item.ImageSrc.Add(String.Format("{0}/Images/{1}", imageSrc, product));
+                    if (!String.IsNullOrEmpty(img))
+                    {
+                        newImages.Add(String.Format("{0}/Images/{1}", imageSrc, img));
+                        item.ImageSrc = newImages;
+                    }
                 }
-
             }
             return productsToReturn;
         }
