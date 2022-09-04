@@ -21,7 +21,7 @@ namespace RENT.Data.Context
         public DbSet<Address> Address { get; set; }
         public DbSet<Products> Products { get; set; }
         public DbSet<Posts> Posts { get; set; }
-        public DbSet<ProductsSpecifications> Specifications { get; set; }
+        public DbSet<ProductsContactForm> ProductsContactForm { get; set; }
         public DbSet<Seller> Seller { get; set; }
         public DbSet<Shop> Shop { get; set; }
         public DbSet<RefreshToken> RefreshToken { get; set; }
@@ -40,7 +40,7 @@ namespace RENT.Data.Context
             builder.Entity<Address>().HasQueryFilter(p => p.IsDeleted == false);
             builder.Entity<Products>().HasQueryFilter(p => p.IsDeleted == false);
             builder.Entity<Posts>().HasQueryFilter(p => p.IsDeleted == false);
-            builder.Entity<ProductsSpecifications>().HasQueryFilter(p => p.IsDeleted == false);
+            builder.Entity<ProductsContactForm>().HasQueryFilter(p => p.IsDeleted == false);
             builder.Entity<Seller>().HasQueryFilter(p => p.IsDeleted == false);
             builder.Entity<Shop>().HasQueryFilter(p => p.IsDeleted == false);
             builder.Entity<ApplicationUser>().HasQueryFilter(p => p.IsDeleted == false);
