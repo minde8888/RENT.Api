@@ -35,7 +35,8 @@ namespace RENT.Data.Repositorys
                 Price = product.Price,
                 Size = product.Size,
                 Place = product.Place,
-                ProductCode = product.ProductCode,
+                Phone = product.Phone,
+                Email = product.Email,
                 CategoriesId = cat.CategoriesId,
                 SellerId = product.SellerId
             };
