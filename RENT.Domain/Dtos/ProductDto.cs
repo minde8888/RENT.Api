@@ -12,5 +12,6 @@
         public Guid SellerId { get; set; }
         public ICollection<CategoriesDto> CategoriesDto { get; set; }
         public PostsDto PostsDto { get; set; }
+        public ProductsContactFormDto ProductsContactForm { get; set; }
     }
 }

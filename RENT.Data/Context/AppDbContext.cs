@@ -90,7 +90,12 @@ namespace RENT.Data.Context
             builder.Entity<Products>()
              .HasOne(c => c.Posts)
              .WithOne(e => e.Products)
-              .HasForeignKey<Posts>(b => b.ProductsId); ;
+              .HasForeignKey<Posts>(b => b.ProductsId);
+
+            builder.Entity<Products>()
+             .HasOne(c => c.ProductsContactForm)
+             .WithOne(e => e.Products)
+                .HasForeignKey<ProductsContactForm>(b => b.ProductsContactFormId);
         }
     }
 }
