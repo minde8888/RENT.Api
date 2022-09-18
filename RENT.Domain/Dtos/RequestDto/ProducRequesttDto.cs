@@ -4,7 +4,7 @@ namespace RENT.Domain.Dtos.RequestDto
 {
     public class ProducRequesttDto
     {
-
+        public Guid ProductsId { get; set; }
         public List<IFormFile> Images { get; set; }
         public string ImageHeight { get; set; }
         public string ImageWidth { get; set; }
@@ -14,8 +14,10 @@ namespace RENT.Domain.Dtos.RequestDto
         public string Price { get; set; }
         public string Size { get; set; }
         public string Place { get; set; }
+        public string Name { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
+        public string ImageSrc { get; set; }
         public string Category { get; set; }
         public Guid SellerId { get; set; }
     }

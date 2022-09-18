@@ -8,7 +8,7 @@ namespace RENT.Data.Interfaces
         Task AddProductsAsync(ProducRequesttDto product);
         Task<List<ProductDto>> GetProductsAsync(string ImageSrc);
         Task<List<Products>> GetProductIdAsync(Guid Id);
-        Task<IList<ProductDto>> UpdateProductAsync(ProductDto productDto);
+        void UpdateProductAsync(ProducRequesttDto productDto);
         Task RemoveProductsAsync(Guid userId);
     }
 }

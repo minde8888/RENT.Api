@@ -106,7 +106,7 @@ namespace RENT.Api.Controllers
 
         [HttpPut("Update")]
         [SupportedOSPlatform("windows")]
-        public async Task<ActionResult<IList<ProductDto>>> Update([FromForm] ProductDto product)
+        public ActionResult Update([FromForm] ProducRequesttDto product)
         {
             if (product.ProductsId == Guid.Empty)
                 return BadRequest("This project can not by updated");
@@ -115,29 +115,22 @@ namespace RENT.Api.Controllers
                 return BadRequest(ModelState);
             try
             {
-                var productToReturn = await _productsRepository.UpdateProductAsync(product);
+                string[] height = product.ImageHeight.Split(',');
+                string[] width = product.ImageWidth.Split(',');
+                string[] imageName = product.ImageSrc.Split(',');
 
-                String ImageSrc = String.Format("{0}://{1}{2}", Request.Scheme, Request.Host, Request.PathBase);
-
-                //foreach (var item in productToReturn)
-                //{
-                //    if (!item.Attachments.Any() && !item.ImageName.Any())
-                //    {
-                //        string[] imagesNames = item.ImageName.Split(',');
-                //        foreach (var ImageName in imagesNames)
-                //        {
-                //            string imagePath = Path.Combine(_hostEnvironment.ContentRootPath, "Images", ImageName);
-                //            _imagesService.DeleteImage(imagePath);
-
-                //            //item.ImageName =  _imagesService.SaveImage(product.Attachments, product.Height, product.Width);
-
-                //            item.ImageSrc.Add(String.Format("{0}/Images/{1}", ImageSrc, ImageName));
-                //        }
-                //    }
-                //}
-                return Ok(productToReturn);
+                for (int i = 0; i < imageName.Length; i++)
+                {
+                    if (imageName[i] == "")
+                    {
+                        imageName[i] = _imagesService.SaveImage(product.Images[i], height[i], width[i]);//.Images[i] index klaida
+                    }
+                }
+                product.ImageName = imageName.ToString();
+                _productsRepository.UpdateProductAsync(product);
+                return Ok();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateException)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
                    "Error update DB");
