@@ -109,8 +109,8 @@ namespace RENT.Data.Repositorys
         public async void UpdateProductAsync(ProducRequesttDto productDto)
         {
             var products = await _context.Products.
-                 Include(p => p.Posts).
-                 Where(x => x.ProductsId == productDto.ProductsId).FirstOrDefaultAsync();
+                  Include(p => p.Posts).
+                  Where(x => x.ProductsId == productDto.ProductsId).FirstOrDefaultAsync();
 
             if (products != null)
             {
@@ -127,7 +127,7 @@ namespace RENT.Data.Repositorys
                 products.DateUpdated = DateTime.UtcNow;
             }
             _context.Entry(products).State = EntityState.Modified;
-         //   _context.Entry(products.Posts).State = EntityState.Modified;
+            //   _context.Entry(products.Posts).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
             if (String.IsNullOrEmpty(productDto.Category))

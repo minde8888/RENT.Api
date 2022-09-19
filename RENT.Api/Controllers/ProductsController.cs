@@ -122,7 +122,7 @@ namespace RENT.Api.Controllers
 
                 for (int i = 0; i < imageName.Length; i++)
                 {
-                    if (imageName[i] == "")
+                    if (imageName[i] == "/")
                     {
                         imageName[i] = _imagesService.SaveImage(product.Images[count], height[count], width[count]);
                         count++;
