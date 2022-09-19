@@ -118,12 +118,14 @@ namespace RENT.Api.Controllers
                 string[] height = product.ImageHeight.Split(',');
                 string[] width = product.ImageWidth.Split(',');
                 string[] imageName = product.ImageSrc.Split(',');
+                int count = 0;
 
                 for (int i = 0; i < imageName.Length; i++)
                 {
                     if (imageName[i] == "")
                     {
-                        imageName[i] = _imagesService.SaveImage(product.Images[i], height[i], width[i]);//.Images[i] index klaida
+                        imageName[i] = _imagesService.SaveImage(product.Images[count], height[count], width[count]);
+                        count++;
                     }
                 }
                 product.ImageName = imageName.ToString();
