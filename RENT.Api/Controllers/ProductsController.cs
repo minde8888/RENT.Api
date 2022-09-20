@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RENT.Data.Interfaces;
+using RENT.Data.Repositorys;
 using RENT.Domain.Dtos.RequestDto;
 using System.Runtime.Versioning;
 
@@ -149,18 +151,14 @@ namespace RENT.Api.Controllers
             }
         }
 
-        [HttpPost("Delete")]
-        [Authorize(Roles = "Seller, Admin")]
-        public async Task<ActionResult> DeleteProduct([FromBody] List<object> ids)
+        [HttpDelete("Delete/{id}")]
+        //[Authorize(Roles = "Seller, Admin")]
+        public async Task<ActionResult> DeleteProduct(String id)
         {
-            foreach (var p in ids)
-            {
-                var id = new Guid(p.ToString());
-                if (id == Guid.Empty)
-                    return BadRequest();
+            if (id == String.Empty)
+                return BadRequest();
 
-                await _productsRepository.RemoveProductsAsync(id);
-            }
+            await _productsRepository.RemoveProductsAsync(id);
             return Ok();
         }
     }

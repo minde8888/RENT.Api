@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RENT.Data.Context;
 using RENT.Data.Interfaces;
@@ -142,11 +144,22 @@ namespace RENT.Data.Repositorys
             await _context.SaveChangesAsync();
         }
 
-        public async Task RemoveProductsAsync(Guid userId)
+        [HttpDelete("Delete/{id}")]
+        public async Task RemoveProductsAsync([FromQuery]string id)
         {
-            var product = _context.Products
-                .Where(x => x.ProductsId == userId).FirstOrDefault();
+            if (String.IsNullOrEmpty(id)) throw new Exception();
+
+            Guid newId = new(id);
+
+            var product = await _context.Products.
+                Include(p => p.Posts).
+                Include(f => f.ProductsContactForm).
+                Where(x => x.ProductsId == newId).FirstOrDefaultAsync();
+
             product.IsDeleted = true;
+            product.ProductsContactForm.IsDeleted = true;
+            product.Posts.IsDeleted = true;
+
             await _context.SaveChangesAsync();
         }
     }

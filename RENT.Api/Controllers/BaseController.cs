@@ -161,7 +161,7 @@ namespace RENT.Api.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
-        [Authorize(Roles = "Manager, Admin")]
+        [Authorize(Roles = "Seller, Admin")]
         public async Task<ActionResult> DeleteManager(String id)
         {
             if (id == String.Empty)
