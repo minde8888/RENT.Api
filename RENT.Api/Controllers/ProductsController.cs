@@ -106,7 +106,7 @@ namespace RENT.Api.Controllers
 
         [HttpPut("Update")]
         [SupportedOSPlatform("windows")]
-        public ActionResult Update([FromForm] ProducRequesttDto product)
+        public async Task<ActionResult> UpdateAsync([FromForm] ProducRequesttDto product)
         {
             if (product.ProductsId == Guid.Empty)
                 return BadRequest("This project can not by updated");
@@ -115,21 +115,26 @@ namespace RENT.Api.Controllers
                 return BadRequest(ModelState);
             try
             {
-                string[] height = product.ImageHeight.Split(',');
-                string[] width = product.ImageWidth.Split(',');
-                string[] imageName = product.ImageSrc.Split(',');
-                int count = 0;
-
-                for (int i = 0; i < imageName.Length; i++)
+                if (product.Images != null)
                 {
-                    if (imageName[i] == "/")
+                    string[] height = product.ImageHeight.Split(',');
+                    string[] width = product.ImageWidth.Split(',');
+                    string[] imageName = product.ImageSrc.Split(',');
+
+                    int count = 0;
+
+                    for (int i = 0; i < imageName.Length; i++)
                     {
-                        imageName[i] = _imagesService.SaveImage(product.Images[count], height[count], width[count]);
-                        count++;
+                        if (imageName[i] == "/")
+                        {
+                            imageName[i] = _imagesService.SaveImage(product.Images[count], height[count], width[count]).Replace(",", "");
+                            count++;
+                        }
                     }
+                    product.ImageName = String.Join(',', imageName);
                 }
-                product.ImageName = imageName.ToString();
-                _productsRepository.UpdateProductAsync(product);
+
+                await _productsRepository.UpdateProductAsync(product);
                 return Ok();
             }
             catch (DbUpdateException)

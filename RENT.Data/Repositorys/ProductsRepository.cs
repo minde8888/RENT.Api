@@ -106,17 +106,15 @@ namespace RENT.Data.Repositorys
                 Where(x => x.ProductsId == Id).ToListAsync();
         }
 
-        public async void UpdateProductAsync(ProducRequesttDto productDto)
+        public async Task UpdateProductAsync(ProducRequesttDto productDto)
         {
             var products = await _context.Products.
                   Include(p => p.Posts).
+                  Include(f => f.ProductsContactForm).
                   Where(x => x.ProductsId == productDto.ProductsId).FirstOrDefaultAsync();
 
             if (products != null)
             {
-                //products.Posts.Content = productDto.ProductDescription;
-                //products.Posts.ProductName = productDto.ProductName;
-
                 products.ImageName = productDto.ImageName;
                 products.Email = productDto.Email;
                 products.Price = productDto.Price;
@@ -125,10 +123,12 @@ namespace RENT.Data.Repositorys
                 products.ImageHeight = productDto.ImageHeight;
                 products.Place = productDto.Place;
                 products.DateUpdated = DateTime.UtcNow;
+
+                //products.Posts.Content = productDto.ProductDescription;
+                //products.Posts.ProductName = productDto.ProductName;
             }
             _context.Entry(products).State = EntityState.Modified;
-            //   _context.Entry(products.Posts).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            //_context.Entry(products.Posts).State = EntityState.Modified;
 
             if (String.IsNullOrEmpty(productDto.Category))
             {
@@ -138,8 +138,8 @@ namespace RENT.Data.Repositorys
 
                 cats.Categories.CategoriesName = productDto.Category;
                 _context.Entry(cats).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
             }
+            await _context.SaveChangesAsync();
         }
 
         public async Task RemoveProductsAsync(Guid userId)
