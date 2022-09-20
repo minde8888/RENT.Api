@@ -131,7 +131,7 @@ namespace RENT.Api.Controllers
                             count++;
                         }
                     }
-                    product.ImageName = String.Join(',', imageName);
+                    product.ImageSrc = String.Join(',', imageName);
                 }
 
                 await _productsRepository.UpdateProductAsync(product);

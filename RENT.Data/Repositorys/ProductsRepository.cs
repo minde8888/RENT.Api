@@ -46,7 +46,7 @@ namespace RENT.Data.Repositorys
             var post = new Posts
             {
                 ProductName = product.ProductName,
-                Content = product.ProductDescription,
+                Content = product.Content,
                 ProductsId = products.ProductsId
             };
             _context.Posts.Add(post);
@@ -115,7 +115,7 @@ namespace RENT.Data.Repositorys
 
             if (products != null)
             {
-                products.ImageName = productDto.ImageName;
+                products.ImageName = productDto.ImageSrc;
                 products.Email = productDto.Email;
                 products.Price = productDto.Price;
                 products.Phone = productDto.Phone;
@@ -124,11 +124,11 @@ namespace RENT.Data.Repositorys
                 products.Place = productDto.Place;
                 products.DateUpdated = DateTime.UtcNow;
 
-                //products.Posts.Content = productDto.ProductDescription;
-                //products.Posts.ProductName = productDto.ProductName;
+                products.Posts.Content = productDto.Content;
+                products.Posts.ProductName = productDto.ProductName;
             }
             _context.Entry(products).State = EntityState.Modified;
-            //_context.Entry(products.Posts).State = EntityState.Modified;
+            _context.Entry(products.Posts).State = EntityState.Modified;
 
             if (String.IsNullOrEmpty(productDto.Category))
             {
