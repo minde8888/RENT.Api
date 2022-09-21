@@ -7,7 +7,8 @@
         public string Price { get; set; }
         public string Size { get; set; }
         public string Place { get; set; }
-        public string ProductCode { get; set; }
+        public string Phone { get; set; }
+        public string Email { get; set; }
         public List<string> ImageSrc { get; set; }
         public Guid SellerId { get; set; }
         public ICollection<CategoriesDto> CategoriesDto { get; set; }

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RENT.Data.Context;
@@ -22,14 +21,14 @@ namespace RENT.Data.Repositorys
 
         public async Task AddProductsAsync(ProducRequesttDto product)
         {
-            var cat = new Categories
+            Categories cat = new()
             {
                 CategoriesName = product.Category
             };
             _context.Categories.Add(cat);
             await _context.SaveChangesAsync();
 
-            var products = new Products
+            Products products = new()
             {
                 ImageHeight = product.ImageHeight,
                 ImageWidth = product.ImageWidth,
@@ -45,7 +44,7 @@ namespace RENT.Data.Repositorys
             _context.Products.Add(products);
             await _context.SaveChangesAsync();
 
-            var post = new Posts
+            Posts post = new()
             {
                 ProductName = product.ProductName,
                 Content = product.Content,
@@ -54,7 +53,7 @@ namespace RENT.Data.Repositorys
             _context.Posts.Add(post);
             await _context.SaveChangesAsync();
 
-            var categories = new CategoriesProduct
+            CategoriesProduct categories = new()
             {
                 ProductsId = products.ProductsId,
                 CategoriesId = cat.CategoriesId
@@ -62,12 +61,8 @@ namespace RENT.Data.Repositorys
             _context.CategoriesProduct.Add(categories);
             await _context.SaveChangesAsync();
 
-            var contactForm = new ProductsContactForm
-            {
-                Name = product.Name,
-                Email = product.Email,
-                Phone = product.Phone
-            };
+            ProductsContactForm contactForm = new();
+
             _context.ProductsContactForm.Add(contactForm);
             await _context.SaveChangesAsync();
         }
@@ -145,7 +140,7 @@ namespace RENT.Data.Repositorys
         }
 
         [HttpDelete("Delete/{id}")]
-        public async Task RemoveProductsAsync([FromQuery]string id)
+        public async Task RemoveProductsAsync(string id)
         {
             if (String.IsNullOrEmpty(id)) throw new Exception();
 

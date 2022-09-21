@@ -4,20 +4,18 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RENT.Data.Interfaces;
-using RENT.Data.Repositorys;
 using RENT.Domain.Dtos.RequestDto;
 using System.Runtime.Versioning;
 
 namespace RENT.Api.Controllers
 {
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     [Route("api/v1/[controller]")]
     public class ProductsController : Controller
     {
         private readonly IWebHostEnvironment _hostEnvironment;
         private readonly IImagesService _imagesService;
-        private readonly IMapper _mapper;
         private readonly IProductsRepository _productsRepository;
         private readonly IProductsService _productsService;
 
@@ -27,13 +25,13 @@ namespace RENT.Api.Controllers
             IProductsService productsService,
             IProductsRepository productsRepository)
         {
-            _mapper = mapper;
             _imagesService = imagesService;
             _hostEnvironment = hostEnvironment;
             _productsRepository = productsRepository;
             _productsService = productsService;
         }
 
+        [Authorize(Roles = "User, Admin")]
         [HttpPost]
         [SupportedOSPlatform("windows")]
         public async Task<IActionResult> AddNewProduct([FromForm] ProducRequesttDto product)
@@ -106,6 +104,7 @@ namespace RENT.Api.Controllers
             }
         }
 
+        [Authorize(Roles = "User, Admin")]
         [HttpPut("Update")]
         [SupportedOSPlatform("windows")]
         public async Task<ActionResult> UpdateAsync([FromForm] ProducRequesttDto product)
@@ -152,10 +151,10 @@ namespace RENT.Api.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
-        //[Authorize(Roles = "Seller, Admin")]
+        [Authorize(Roles = "User, Admin")]
         public async Task<ActionResult> DeleteProduct(String id)
         {
-            if (id == String.Empty)
+            if (String.IsNullOrEmpty(id))
                 return BadRequest();
 
             await _productsRepository.RemoveProductsAsync(id);
