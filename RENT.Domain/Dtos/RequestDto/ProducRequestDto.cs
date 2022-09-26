@@ -2,7 +2,7 @@
 
 namespace RENT.Domain.Dtos.RequestDto
 {
-    public class ProducRequesttDto
+    public class ProducRequestDto
     {
         public Guid ProductsId { get; set; }
         public List<IFormFile> Images { get; set; }

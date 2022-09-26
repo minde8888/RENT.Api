@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +18,7 @@ namespace RENT.Api.Controllers
         private readonly IProductsRepository _productsRepository;
         private readonly IProductsService _productsService;
 
-        public ProductsController(IMapper mapper,
+        public ProductsController(
             IImagesService imagesService,
             IWebHostEnvironment hostEnvironment,
             IProductsService productsService,
@@ -34,7 +33,7 @@ namespace RENT.Api.Controllers
         [Authorize(Roles = "User, Admin")]
         [HttpPost]
         [SupportedOSPlatform("windows")]
-        public async Task<IActionResult> AddNewProduct([FromForm] ProducRequesttDto product)
+        public async Task<IActionResult> AddNewProduct([FromForm] ProducRequestDto product)
         {
             try
             {
@@ -107,7 +106,7 @@ namespace RENT.Api.Controllers
         [Authorize(Roles = "User, Admin")]
         [HttpPut("Update")]
         [SupportedOSPlatform("windows")]
-        public async Task<ActionResult> UpdateAsync([FromForm] ProducRequesttDto product)
+        public async Task<ActionResult> UpdateAsync([FromForm] ProducRequestDto product)
         {
             if (product.ProductsId == Guid.Empty)
                 return BadRequest("This project can not by updated");

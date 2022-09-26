@@ -19,7 +19,7 @@ namespace RENT.Data.Repositorys
             _mapper = mapper;
         }
 
-        public async Task AddProductsAsync(ProducRequesttDto product)
+        public async Task AddProductsAsync(ProducRequestDto product)
         {
             Categories cat = new()
             {
@@ -103,7 +103,7 @@ namespace RENT.Data.Repositorys
                 Where(x => x.ProductsId == Id).ToListAsync();
         }
 
-        public async Task UpdateProductAsync(ProducRequesttDto productDto)
+        public async Task UpdateProductAsync(ProducRequestDto productDto)
         {
             var products = await _context.Products.
                   Include(p => p.Posts).
@@ -130,12 +130,18 @@ namespace RENT.Data.Repositorys
 
             if (productDto.categoriesName != null)
             {
-                var cats = await _context.CategoriesProduct.
-                    Include(c => c.Categories).
-                    Where(x => x.ProductsId == productDto.ProductsId).FirstOrDefaultAsync();
+                string[] category = productDto.categoriesName.Split(',');
 
-                cats.Categories.CategoriesName = productDto.categoriesName;
-                _context.Entry(cats).State = EntityState.Modified;
+                foreach (var item in category)
+                {
+                    var cats = await _context.CategoriesProduct.
+                     Include(c => c.Categories).
+                     Where(x => x.ProductsId == productDto.ProductsId).FirstOrDefaultAsync();
+
+                    cats.Categories.CategoriesName = item;
+                    _context.Entry(cats).State = EntityState.Modified;
+                    await _context.SaveChangesAsync();
+                }
             }
             await _context.SaveChangesAsync();
         }
