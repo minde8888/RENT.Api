@@ -21,7 +21,6 @@
         public ProductsContactForm ProductsContactForm { get; set; }
         public DateTime DateCreated { get; set; } = DateTime.Now;
         public DateTime DateUpdated { get; set; }
-        public Guid CategoriesId { get; set; }
-        public ICollection<Categories> Categories { get; set; }
+         public ICollection<Categories> Categories { get; set; }
     }
 }

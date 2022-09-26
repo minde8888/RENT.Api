@@ -130,9 +130,9 @@ namespace RENT.Data.Repositorys
 
             if (productDto.categoriesName != null)
             {
-                var cats = await _context.CategoriesProduct.
+                var cats =  _context.CategoriesProduct.
                   Include(c => c.Categories).
-                  Where(x => x.ProductsId == productDto.ProductsId).FirstOrDefaultAsync();
+                  Where(x => x.ProductsId == productDto.ProductsId);
                 _context.CategoriesProduct.RemoveRange(cats);
                 _context.SaveChanges();
 
