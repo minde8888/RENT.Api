@@ -23,7 +23,7 @@ namespace RENT.Data.Repositorys
         {
             Categories cat = new()
             {
-                CategoriesName = product.Category
+                CategoriesName = product.categoriesName
             };
             _context.Categories.Add(cat);
             await _context.SaveChangesAsync();
@@ -128,13 +128,13 @@ namespace RENT.Data.Repositorys
             _context.Entry(products).State = EntityState.Modified;
             _context.Entry(products.Posts).State = EntityState.Modified;
 
-            if (String.IsNullOrEmpty(productDto.Category))
+            if (productDto.categoriesName != null)
             {
                 var cats = await _context.CategoriesProduct.
                     Include(c => c.Categories).
                     Where(x => x.ProductsId == productDto.ProductsId).FirstOrDefaultAsync();
 
-                cats.Categories.CategoriesName = productDto.Category;
+                cats.Categories.CategoriesName = productDto.categoriesName;
                 _context.Entry(cats).State = EntityState.Modified;
             }
             await _context.SaveChangesAsync();
