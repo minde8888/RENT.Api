@@ -130,16 +130,29 @@ namespace RENT.Data.Repositorys
 
             if (productDto.categoriesName != null)
             {
+                var cats = await _context.CategoriesProduct.
+                  Include(c => c.Categories).
+                  Where(x => x.ProductsId == productDto.ProductsId).FirstOrDefaultAsync();
+                _context.CategoriesProduct.RemoveRange(cats);
+                _context.SaveChanges();
+
                 string[] category = productDto.categoriesName.Split(',');
 
                 foreach (var item in category)
                 {
-                    var cats = await _context.CategoriesProduct.
-                     Include(c => c.Categories).
-                     Where(x => x.ProductsId == productDto.ProductsId).FirstOrDefaultAsync();
+                    Categories categories = new()
+                    {
+                        CategoriesName = item,
+                    };
+                    _context.Categories.Add(categories);
+                    await _context.SaveChangesAsync();
 
-                    cats.Categories.CategoriesName = item;
-                    _context.Entry(cats).State = EntityState.Modified;
+                    CategoriesProduct categoriesProduct = new()
+                    {
+                        CategoriesId = categories.CategoriesId,
+                        ProductsId = productDto.ProductsId,
+                    };
+                    _context.CategoriesProduct.Add(categoriesProduct);
                     await _context.SaveChangesAsync();
                 }
             }
