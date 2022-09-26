@@ -119,6 +119,7 @@ namespace RENT.Data.Repositorys
                 products.ImageWidth = productDto.ImageWidth;
                 products.ImageHeight = productDto.ImageHeight;
                 products.Place = productDto.Place;
+                products.Size = productDto.Size;
                 products.DateUpdated = DateTime.UtcNow;
 
                 products.Posts.Content = productDto.Content;
