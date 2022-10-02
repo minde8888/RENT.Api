@@ -6,5 +6,6 @@
         public string CategoriesName { get; set; }
         public string Description { get; set; }
         public string ImageName { get; set; }
+        public Guid ProductsId { get; set; }
     }
 }

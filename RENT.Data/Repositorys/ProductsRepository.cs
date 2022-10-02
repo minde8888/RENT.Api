@@ -37,8 +37,7 @@ namespace RENT.Data.Repositorys
                 Size = product.Size,
                 Place = product.Place,
                 Phone = product.Phone,
-                Email = product.Email,
-                CategoriesId = cat.CategoriesId,
+                Email = product.Email,             
                 SellerId = product.SellerId
             };
             _context.Products.Add(products);
