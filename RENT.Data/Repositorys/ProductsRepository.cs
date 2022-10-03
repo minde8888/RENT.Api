@@ -38,7 +38,6 @@ namespace RENT.Data.Repositorys
                 Place = product.Place,
                 Phone = product.Phone,
                 Email = product.Email,
-                CategoriesId = cat.CategoriesId,
                 SellerId = product.SellerId
             };
             _context.Products.Add(products);
@@ -130,7 +129,7 @@ namespace RENT.Data.Repositorys
 
             if (productDto.categoriesName != null)
             {
-                var cats =  _context.CategoriesProduct.
+                var cats = _context.CategoriesProduct.
                   Include(c => c.Categories).
                   Where(x => x.ProductsId == productDto.ProductsId);
                 _context.CategoriesProduct.RemoveRange(cats);
