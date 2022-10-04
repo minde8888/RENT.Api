@@ -26,8 +26,8 @@ namespace RENT.Api.Controllers
         {
             try
             {
-                await _categoryRepository.AddCategotyAsync(category);
-                return Ok();
+                var returnCategories = await _categoryRepository.AddCategotyAsync(category);
+                return Ok(returnCategories);
             }
             catch (Exception)
             {
@@ -42,7 +42,7 @@ namespace RENT.Api.Controllers
         {
             if (String.IsNullOrEmpty(id))
                 return BadRequest();
-          
+
             _categoryRepository.RemoveCategoryAsync(id);
             return Ok();
         }

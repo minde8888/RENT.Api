@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using RENT.Data.Context;
 using RENT.Data.Interfaces;
 using RENT.Domain.Dtos;
+using RENT.Domain.Dtos.RequestDto;
 using RENT.Domain.Entities;
 
 namespace RENT.Data.Repositorys
@@ -10,12 +11,14 @@ namespace RENT.Data.Repositorys
     public class CategoryRepository: ICategoryRepository
     {
         private readonly AppDbContext _context;
+        private readonly IMapper _mapper;
 
-        public CategoryRepository(AppDbContext context)
+        public CategoryRepository(AppDbContext context, IMapper mapper)
         {
             _context = context;
-         }
-        public async Task AddCategotyAsync(CategoriesDto category)
+            _mapper = mapper;
+        }
+        public async Task<CategoriesDto> AddCategotyAsync(CategoriesDto category)
         {
             Categories cat = new ()
             {
@@ -31,6 +34,8 @@ namespace RENT.Data.Repositorys
             };
             _context.CategoriesProduct.Add(categories);
             await _context.SaveChangesAsync();
+           return _mapper.Map<CategoriesDto>(cat);
+
         }
         public void RemoveCategoryAsync(string id)
         {
