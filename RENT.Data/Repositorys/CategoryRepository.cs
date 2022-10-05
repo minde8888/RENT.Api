@@ -36,6 +36,13 @@ namespace RENT.Data.Repository
 
             return _mapper.Map<CategoriesDto>(cat);
         }
+        public async Task<CategoriesDto> GetCategoriesIdAsync(Guid guidId)
+        {
+            var prodCat = await _context.CategoriesProduct.Where(x => x.CategoriesId == guidId).FirstOrDefaultAsync();
+
+            return _mapper.Map<CategoriesDto>(prodCat.Categories);
+
+        }
         public async Task UpdateCategory(CategoriesDto category)
         {
             string[] categories = category.CategoriesName.Split(',');

@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using RENT.Api.Configuration;
 using RENT.Data.Context;
 using RENT.Data.Interfaces;
+using RENT.Data.Repository;
 using RENT.Data.Repositorys;
 using RENT.Domain.Entities.Auth;
 using RENT.Domain.Entities.Roles;
@@ -92,7 +93,7 @@ namespace RENT.Api
             services.AddScoped(typeof(IProductsRepository), typeof(ProductsRepository));
             services.AddScoped(typeof(ICategoryRepository), typeof(CategoryRepository));
 
-            
+
             services.AddScoped(typeof(IBaseSerrvice<>), typeof(BaseSerrvice<>));
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 

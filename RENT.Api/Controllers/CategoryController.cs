@@ -19,7 +19,6 @@ namespace RENT.Api.Controllers
             _categoryRepository = categoryRepository;
         }
 
-        [Authorize(Roles = "User, Admin")]
         [HttpPost]
         [SupportedOSPlatform("windows")]
         public async Task<IActionResult> AddNewCategory(CategoriesDto category)
@@ -33,6 +32,29 @@ namespace RENT.Api.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
                 "Error add data to the database -> AddNewProduct");
+            }
+        }
+
+        [HttpGet("id")]
+        [AllowAnonymous]
+        public async Task<ActionResult<CategoriesDto>> Get(String id)
+        {
+            try
+            {
+                if (String.IsNullOrEmpty(id))
+                    return BadRequest();
+                var guidId = new Guid(id);
+
+                var productsInCategory = await _categoryRepository.GetCategoriesIdAsync(guidId);
+                if (productsInCategory == null)
+                    return NotFound();
+
+                return Ok(productsInCategory);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Could not find web user account");
             }
         }
 
