@@ -90,7 +90,9 @@ namespace RENT.Api
             services.AddScoped(typeof(IImagesService), typeof(ImagesService));
             services.AddScoped(typeof(IProductsService), typeof(ProductsService));
             services.AddScoped(typeof(IProductsRepository), typeof(ProductsRepository));
+            services.AddScoped(typeof(ICategoryRepository), typeof(CategoryRepository));
 
+            
             services.AddScoped(typeof(IBaseSerrvice<>), typeof(BaseSerrvice<>));
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 
