@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using RENT.Data.Context;
 using RENT.Data.Interfaces;
 using RENT.Domain.Dtos;
-using RENT.Domain.Dtos.RequestDto;
 using RENT.Domain.Entities;
 
 namespace RENT.Data.Repository
@@ -18,7 +17,7 @@ namespace RENT.Data.Repository
             _context = context;
             _mapper = mapper;
         }
-        public async Task<CategoriesDto> AddCategoryAsync(CategoriesDto category)
+        public async Task<CategoriesDto> AddCategotyAsync(CategoriesDto category)
         {
             Categories cat = new()
             {
@@ -37,7 +36,6 @@ namespace RENT.Data.Repository
 
             return _mapper.Map<CategoriesDto>(cat);
         }
-
         public async Task UpdateCategory(CategoriesDto category)
         {
             string[] categories = category.CategoriesName.Split(',');

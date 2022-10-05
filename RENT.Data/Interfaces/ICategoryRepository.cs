@@ -6,6 +6,6 @@ namespace RENT.Data.Interfaces
     {
         public Task<CategoriesDto> AddCategotyAsync(CategoriesDto category);
         public void RemoveCategoryAsync(string id);
-        public Task UpdateCategoty(CategoriesDto category);
+        public Task UpdateCategory(CategoriesDto category);
     }
 }

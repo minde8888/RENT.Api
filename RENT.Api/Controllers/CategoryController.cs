@@ -43,7 +43,7 @@ namespace RENT.Api.Controllers
         {
             try
             {
-                _categoryRepository.UpdateCategoty(category);
+                _categoryRepository.UpdateCategory(category);
                 return Ok();
             }
             catch (Exception)
