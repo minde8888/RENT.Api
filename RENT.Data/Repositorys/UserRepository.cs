@@ -76,6 +76,7 @@ namespace RENT.Data.Repositorys
                     case "User":
                         var seller = await _context.Seller
                         .Include(address => address.Address)
+                        .Include(product => product.Products)
                         .Where(u => u.UserId == new Guid(user.Id.ToString()))
                         .FirstOrDefaultAsync();
 
