@@ -53,10 +53,10 @@ namespace RENT.Api.Controllers
                 await _productsRepository.AddProductsAsync(product);
                 return Ok();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                "Error Get data from the database -> AddNewProduct");
+                "Error Get data from the database -> AddNewProduct" + ex);
             }
         }
 

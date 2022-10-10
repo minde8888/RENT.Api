@@ -30,6 +30,7 @@ namespace RENT.Data.Repositorys
 
             Products products = new()
             {
+
                 ImageHeight = product.ImageHeight,
                 ImageWidth = product.ImageWidth,
                 ImageName = product.ImageName,
