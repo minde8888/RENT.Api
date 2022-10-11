@@ -10,7 +10,7 @@ namespace RENT.Domain.Dtos.RequestDto
         public string ImageWidth { get; set; }
         public string ImageName { get; set; }
         public string ProductName { get; set; }
-        public string Content { get; set; }
+        public string ProductDescription { get; set; }
         public string Price { get; set; }
         public string Size { get; set; }
         public string Place { get; set; }
@@ -18,7 +18,7 @@ namespace RENT.Domain.Dtos.RequestDto
         public string Phone { get; set; }
         public string Email { get; set; }
         public string ImageSrc { get; set; }
-        public string categoriesName { get; set; }
+        public string CategoriesName { get; set; }
         public Guid SellerId { get; set; }
     }
 }

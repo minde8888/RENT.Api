@@ -21,16 +21,8 @@ namespace RENT.Data.Repositorys
 
         public async Task AddProductsAsync(ProducRequestDto product)
         {
-            Categories cat = new()
-            {
-                CategoriesName = product.categoriesName
-            };
-            _context.Categories.Add(cat);
-            await _context.SaveChangesAsync();
-
             Products products = new()
             {
-
                 ImageHeight = product.ImageHeight,
                 ImageWidth = product.ImageWidth,
                 ImageName = product.ImageName,
@@ -47,24 +39,30 @@ namespace RENT.Data.Repositorys
             Posts post = new()
             {
                 ProductName = product.ProductName,
-                Content = product.Content,
+                Content = product.ProductDescription,
                 ProductsId = products.ProductsId
             };
             _context.Posts.Add(post);
             await _context.SaveChangesAsync();
 
-            CategoriesProduct categories = new()
+            string[] categories = product.CategoriesName.Split(',');
+
+            foreach (var item in categories)
             {
-                ProductsId = products.ProductsId,
-                CategoriesId = cat.CategoriesId
-            };
-            _context.CategoriesProduct.Add(categories);
-            await _context.SaveChangesAsync();
+                Categories cat = new();
+                cat.CategoriesName = item;
+                _context.Categories.Add(cat);
+                await _context.SaveChangesAsync();
 
-            ProductsContactForm contactForm = new();
+                CategoriesProduct category = new()
+                {
+                    ProductsId = products.ProductsId,
+                    CategoriesId = cat.CategoriesId
+                };
+                _context.CategoriesProduct.Add(category);
+                await _context.SaveChangesAsync();
 
-            _context.ProductsContactForm.Add(contactForm);
-            await _context.SaveChangesAsync();
+            }
         }
 
         public async Task<List<ProductDto>> GetProductsAsync(string ImageSrc)
@@ -99,7 +97,6 @@ namespace RENT.Data.Repositorys
             return await _context.Products.
                 Include(c => c.Categories).
                 Include(p => p.Posts).
-                Include(f => f.ProductsContactForm).
                 Where(x => x.ProductsId == Id).ToListAsync();
         }
 
@@ -107,7 +104,6 @@ namespace RENT.Data.Repositorys
         {
             var products = await _context.Products.
                   Include(p => p.Posts).
-                  Include(f => f.ProductsContactForm).
                   Where(x => x.ProductsId == productDto.ProductsId).FirstOrDefaultAsync();
 
             if (products != null)
@@ -122,13 +118,13 @@ namespace RENT.Data.Repositorys
                 products.Size = productDto.Size;
                 products.DateUpdated = DateTime.UtcNow;
 
-                products.Posts.Content = productDto.Content;
+                products.Posts.Content = productDto.ProductDescription;
                 products.Posts.ProductName = productDto.ProductName;
             }
             _context.Entry(products).State = EntityState.Modified;
             _context.Entry(products.Posts).State = EntityState.Modified;
 
-            if (productDto.categoriesName != null)
+            if (productDto.CategoriesName != null)
             {
                 var cats = _context.CategoriesProduct.
                   Include(c => c.Categories).
@@ -136,7 +132,7 @@ namespace RENT.Data.Repositorys
                 _context.CategoriesProduct.RemoveRange(cats);
                 _context.SaveChanges();
 
-                string[] category = productDto.categoriesName.Split(',');
+                string[] category = productDto.CategoriesName.Split(',');
 
                 foreach (var item in category)
                 {
@@ -168,11 +164,9 @@ namespace RENT.Data.Repositorys
 
             var product = await _context.Products.
                 Include(p => p.Posts).
-                Include(f => f.ProductsContactForm).
                 Where(x => x.ProductsId == newId).FirstOrDefaultAsync();
 
             product.IsDeleted = true;
-            product.ProductsContactForm.IsDeleted = true;
             product.Posts.IsDeleted = true;
 
             await _context.SaveChangesAsync();
