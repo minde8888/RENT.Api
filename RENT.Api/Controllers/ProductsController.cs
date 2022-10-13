@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using RENT.Data.Filter;
 using RENT.Data.Interfaces;
 using RENT.Domain.Dtos.RequestDto;
+using RENT.Domain.Dtos.ResponseDto;
 using System.Runtime.Versioning;
 
 namespace RENT.Api.Controllers
@@ -63,7 +64,7 @@ namespace RENT.Api.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<List<ProductDto>>> GetAll([FromQuery] PaginationFilter filter)
+        public async Task<ActionResult<ProductResponseDto>> GetAll([FromQuery] PaginationFilter filter)
         {
             try
             {

@@ -6,6 +6,7 @@ using RENT.Data.Filter;
 using RENT.Data.Helpers;
 using RENT.Data.Interfaces;
 using RENT.Domain.Dtos.RequestDto;
+using RENT.Domain.Dtos.ResponseDto;
 using RENT.Domain.Entities;
 
 namespace RENT.Data.Repositorys
@@ -69,7 +70,7 @@ namespace RENT.Data.Repositorys
             }
         }
 
-        public async Task<List<ProductDto>> GetProductsAsync(string ImageSrc, PaginationFilter validFilter, string route)
+        public async Task<ProductResponseDto> GetProductsAsync(string ImageSrc, PaginationFilter validFilter, string route)
         {
             var pagedData = await _context.Products
                  .Include(c => c.Categories)
@@ -84,19 +85,19 @@ namespace RENT.Data.Repositorys
                  .CountAsync();
 
             var products = PaginationHelper.CreatePagedReponse<Products>(pagedData, validFilter, totalRecords, _uriService, route);
-            //ProductDto productsList = new();
-            //productsList.PageNumber = products.PageNumber;
-            //productsList.PageSize = products.PageSize;
-            //productsList.FirstPage = products.FirstPage;
-            //productsList.LastPage = products.LastPage;
-            //productsList.TotalPages = products.TotalPages;
-            //productsList.TotalRecords = products.TotalRecords;
-            //productsList.NextPage = products.NextPage;
-            //productsList.PreviousPage = products.PreviousPage;
 
-            var productsToReturn = _mapper.Map<List<ProductDto>>(products.Data);
+            ProductResponseDto response = new();
+            response.PageNumber = products.PageNumber;
+            response.PageSize = products.PageSize;
+            response.FirstPage = products.FirstPage;
+            response.LastPage = products.LastPage;
+            response.TotalPages = products.TotalPages;
+            response.TotalRecords = products.TotalRecords;
+            response.NextPage = products.NextPage;
+            response.PreviousPage = products.PreviousPage;
+            response.ProductDto = _mapper.Map<List<ProductDto>>(products.Data);
 
-            foreach (var item in productsToReturn)
+            foreach (var item in response.ProductDto)
             {
                 string[] name = item.ImageName.Split(','); ;
                 var newImages = new List<string>();
@@ -110,7 +111,7 @@ namespace RENT.Data.Repositorys
                     }
                 }
             }
-            return productsToReturn;
+            return response;
         }
 
         public async Task<List<Products>> GetProductIdAsync(Guid Id)
