@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using RENT.Domain.Dtos;
 using RENT.Domain.Dtos.RequestDto;
+using RENT.Domain.Dtos.ResponseDto;
 using RENT.Domain.Entities;
+using RENT.Domain.Entities.Wrappers;
 
 namespace RENT.Services.Services.AppMapper
 {
@@ -43,6 +45,10 @@ namespace RENT.Services.Services.AppMapper
             CreateMap<Products, ProductDto>().
                 ForMember(dest => dest.PostsDto, act => act.MapFrom(src => src.Posts)).
                 ForMember(dest => dest.CategoriesDto, act => act.MapFrom(src => src.Categories)).ReverseMap();
+
+            CreateMap<PagedResponse<Products>, ProductResponseDto>().ReverseMap().
+               ForMember(m => m.Data, opt =>
+               opt.MapFrom(m => m.ProductDto));
         }
     }
 }

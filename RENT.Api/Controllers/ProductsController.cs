@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using RENT.Data.Filter;
 using RENT.Data.Interfaces;
 using RENT.Domain.Dtos.RequestDto;
 using System.Runtime.Versioning;
@@ -62,12 +63,15 @@ namespace RENT.Api.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<List<ProductDto>>> GetAll()
+        public async Task<ActionResult<List<ProductDto>>> GetAll([FromQuery] PaginationFilter filter)
         {
             try
             {
+                var route = Request.Path.Value;
+                var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
                 String ImageSrc = String.Format("{0}://{1}{2}", Request.Scheme, Request.Host, Request.PathBase);
-                return Ok(await _productsRepository.GetProductsAsync(ImageSrc));
+                var response = await _productsRepository.GetProductsAsync(ImageSrc, validFilter, route);
+                return Ok(response);
             }
             catch (Exception ex)
             {

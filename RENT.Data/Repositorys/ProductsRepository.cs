@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RENT.Data.Context;
+using RENT.Data.Filter;
+using RENT.Data.Helpers;
 using RENT.Data.Interfaces;
 using RENT.Domain.Dtos.RequestDto;
 using RENT.Domain.Entities;
@@ -12,11 +14,13 @@ namespace RENT.Data.Repositorys
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IUriService _uriService;
 
-        public ProductsRepository(AppDbContext context, IMapper mapper)
+        public ProductsRepository(AppDbContext context, IMapper mapper, IUriService uriService)
         {
             _context = context;
             _mapper = mapper;
+            _uriService = uriService;
         }
 
         public async Task AddProductsAsync(ProducRequestDto product)
@@ -65,14 +69,32 @@ namespace RENT.Data.Repositorys
             }
         }
 
-        public async Task<List<ProductDto>> GetProductsAsync(string ImageSrc)
+        public async Task<List<ProductDto>> GetProductsAsync(string ImageSrc, PaginationFilter validFilter, string route)
         {
-            var products = await _context.Products.
-                Include(c => c.Categories).
-                Include(p => p.Posts).
-                ToListAsync();
+            var pagedData = await _context.Products
+                 .Include(c => c.Categories)
+                 .Include(p => p.Posts)
+                 .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                 .Take(validFilter.PageSize)
+                 .ToListAsync();
 
-            var productsToReturn = _mapper.Map<List<ProductDto>>(products);
+            var totalRecords = await _context.Products
+                 .Include(c => c.Categories)
+                 .Include(p => p.Posts)
+                 .CountAsync();
+
+            var products = PaginationHelper.CreatePagedReponse<Products>(pagedData, validFilter, totalRecords, _uriService, route);
+            //ProductDto productsList = new();
+            //productsList.PageNumber = products.PageNumber;
+            //productsList.PageSize = products.PageSize;
+            //productsList.FirstPage = products.FirstPage;
+            //productsList.LastPage = products.LastPage;
+            //productsList.TotalPages = products.TotalPages;
+            //productsList.TotalRecords = products.TotalRecords;
+            //productsList.NextPage = products.NextPage;
+            //productsList.PreviousPage = products.PreviousPage;
+
+            var productsToReturn = _mapper.Map<List<ProductDto>>(products.Data);
 
             foreach (var item in productsToReturn)
             {
@@ -88,7 +110,6 @@ namespace RENT.Data.Repositorys
                     }
                 }
             }
-
             return productsToReturn;
         }
 

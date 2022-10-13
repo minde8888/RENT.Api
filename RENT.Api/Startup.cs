@@ -38,6 +38,14 @@ namespace RENT.Api
 
             services.AddDbContext<AppDbContext>(options =>
                     options.UseNpgsql(Configuration["ConnectionStrings:LocalConnectionString"]));
+            services.AddHttpContextAccessor();
+            services.AddSingleton<IUriService>(o =>
+            {
+                var accessor = o.GetRequiredService<IHttpContextAccessor>();
+                var request = accessor.HttpContext.Request;
+                var uri = string.Concat(request.Scheme, "://", request.Host.ToUriComponent());
+                return new UriService(uri);
+            });
 
             services.AddIdentity<ApplicationUser, ApplicationRole>(o => o.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<ApplicationRole>()
