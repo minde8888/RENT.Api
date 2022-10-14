@@ -6,6 +6,7 @@ using RENT.Data.Filter;
 using RENT.Data.Helpers;
 using RENT.Data.Interfaces;
 using RENT.Domain.Dtos.RequestDto;
+using RENT.Domain.Dtos.ResponseDto;
 using RENT.Domain.Entities;
 
 namespace RENT.Data.Repositorys
@@ -84,7 +85,7 @@ namespace RENT.Data.Repositorys
                  .CountAsync();
 
             var products = PaginationHelper.CreatePagedReponse<Products>(pagedData, validFilter, totalRecords, _uriService, route);
-            //ProductDto productsList = new();
+            ProductResponseDto productsList = new();
             //productsList.PageNumber = products.PageNumber;
             //productsList.PageSize = products.PageSize;
             //productsList.FirstPage = products.FirstPage;
@@ -93,8 +94,12 @@ namespace RENT.Data.Repositorys
             //productsList.TotalRecords = products.TotalRecords;
             //productsList.NextPage = products.NextPage;
             //productsList.PreviousPage = products.PreviousPage;
-
             var productsToReturn = _mapper.Map<List<ProductDto>>(products.Data);
+
+            var pageResponse = _mapper.Map<List<ProductResponseDto>>(products);
+
+            productsList.ProductDto = productsToReturn;
+
 
             foreach (var item in productsToReturn)
             {
