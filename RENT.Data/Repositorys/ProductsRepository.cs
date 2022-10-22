@@ -89,12 +89,10 @@ namespace RENT.Data.Repositorys
             ProductResponseDto response = new();
             response.PageNumber = products.PageNumber;
             response.PageSize = products.PageSize;
-            response.FirstPage = products.FirstPage;
-            response.LastPage = products.LastPage;
             response.TotalPages = products.TotalPages;
             response.TotalRecords = products.TotalRecords;
-            response.NextPage = products.NextPage;
-            response.PreviousPage = products.PreviousPage;
+            response.NextPage = products.NexPage;
+            response.PreviousPage = products.PrevPage;
             response.ProductDto = _mapper.Map<List<ProductDto>>(products.Data);
 
             foreach (var item in response.ProductDto)
