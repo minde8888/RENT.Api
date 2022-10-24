@@ -31,8 +31,9 @@ namespace RENT.Data.Helpers
             
             respose.NexPage = validFilter.PageNumber >= 1 && validFilter.PageNumber < roundedTotalPages
                 ? new PaginationFilter(validFilter.PageNumber +1, validFilter.PageSize).PageNumber : null;
+
             respose.PrevPage = validFilter.PageNumber - 1 >= 1 && validFilter.PageNumber <= roundedTotalPages
-                ? new PaginationFilter(roundedTotalPages, validFilter.PageSize).PageNumber : null;  
+                ? new PaginationFilter(validFilter.PageNumber - 1, validFilter.PageSize).PageNumber : null;  
             return respose;
         }
     }
