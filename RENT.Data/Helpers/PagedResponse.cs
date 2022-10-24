@@ -6,7 +6,12 @@ namespace RENT.Data.Helpers
 {
     public static class PaginationHelper
     {
-        public static PagedResponse<List<T>> CreatePagedReponse<T>(List<T> pagedData, PaginationFilter validFilter, int totalRecords, IUriService uriService, string route)
+        public static PagedResponse<List<T>> CreatePagedReponse<T>(
+            List<T> pagedData,
+            PaginationFilter validFilter, 
+            int totalRecords, 
+            IUriService uriService,
+            string route)
         {
             var respose = new PagedResponse<List<T>>(pagedData, validFilter.PageNumber, validFilter.PageSize);
             var totalPages = ((double)totalRecords / (double)validFilter.PageSize);
@@ -22,7 +27,12 @@ namespace RENT.Data.Helpers
             respose.FirstPage = uriService.GetPageUri(new PaginationFilter(1, validFilter.PageSize), route);
             respose.LastPage = uriService.GetPageUri(new PaginationFilter(roundedTotalPages, validFilter.PageSize), route);
             respose.TotalPages = roundedTotalPages;
-            respose.TotalRecords = totalRecords;
+            respose.TotalRecords = totalRecords;     
+            
+            respose.NexPage = validFilter.PageNumber >= 1 && validFilter.PageNumber < roundedTotalPages
+                ? new PaginationFilter(validFilter.PageNumber +1, validFilter.PageSize).PageNumber : null;
+            respose.PrevPage = validFilter.PageNumber - 1 >= 1 && validFilter.PageNumber <= roundedTotalPages
+                ? new PaginationFilter(roundedTotalPages, validFilter.PageSize).PageNumber : null;  
             return respose;
         }
     }
