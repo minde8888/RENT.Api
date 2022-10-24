@@ -1,6 +1,11 @@
+using AutoFixture;
+using AutoFixture.AutoMoq;
 using FluentAssertions;
 using FluentAssertions.Extensions;
+using RENT.Data.Filter;
 using RENT.Data.Helpers;
+using RENT.Data.Interfaces;
+using RENT.Domain.Entities;
 
 namespace Rent.Xunit.Static
 {
@@ -22,6 +27,23 @@ namespace Rent.Xunit.Static
             var expDate = UnixTimeStamp.UnixTimeStampToDateTime(unixTimeStampInSeconds);
 
             expDate.Should().BeMoreThan(1.Days()).Before(DateTime.UtcNow);
+        }
+        [Fact]
+        public void Pagination()
+        {
+            var fixture = new Fixture();
+            fixture.Customize(new AutoMoqCustomization()
+            {
+                ConfigureMembers = true
+            });
+            var filter = fixture.Create<PaginationFilter>();
+            var uri = fixture.Create<IUriService>();
+            var uriService = uri.GetPageUri(filter, "test.com");
+            uriService.AbsolutePath.Should().Be("/");
+            List<Products> product = new();
+            product.Add(new Products());
+            var value = PaginationHelper.CreatePagedReponse(product, filter, 10, uri, "test.com");
+            value.TotalRecords.Should().Be(10);
         }
     }
 }
