@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,21 +20,21 @@ namespace RENT.Api.Controllers
         private readonly IImagesService _imagesService;
         private readonly IProductsRepository _productsRepository;
         private readonly IProductsService _productsService;
-        private IProductsRepository object1;
-        private IImagesService object2;
-        private IProductsService object3;
-        private IWebHostEnvironment object4;
+        private readonly IMapper _mapper;
+
 
         public ProductsController(
             IImagesService imagesService,
             IWebHostEnvironment hostEnvironment,
             IProductsService productsService,
-            IProductsRepository productsRepository)
+            IProductsRepository productsRepository,
+            IMapper mapper)
         {
             _imagesService = imagesService;
             _hostEnvironment = hostEnvironment;
             _productsRepository = productsRepository;
             _productsService = productsService;
+            _mapper = mapper;
         }
 
         [Authorize(Roles = "User, Admin")]
@@ -101,7 +102,7 @@ namespace RENT.Api.Controllers
 
                 String ImageSrc = String.Format("{0}://{1}{2}", Request.Scheme, Request.Host, Request.PathBase);
 
-                var productsToReturn = _productsService.GetProductImageAsync(product, ImageSrc);
+                var productsToReturn = _productsService.GetProductImage(product, ImageSrc);
 
                 return Ok(productsToReturn);
             }

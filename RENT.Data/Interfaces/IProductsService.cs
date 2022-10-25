@@ -5,6 +5,6 @@ namespace RENT.Data.Interfaces
 {
     public interface IProductsService
     {
-        List<ProductDto> GetProductImageAsync(List<Products> products, string imageSrc);
+        List<ProductDto> GetProductImage(List<Products> products, string imageSrc);
     }
 }

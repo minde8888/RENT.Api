@@ -14,7 +14,7 @@ namespace RENT.Services.Services
             _mapper = mapper;
         }
 
-        public List<ProductDto> GetProductImageAsync(List<Products> products, string imageSrc)
+        public List<ProductDto> GetProductImage(List<Products> products, string imageSrc)
         {
             var productsToReturn = _mapper.Map<List<ProductDto>>(products);
 
