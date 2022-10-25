@@ -19,6 +19,10 @@ namespace RENT.Api.Controllers
         private readonly IImagesService _imagesService;
         private readonly IProductsRepository _productsRepository;
         private readonly IProductsService _productsService;
+        private IProductsRepository object1;
+        private IImagesService object2;
+        private IProductsService object3;
+        private IWebHostEnvironment object4;
 
         public ProductsController(
             IImagesService imagesService,
@@ -35,7 +39,7 @@ namespace RENT.Api.Controllers
         [Authorize(Roles = "User, Admin")]
         [HttpPost]
         [SupportedOSPlatform("windows")]
-        public async Task<IActionResult> AddNewProduct([FromForm] ProducRequestDto product)
+        public async Task<IActionResult> AddNewProductAsync([FromForm] ProducRequestDto product)
         {
             try
             {
@@ -64,7 +68,7 @@ namespace RENT.Api.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<ProductResponseDto>> GetAll([FromQuery] PaginationFilter filter)
+        public async Task<ActionResult<ProductResponseDto>> GetAllAsync([FromQuery] PaginationFilter filter)
         {
             try
             {
@@ -83,7 +87,7 @@ namespace RENT.Api.Controllers
 
         [HttpGet("id")]
         [AllowAnonymous]
-        public async Task<ActionResult<List<ProductDto>>> Get(String id)
+        public async Task<ActionResult<List<ProductDto>>> GetAsync(String id)
         {
             try
             {
@@ -156,7 +160,7 @@ namespace RENT.Api.Controllers
 
         [HttpDelete("Delete/{id}")]
         [Authorize(Roles = "User, Admin")]
-        public async Task<ActionResult> DeleteProduct(String id)
+        public async Task<ActionResult> DeleteProductAsync(String id)
         {
             if (String.IsNullOrEmpty(id))
                 return BadRequest();

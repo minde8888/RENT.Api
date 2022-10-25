@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using AutoFixture;
+using AutoFixture.AutoMoq;
 using RENT.Domain.Dtos;
 
 namespace Rent.Xunit.Auth
@@ -7,19 +8,27 @@ namespace Rent.Xunit.Auth
     {
         public void RegistrationTest()
         {
-            var mockUserRegistration = new Mock<UserRegistrationDto>();
-            var userRegistration = new UserRegistrationDto()
+            var fixture = new Fixture();
+            fixture.Customize(new AutoMoqCustomization()
             {
-                Id = Guid.NewGuid(),
-                UserId = Guid.NewGuid(),
-                Name = "test_name",
-                Surname = "test_surname",
-                Email = "test@test.com",
-                Occupation = "test_ocupation",
-                Password = "test_password",
-                PhoneNumber = "+4712345678",
-                Roles = "Test_Admin"
-            };
+                ConfigureMembers = true
+            });
+            //var mockUserRegistration = new Mock<UserRegistrationDto>();
+            var userRegistration = fixture.Create<UserRegistrationDto>();
+
+
+            //var userRegistration = new UserRegistrationDto()
+            //{
+            //    Id = Guid.NewGuid(),
+            //    UserId = Guid.NewGuid(),
+            //    Name = "test_name",
+            //    Surname = "test_surname",
+            //    Email = "test@test.com",
+            //    Occupation = "test_ocupation",
+            //    Password = "test_password",
+            //    PhoneNumber = "+4712345678",
+            //    Roles = "Test_Admin"
+            //};
         }
     }
 }
