@@ -40,6 +40,7 @@ namespace Rent.Xunit.Static
             var uri = fixture.Create<IUriService>();
             var uriService = uri.GetPageUri(filter, "test.com");
             uriService.AbsolutePath.Should().Be("/");
+
             List<Products> product = new();
             product.Add(new Products());
             var value = PaginationHelper.CreatePagedReponse(product, filter, 10, uri, "test.com");

@@ -119,7 +119,7 @@ namespace RENT.Api.Controllers
         public async Task<ActionResult> UpdateAsync([FromForm] ProducRequestDto product)
         {
             if (product.ProductsId == Guid.Empty)
-                return BadRequest("This project can not by updated");
+                return BadRequest("This product can not by updated");
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

@@ -46,6 +46,16 @@ namespace Rent.Xunit.ControllerTest
                 }
             };
         }
+        [Fact]
+        public void AddProduct()
+        {
+            // _mockProductRepository.Verify(x => x.AddProductsAsync(new ProducRequestDto()), Times.AtLeastOnce);
+
+            var formFile = new Mock<IFormFile>();
+            var imageName = _mockImageRepository.Setup(_ => _.SaveImage(formFile.Object, "1", "2")).Returns("");
+            Assert.NotNull(imageName);
+            //Assert.Equal("", imageName.);
+        }
 
         [Fact]
         public void GetReturnsProductWithSameId()
@@ -53,11 +63,12 @@ namespace Rent.Xunit.ControllerTest
             var productList = GetProductsData();
             var productListDto = GetProductsDtoData();
             _mockProductRepository.Setup(x => x.GetProductIdAsync(productList[0].ProductsId)).ReturnsAsync(productList);
-            _mockProductService.Setup(i => i.GetProductImage(productList, "http//test.com")).Returns(productListDto);
+            _mockProductService.Setup(i => i.GetProductImage(productList, "test")).Returns(productListDto);
             //request.Setup(x => x.PathBase).Returns(PathString.FromUriComponent("/api/v1/?PageNumber=1&PageSize=5"));
-       
+
+            //var a = _mockProductService.Object;
             var response = _controller.GetAsync(productList[0].ProductsId.ToString());
-            Assert.NotNull(response);
+            //Assert.NotNull(response);
             //Assert.NotNull(response.Content);
             //Assert.Equal(product[0], response.Result.Value.Count);
             //var productResult = Assert.IsType<List<Products>>(response);
@@ -72,29 +83,25 @@ namespace Rent.Xunit.ControllerTest
             //Assert.IsNotNull(contentResult.Content);
             //Assert.AreEqual(42, contentResult.Content.Id);
         }
-    
+
         private List<Products> GetProductsData()
         {
-
             List<Products> productsData = new()
             {
                 new Products() { ProductsId = new Guid("E4DE1CC1-5271-4B2F-9783-A96E9F904DE9") },
                 new Products() { ProductsId = new Guid("BAA849FE-5270-4E34-AFCA-0C94D7522166") },
                 new Products() { ProductsId = new Guid("197C5532-C5CA-4A31-AF68-C1A54A3D06C4") }
             };
-
             return productsData;
         }
         private List<ProductDto> GetProductsDtoData()
         {
-
             List<ProductDto> productsData = new()
             {
                 new ProductDto() { ProductsId = new Guid("E4DE1CC1-5271-4B2F-9783-A96E9F904DE9") },
                 new ProductDto() { ProductsId = new Guid("BAA849FE-5270-4E34-AFCA-0C94D7522166") },
                 new ProductDto() { ProductsId = new Guid("197C5532-C5CA-4A31-AF68-C1A54A3D06C4") }
             };
-
             return productsData;
         }
     }
