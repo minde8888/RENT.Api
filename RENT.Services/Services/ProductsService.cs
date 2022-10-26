@@ -8,10 +8,31 @@ namespace RENT.Services.Services
     public class ProductsService : IProductsService
     {
         private readonly IMapper _mapper;
+        private readonly IProductsRepository _productsRepository;
+        private readonly IImagesService _imagesService;
 
-        public ProductsService(IMapper mapper)
+        public ProductsService(IProductsRepository productsRepository, IImagesService imagesService, IMapper mapper)
         {
             _mapper = mapper;
+            _productsRepository = productsRepository;
+            _imagesService = imagesService;
+        }
+
+        public async Task AddProductWithImage(ProducRequestDto product)
+        {
+            var imageName = "";
+            if (product.Images != null)
+            {
+                string[] height = product.ImageHeight.Split(',');
+                string[] width = product.ImageWidth.Split(',');
+
+                for (int i = 0; i < height.Length; i++)
+                {
+                    imageName += _imagesService.SaveImage(product.Images[i], height[i], width[i]);
+                }
+            }
+            product.ImageName = imageName;
+            await _productsRepository.AddProductsAsync(product);
         }
 
         public List<ProductDto> GetProductImage(List<Products> products, string imageSrc)
@@ -23,7 +44,7 @@ namespace RENT.Services.Services
             foreach (var item in productsToReturn)
             {
                 string[] ImageName = item.ImageName.Split(',');
-          
+
                 foreach (var img in ImageName)
                 {
                     if (!String.IsNullOrEmpty(img))

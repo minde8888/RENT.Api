@@ -49,12 +49,10 @@ namespace Rent.Xunit.ControllerTest
         [Fact]
         public void AddProduct()
         {
+            var controler
             // _mockProductRepository.Verify(x => x.AddProductsAsync(new ProducRequestDto()), Times.AtLeastOnce);
 
-            var formFile = new Mock<IFormFile>();
-            var imageName = _mockImageRepository.Setup(_ => _.SaveImage(formFile.Object, "1", "2")).Returns("");
-            Assert.NotNull(imageName);
-            //Assert.Equal("", imageName.);
+
         }
 
         [Fact]

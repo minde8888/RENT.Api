@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,24 +16,20 @@ namespace RENT.Api.Controllers
     public class ProductsController : Controller
     {
         private readonly IWebHostEnvironment _hostEnvironment;
-        private readonly IImagesService _imagesService;
         private readonly IProductsRepository _productsRepository;
         private readonly IProductsService _productsService;
-        private readonly IMapper _mapper;
 
 
         public ProductsController(
-            IImagesService imagesService,
+
             IWebHostEnvironment hostEnvironment,
             IProductsService productsService,
-            IProductsRepository productsRepository,
-            IMapper mapper)
+            IProductsRepository productsRepository)
         {
-            _imagesService = imagesService;
+
             _hostEnvironment = hostEnvironment;
             _productsRepository = productsRepository;
             _productsService = productsService;
-            _mapper = mapper;
         }
 
         [Authorize(Roles = "User, Admin")]
@@ -44,20 +39,8 @@ namespace RENT.Api.Controllers
         {
             try
             {
-                var imageName = "";
-                if (product.Images != null)
-                {
-                    string[] height = product.ImageHeight.Split(',');
-                    string[] width = product.ImageWidth.Split(',');
-                    string path = _hostEnvironment.ContentRootPath;
 
-                    for (int i = 0; i < height.Length; i++)
-                    {
-                        imageName += _imagesService.SaveImage(product.Images[i], height[i], width[i]);
-                    }
-                }
-                product.ImageName = imageName;
-                await _productsRepository.AddProductsAsync(product);
+                await _productsService.AddProductWithImage(product);
                 return Ok();
             }
             catch (Exception ex)
