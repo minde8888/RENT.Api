@@ -7,16 +7,14 @@ using RENT.Api.Controllers;
 using RENT.Data.Interfaces;
 using RENT.Domain.Dtos.RequestDto;
 using RENT.Domain.Entities;
+using System.Net;
 
 namespace Rent.Xunit.ControllerTest
 {
     public class ProductsControllerTest
     {
         private readonly Mock<IProductsRepository> _mockProductRepository;
-        private readonly Mock<IImagesService> _mockImageRepository;
         private readonly Mock<IProductsService> _mockProductService;
-        private readonly Mock<IWebHostEnvironment> _mockWebHostRepository;
-        private readonly Mock<IMapper> _mockMapperRepository;
         private readonly ProductsController _controller;
 
         public ProductsControllerTest()
@@ -28,17 +26,13 @@ namespace Rent.Xunit.ControllerTest
             var httpContext = Mock.Of<HttpContext>(_ =>
                 _.Request == request.Object
             );
-            _mockProductRepository = new Mock<IProductsRepository>();
-            _mockImageRepository = new Mock<IImagesService>();
+            _mockProductRepository = new Mock<IProductsRepository>();  
             _mockProductService = new Mock<IProductsService>();
-            _mockWebHostRepository = new Mock<IWebHostEnvironment>();
-            _mockMapperRepository = new Mock<IMapper>();
 
-            _controller = new ProductsController(_mockImageRepository.Object,
-                _mockWebHostRepository.Object,
+
+            _controller = new ProductsController(
                 _mockProductService.Object,
-                _mockProductRepository.Object,
-                _mockMapperRepository.Object)
+                _mockProductRepository.Object)
             {
                 ControllerContext = new ControllerContext()
                 {
@@ -49,38 +43,38 @@ namespace Rent.Xunit.ControllerTest
         [Fact]
         public void AddProduct()
         {
-            var controler
-            // _mockProductRepository.Verify(x => x.AddProductsAsync(new ProducRequestDto()), Times.AtLeastOnce);
-
-
+            //Arrange
+            var product = new ProducRequestDto();
+           _mockProductService.Setup(x => x.AddProductWithImage(product));
+            //Act
+            var response = _controller.AddNewProductAsync(product);
+            //result.  
+            Assert.Equal(typeof(Task<IActionResult>), response.GetType());
         }
 
         [Fact]
+        public void GetAllProductsByFromQuery()
+        {
+            //request.Setup(x => x.PathBase).Returns(PathString.FromUriComponent("/api/v1/?PageNumber=1&PageSize=5"));
+        }
+        [Fact]
         public void GetReturnsProductWithSameId()
         {
+            //Arrange
             var productList = GetProductsData();
             var productListDto = GetProductsDtoData();
-            _mockProductRepository.Setup(x => x.GetProductIdAsync(productList[0].ProductsId)).ReturnsAsync(productList);
-            _mockProductService.Setup(i => i.GetProductImage(productList, "test")).Returns(productListDto);
-            //request.Setup(x => x.PathBase).Returns(PathString.FromUriComponent("/api/v1/?PageNumber=1&PageSize=5"));
-
-            //var a = _mockProductService.Object;
+            _mockProductService.Setup(x => x.GetProductById(productList[0].ProductsId, "imageSrc")).ReturnsAsync(productListDto);  
+            //Act
             var response = _controller.GetAsync(productList[0].ProductsId.ToString());
-            //Assert.NotNull(response);
+            // Assert
+            Assert.NotNull(response);
             //Assert.NotNull(response.Content);
-            //Assert.Equal(product[0], response.Result.Value.Count);
+            //Assert.Equal(mockResult., response);
             //var productResult = Assert.IsType<List<Products>>(response);
             //Assert.Equal(1, productResult.Count);
-
-            //// Act
-            //IHttpActionResult actionResult = controller.Get(42);
-            //var contentResult = actionResult as OkNegotiatedContentResult<Product>;
-
-            //// Assert
-            //Assert.IsNotNull(contentResult);
-            //Assert.IsNotNull(contentResult.Content);
-            //Assert.AreEqual(42, contentResult.Content.Id);
         }
+
+
 
         private List<Products> GetProductsData()
         {

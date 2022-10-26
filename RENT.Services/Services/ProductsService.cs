@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
+using Org.BouncyCastle.Asn1.Ocsp;
+using RENT.Data.Filter;
 using RENT.Data.Interfaces;
 using RENT.Domain.Dtos.RequestDto;
+using RENT.Domain.Dtos.ResponseDto;
 using RENT.Domain.Entities;
 
 namespace RENT.Services.Services
@@ -17,7 +20,6 @@ namespace RENT.Services.Services
             _productsRepository = productsRepository;
             _imagesService = imagesService;
         }
-
         public async Task AddProductWithImage(ProducRequestDto product)
         {
             var imageName = "";
@@ -35,7 +37,44 @@ namespace RENT.Services.Services
             await _productsRepository.AddProductsAsync(product);
         }
 
-        public List<ProductDto> GetProductImage(List<Products> products, string imageSrc)
+        public async Task<ProductResponseDto> GetAllProductsAsync(PaginationFilter filter, string ImageSrc, string route)
+        {
+            var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+            return await _productsRepository.GetProductsAsync(ImageSrc, validFilter, route);
+
+        }
+        public async Task<List<ProductDto>> GetProductById(Guid userId, string imageSrc)
+        {
+            var products = await _productsRepository.GetProductIdAsync(userId);
+            if (products == null)
+                 throw new Exception();
+            return GetProductImage(products, imageSrc);
+        }
+
+        public async Task UpdateItemAsync(ProducRequestDto product)
+        {
+            if (product.Images != null)
+            {
+                string[] height = product.ImageHeight.Split(',');
+                string[] width = product.ImageWidth.Split(',');
+                string[] imageName = product.ImageSrc.Split(',');
+
+                int count = 0;
+
+                for (int i = 0; i < imageName.Length; i++)
+                {
+                    if (imageName[i] == "/")
+                    {
+                        imageName[i] = _imagesService.SaveImage(product.Images[count], height[count], width[count]).Replace(",", "");
+                        count++;
+                    }
+                }
+                product.ImageSrc = String.Join(',', imageName);
+            }
+            await _productsRepository.UpdateProductAsync(product);
+        }
+
+        private List<ProductDto> GetProductImage(List<Products> products, string imageSrc)
         {
             var productsToReturn = _mapper.Map<List<ProductDto>>(products);
 
@@ -56,6 +95,5 @@ namespace RENT.Services.Services
             }
             return productsToReturn;
         }
-
     }
 }

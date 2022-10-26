@@ -15,19 +15,16 @@ namespace RENT.Api.Controllers
     [Route("api/v1/[controller]")]
     public class ProductsController : Controller
     {
-        private readonly IWebHostEnvironment _hostEnvironment;
         private readonly IProductsRepository _productsRepository;
         private readonly IProductsService _productsService;
 
 
         public ProductsController(
 
-            IWebHostEnvironment hostEnvironment,
             IProductsService productsService,
             IProductsRepository productsRepository)
         {
 
-            _hostEnvironment = hostEnvironment;
             _productsRepository = productsRepository;
             _productsService = productsService;
         }
@@ -39,7 +36,6 @@ namespace RENT.Api.Controllers
         {
             try
             {
-
                 await _productsService.AddProductWithImage(product);
                 return Ok();
             }
@@ -57,9 +53,8 @@ namespace RENT.Api.Controllers
             try
             {
                 var route = Request.Path.Value;
-                var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
                 String ImageSrc = String.Format("{0}://{1}{2}", Request.Scheme, Request.Host, Request.PathBase);
-                var response = await _productsRepository.GetProductsAsync(ImageSrc, validFilter, route);
+                var response = await _productsService.GetAllProductsAsync(filter, ImageSrc, route);
                 return Ok(response);
             }
             catch (Exception ex)
@@ -79,13 +74,9 @@ namespace RENT.Api.Controllers
                     return BadRequest();
                 var userId = new Guid(id);
 
-                var product = await _productsRepository.GetProductIdAsync(userId);
-                if (product == null)
-                    return NotFound();
-
                 String ImageSrc = String.Format("{0}://{1}{2}", Request.Scheme, Request.Host, Request.PathBase);
 
-                var productsToReturn = _productsService.GetProductImage(product, ImageSrc);
+                var productsToReturn = await _productsService.GetProductById(userId, ImageSrc);
 
                 return Ok(productsToReturn);
             }
@@ -99,35 +90,13 @@ namespace RENT.Api.Controllers
         [Authorize(Roles = "User, Admin")]
         [HttpPut("Update")]
         [SupportedOSPlatform("windows")]
-        public async Task<ActionResult> UpdateAsync([FromForm] ProducRequestDto product)
+        public ActionResult UpdateAsync([FromForm] ProducRequestDto product)
         {
             if (product.ProductsId == Guid.Empty)
                 return BadRequest("This product can not by updated");
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
             try
             {
-                if (product.Images != null)
-                {
-                    string[] height = product.ImageHeight.Split(',');
-                    string[] width = product.ImageWidth.Split(',');
-                    string[] imageName = product.ImageSrc.Split(',');
-
-                    int count = 0;
-
-                    for (int i = 0; i < imageName.Length; i++)
-                    {
-                        if (imageName[i] == "/")
-                        {
-                            imageName[i] = _imagesService.SaveImage(product.Images[count], height[count], width[count]).Replace(",", "");
-                            count++;
-                        }
-                    }
-                    product.ImageSrc = String.Join(',', imageName);
-                }
-
-                await _productsRepository.UpdateProductAsync(product);
+                _productsService.UpdateItemAsync( product);
                 return Ok();
             }
             catch (DbUpdateException)
