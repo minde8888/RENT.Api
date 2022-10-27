@@ -32,7 +32,7 @@ namespace RENT.Api.Controllers
         [Authorize(Roles = "User, Admin")]
         [HttpPost]
         [SupportedOSPlatform("windows")]
-        public async Task<IActionResult> AddNewProductAsync([FromForm] ProducRequestDto product)
+        public async Task<ActionResult> AddNewProductAsync([FromForm] ProducRequestDto product)
         {
             try
             {
@@ -75,9 +75,7 @@ namespace RENT.Api.Controllers
                 var userId = new Guid(id);
 
                 String ImageSrc = String.Format("{0}://{1}{2}", Request.Scheme, Request.Host, Request.PathBase);
-
                 var productsToReturn = await _productsService.GetProductById(userId, ImageSrc);
-
                 return Ok(productsToReturn);
             }
             catch (Exception)
@@ -96,7 +94,7 @@ namespace RENT.Api.Controllers
                 return BadRequest("This product can not by updated");
             try
             {
-                _productsService.UpdateItemAsync( product);
+                _productsService.UpdateItemAsync(product);
                 return Ok();
             }
             catch (DbUpdateException)

@@ -3,11 +3,15 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using Org.BouncyCastle.Asn1.Ocsp;
 using RENT.Api.Controllers;
+using RENT.Data.Filter;
 using RENT.Data.Interfaces;
 using RENT.Domain.Dtos.RequestDto;
+using RENT.Domain.Dtos.ResponseDto;
 using RENT.Domain.Entities;
 using System.Net;
+using System.Runtime.Versioning;
 
 namespace Rent.Xunit.ControllerTest
 {
@@ -26,6 +30,7 @@ namespace Rent.Xunit.ControllerTest
             var httpContext = Mock.Of<HttpContext>(_ =>
                 _.Request == request.Object
             );
+
             _mockProductRepository = new Mock<IProductsRepository>();  
             _mockProductService = new Mock<IProductsService>();
 
@@ -41,21 +46,24 @@ namespace Rent.Xunit.ControllerTest
             };
         }
         [Fact]
+        [SupportedOSPlatform("windows")]
         public void AddProduct()
         {
             //Arrange
             var product = new ProducRequestDto();
-           _mockProductService.Setup(x => x.AddProductWithImage(product));
+           _mockProductService.Setup(x => x.AddProductWithImage(new ProducRequestDto()));
             //Act
             var response = _controller.AddNewProductAsync(product);
             //result.  
-            Assert.Equal(typeof(Task<IActionResult>), response.GetType());
+            Assert.Equal(typeof(Task<ActionResult>), response.GetType());
         }
 
         [Fact]
         public void GetAllProductsByFromQuery()
         {
-            //request.Setup(x => x.PathBase).Returns(PathString.FromUriComponent("/api/v1/?PageNumber=1&PageSize=5"));
+            _mockProductService.Setup(x => x.GetAllProductsAsync(new PaginationFilter(), "://", " "))
+            .ReturnsAsync(new ProductResponseDto());
+            var response = _controller.GetAllAsync(new PaginationFilter());
         }
         [Fact]
         public void GetReturnsProductWithSameId()
@@ -63,7 +71,7 @@ namespace Rent.Xunit.ControllerTest
             //Arrange
             var productList = GetProductsData();
             var productListDto = GetProductsDtoData();
-            _mockProductService.Setup(x => x.GetProductById(productList[0].ProductsId, "imageSrc")).ReturnsAsync(productListDto);  
+            _mockProductService.Setup(x => x.GetProductById(Guid.NewGuid(), "://")).ReturnsAsync(GetProductsDtoData());  
             //Act
             var response = _controller.GetAsync(productList[0].ProductsId.ToString());
             // Assert
@@ -73,7 +81,34 @@ namespace Rent.Xunit.ControllerTest
             //var productResult = Assert.IsType<List<Products>>(response);
             //Assert.Equal(1, productResult.Count);
         }
+        [Fact]
+        [SupportedOSPlatform("windows")]
+        public void UpdateProductValues()
+        {
+            //Arrange
+            var product = new ProducRequestDto
+            {
+                ProductsId = Guid.NewGuid()
+            };
+            _mockProductService.Setup(x => x.UpdateItemAsync(product));
+            //Act
+            var response = _controller.UpdateAsync(product);
+            // Assert
+            Assert.Equal(typeof(OkResult), response.GetType());
+        }
 
+        [Fact]
+        [SupportedOSPlatform("windows")]
+        public void DeleteProduct()
+        {
+            //Arrange
+            var id = Guid.NewGuid();
+            _mockProductRepository.Setup(x => x.RemoveProductsAsync(id.ToString()));
+            //Act
+            var response = _controller.DeleteProductAsync(id.ToString());
+            // Assert
+            Assert.Equal(typeof(Task<ActionResult>), response.GetType());
+        }
 
 
         private List<Products> GetProductsData()
