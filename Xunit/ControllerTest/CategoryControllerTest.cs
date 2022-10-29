@@ -1,21 +1,12 @@
 ﻿using AutoFixture.AutoMoq;
 using AutoFixture;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using RENT.Api.Controllers;
-using RENT.Data.Filter;
 using RENT.Data.Interfaces;
-using RENT.Data.Repository;
 using RENT.Domain.Dtos;
-using RENT.Domain.Dtos.RequestDto;
-using RENT.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Versioning;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Rent.Xunit.ControllerTest
 {
@@ -26,23 +17,9 @@ namespace Rent.Xunit.ControllerTest
 
         public CategoryControllerTest()
         {
-            var request = new Mock<HttpRequest>();
-            request.Setup(x => x.Scheme).Returns("http");
-            request.Setup(x => x.Host).Returns(HostString.FromUriComponent("https://localhost:44346/"));
-            request.Setup(x => x.PathBase).Returns(PathString.FromUriComponent("/api/v1/"));
-            var httpContext = Mock.Of<HttpContext>(_ =>
-                _.Request == request.Object
-            );
-
             _mockCategoryRepository = new Mock<ICategoryRepository>();
 
-            _controller = new CategoryController(_mockCategoryRepository.Object)
-            {
-                ControllerContext = new ControllerContext()
-                {
-                    HttpContext = new DefaultHttpContext()
-                }
-            };
+            _controller = new CategoryController(_mockCategoryRepository.Object);
         }
 
         [Fact]
@@ -59,6 +36,66 @@ namespace Rent.Xunit.ControllerTest
             Assert.NotNull(result);
             Assert.Equal(category, result.Value);
 
+        }
+        [Fact]
+        public void GetAllCategories()
+        {
+            //Arrange
+            var category = GetCategoriesDto();
+            var listCategories = new List<CategoriesDto>
+            {
+                category,
+                category,
+                category
+            };
+            _mockCategoryRepository.Setup(x => x.GetAllCategoriesAsync()).ReturnsAsync(listCategories);
+            //Act
+            var response = _controller.GetAll();
+            var result = response.Result.Result as OkObjectResult;
+            //result
+            Assert.NotNull(response);
+            Assert.NotNull(result);
+            Assert.Equal(typeof(Task<ActionResult<CategoriesDto>>), response.GetType());
+            Assert.Equal(listCategories, result.Value);
+        }
+        [Fact]
+        public void GetReturnCategoryWithSameId()
+        {
+            //Arrange
+            var category = GetCategoriesDto();
+            _mockCategoryRepository.Setup(x => x.GetCategoriesIdAsync(category.CategoriesId)).ReturnsAsync(category);
+            //Act
+            var response = _controller.Get(category.CategoriesId.ToString());
+            var result = response.Result.Result as OkObjectResult;
+            //result
+            Assert.NotNull(response);
+            Assert.NotNull(result);
+            Assert.Equal(typeof(Task<ActionResult<CategoriesDto>>), response.GetType());
+            Assert.Equal(category, result.Value);
+        }
+        [Fact]
+        [SupportedOSPlatform("windows")]
+        public void UpdatweCategoryValues()
+        {
+            //Arrange
+            var category = GetCategoriesDto();
+            _mockCategoryRepository.Setup(x => x.UpdateCategory(category));
+            //Act
+            var response = _controller.Update(category);
+            // Assert
+            Assert.Equal(typeof(OkResult), response.GetType());
+        }
+        [Fact]
+        [SupportedOSPlatform("windows")]
+        public void DeleteCategory()
+        {
+            //Arrange
+            var id = Guid.NewGuid();
+            _mockCategoryRepository.Setup(x => x.RemoveCategoryAsync(id.ToString()));
+            //Act
+            var response = _controller.Delete(id.ToString());
+            // Assert
+            Assert.Equal(typeof(OkResult), response.GetType());
         }
         private CategoriesDto GetCategoriesDto()
         {

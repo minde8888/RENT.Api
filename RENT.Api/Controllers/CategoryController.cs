@@ -80,7 +80,7 @@ namespace RENT.Api.Controllers
         [Authorize(Roles = "User, Admin")]
         [HttpPut("Update")]
         [SupportedOSPlatform("windows")]
-        public ActionResult UpdateCategory(CategoriesDto category)
+        public ActionResult Update(CategoriesDto category)
         {
             try
             {
@@ -96,7 +96,7 @@ namespace RENT.Api.Controllers
 
         [HttpDelete("Delete/{id}")]
         [Authorize(Roles = "User, Admin")]
-        public ActionResult DeleteCategory(String id)
+        public ActionResult Delete(String id)
         {
             if (String.IsNullOrEmpty(id))
                 return BadRequest();

@@ -2,17 +2,13 @@
 using AutoFixture.AutoMoq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Moq;
-using Org.BouncyCastle.Asn1.Ocsp;
 using RENT.Api.Controllers;
 using RENT.Data.Filter;
 using RENT.Data.Interfaces;
 using RENT.Domain.Dtos.RequestDto;
 using RENT.Domain.Dtos.ResponseDto;
 using RENT.Domain.Entities;
-using System.Net.Sockets;
-using System.Reflection.Metadata;
 using System.Runtime.Versioning;
 
 namespace Rent.Xunit.ControllerTest
