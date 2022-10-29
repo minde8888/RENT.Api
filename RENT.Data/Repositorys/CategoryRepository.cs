@@ -3,7 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using RENT.Data.Context;
 using RENT.Data.Interfaces;
 using RENT.Domain.Dtos;
+using RENT.Domain.Dtos.RequestDto;
 using RENT.Domain.Entities;
+using System;
 
 namespace RENT.Data.Repository
 {
@@ -33,15 +35,19 @@ namespace RENT.Data.Repository
             };
             _context.CategoriesProduct.Add(categories);
             await _context.SaveChangesAsync();
-
             return _mapper.Map<CategoriesDto>(cat);
+        }
+
+        public async Task<List<CategoriesDto>> GetAllCategoriesAsync()
+        {
+            var catList = await _context.CategoriesProduct.Select(_ => _mapper.Map<CategoriesDto>(_.Categories)).ToListAsync();
+            return catList; 
         }
         public async Task<CategoriesDto> GetCategoriesIdAsync(Guid guidId)
         {
-            var prodCat = await _context.CategoriesProduct.Where(x => x.CategoriesId == guidId).FirstOrDefaultAsync();
-
+            var prodCat = await _context.CategoriesProduct
+                .Where(x => x.CategoriesId == guidId).FirstOrDefaultAsync();
             return _mapper.Map<CategoriesDto>(prodCat.Categories);
-
         }
         public async Task UpdateCategory(CategoriesDto category)
         {
@@ -51,7 +57,8 @@ namespace RENT.Data.Repository
             for (int i = 0; i < categories.Length; i++)
             {
                 var guid = new Guid(categoriesId[i]);
-                var categorySave = _context.Categories.Where(x => x.CategoriesId == guid).FirstOrDefault();
+                var categorySave = _context.Categories
+                    .Where(x => x.CategoriesId == guid).FirstOrDefault();
                 categorySave.CategoriesName = categories[i];
                 _context.Entry(categorySave).State = EntityState.Modified;
             }
@@ -61,7 +68,8 @@ namespace RENT.Data.Repository
         public void RemoveCategoryAsync(string id)
         {
             var guid = new Guid(id);
-            var cat = _context.Categories.Where(x => x.CategoriesId == guid).FirstOrDefault();
+            var cat = _context.Categories
+                .Where(x => x.CategoriesId == guid).FirstOrDefault();
             _context.Categories.Remove(cat);
             _context.SaveChangesAsync();
         }

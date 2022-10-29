@@ -112,12 +112,12 @@ namespace RENT.Data.Repositorys
             return response;
         }
 
-        public async Task<List<Products>> GetProductIdAsync(Guid Id)
+        public async Task<Products> GetProductIdAsync(Guid Id)
         {
             return await _context.Products.
                 Include(c => c.Categories).
                 Include(p => p.Posts).
-                Where(x => x.ProductsId == Id).ToListAsync();
+                Where(x => x.ProductsId == Id).FirstOrDefaultAsync();
         }
 
         public async Task UpdateProductAsync(ProducRequestDto productDto)

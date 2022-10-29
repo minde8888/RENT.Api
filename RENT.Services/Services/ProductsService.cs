@@ -43,12 +43,12 @@ namespace RENT.Services.Services
             return await _productsRepository.GetProductsAsync(ImageSrc, validFilter, route);
 
         }
-        public async Task<List<ProductDto>> GetProductById(Guid userId, string imageSrc)
+        public async Task<ProductDto> GetProductById(Guid userId, string imageSrc)
         {
-            var products = await _productsRepository.GetProductIdAsync(userId);
-            if (products == null)
+            var product = await _productsRepository.GetProductIdAsync(userId);
+            if (product == null)
                  throw new Exception();
-            return GetProductImage(products, imageSrc);
+            return GetProductImage(product, imageSrc);
         }
 
         public async Task UpdateItemAsync(ProducRequestDto product)
@@ -74,25 +74,19 @@ namespace RENT.Services.Services
             await _productsRepository.UpdateProductAsync(product);
         }
 
-        private List<ProductDto> GetProductImage(List<Products> products, string imageSrc)
+        private ProductDto GetProductImage(Products products, string imageSrc)
         {
-            var productsToReturn = _mapper.Map<List<ProductDto>>(products);
-
-            var newImages = new List<string>();
-
-            foreach (var item in productsToReturn)
-            {
-                string[] ImageName = item.ImageName.Split(',');
-
+            var productsToReturn = _mapper.Map<ProductDto>(products);
+            var newImages = new List<string>();        
+            string[] ImageName = productsToReturn.ImageName.Split(',');
                 foreach (var img in ImageName)
                 {
                     if (!String.IsNullOrEmpty(img))
                     {
                         newImages.Add(String.Format("{0}/Images/{1}", imageSrc, img));
-                        item.ImageSrc = newImages;
+                        productsToReturn.ImageSrc = newImages;
                     }
-                }
-            }
+                }            
             return productsToReturn;
         }
     }

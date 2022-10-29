@@ -22,15 +22,18 @@ namespace Rent.Xunit.Static
         [Fact]
         public void DateOffsetChack()
         {
+            //Arrange
             DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(1000);
             long unixTimeStampInSeconds = dateTimeOffset.ToUnixTimeSeconds();
+            //Act
             var expDate = UnixTimeStamp.UnixTimeStampToDateTime(unixTimeStampInSeconds);
-
+            //result
             expDate.Should().BeMoreThan(1.Days()).Before(DateTime.UtcNow);
         }
         [Fact]
         public void Pagination()
         {
+            //Arrange
             var fixture = new Fixture();
             fixture.Customize(new AutoMoqCustomization()
             {
@@ -38,12 +41,15 @@ namespace Rent.Xunit.Static
             });
             var filter = fixture.Create<PaginationFilter>();
             var uri = fixture.Create<IUriService>();
-            var uriService = uri.GetPageUri(filter, "test.com");
-            uriService.AbsolutePath.Should().Be("/");
-
             List<Products> product = new();
             product.Add(new Products());
+            //Act
+            var uriService = uri.GetPageUri(filter, "test.com");
             var value = PaginationHelper.CreatePagedReponse(product, filter, 10, uri, "test.com");
+            //result
+            uriService.Should().NotBeNull();
+            uriService.AbsolutePath.Should().Be("/");  
+            value.Should().NotBeNull();
             value.TotalRecords.Should().Be(10);
         }
     }

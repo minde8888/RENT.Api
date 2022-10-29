@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoFixture.AutoMoq;
+using AutoFixture;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using RENT.Api.Controllers;
+using RENT.Data.Filter;
 using RENT.Data.Interfaces;
 using RENT.Data.Repository;
 using RENT.Domain.Dtos;
@@ -52,22 +55,20 @@ namespace Rent.Xunit.ControllerTest
             //Act
             var response = _controller.AddNewCategory(category);
             var result = response.Result as OkObjectResult;
-            //result.  
+            //result
             Assert.NotNull(result);
             Assert.Equal(category, result.Value);
 
         }
-
         private CategoriesDto GetCategoriesDto()
         {
-            return new CategoriesDto() { 
-                CategoriesId = new Guid("E4DE1CC1-5271-4B2F-9783-A96E9F904DE9") ,
-                CategoriesName = "name",
-                Description = "description",
-                ImageName = "imageName",
-                ProductsId = new Guid("E4DE1CC1-5271-4B2F-9783-A96E9F904D10"),
-    
-            };
+            var fixture = new Fixture();
+            fixture.Customize(new AutoMoqCustomization()
+            {
+                ConfigureMembers = true
+            });
+           
+           return fixture.Create<CategoriesDto>();
         }
     }
 }

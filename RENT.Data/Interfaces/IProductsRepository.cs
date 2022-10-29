@@ -9,7 +9,7 @@ namespace RENT.Data.Interfaces
     {
         public Task AddProductsAsync(ProducRequestDto product);
         public Task<ProductResponseDto> GetProductsAsync(string ImageSrc, PaginationFilter validFilter, string route);
-        public Task<List<Products>> GetProductIdAsync(Guid Id);
+        public Task<Products> GetProductIdAsync(Guid Id);
         public Task UpdateProductAsync(ProducRequestDto productDto);
         public Task RemoveProductsAsync(string userId);
     }

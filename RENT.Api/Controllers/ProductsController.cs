@@ -18,13 +18,11 @@ namespace RENT.Api.Controllers
         private readonly IProductsRepository _productsRepository;
         private readonly IProductsService _productsService;
 
-
         public ProductsController(
 
             IProductsService productsService,
             IProductsRepository productsRepository)
         {
-
             _productsRepository = productsRepository;
             _productsService = productsService;
         }
@@ -52,7 +50,7 @@ namespace RENT.Api.Controllers
         {
             try
             {
-                var route = Request.Path.Value;
+                String route = Request.Path.Value;
                 String ImageSrc = String.Format("{0}://{1}{2}", Request.Scheme, Request.Host, Request.PathBase);
                 var response = await _productsService.GetAllProductsAsync(filter, ImageSrc, route);
                 return Ok(response);
