@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RENT.Data.Interfaces;
@@ -16,20 +15,15 @@ namespace RENT.Api.Controllers
     {
         private readonly IBaseRepository<T> _baseRepository;
         private readonly IBaseSerrvice<T> _baseSerrvice;
-        private readonly IMapper _mapper;
-
         private readonly IWebHostEnvironment _hostEnvironment;
 
-        public BaseController(IBaseRepository<T> baseRepository,
+        public BaseController(
+            IBaseRepository<T> baseRepository,
             IBaseSerrvice<T> baseSerrvice,
-            IMapper mapper,
-            IImagesService imagesService,
             IWebHostEnvironment hostEnvironment)
         {
             _baseRepository = baseRepository;
             _baseSerrvice = baseSerrvice;
-            _mapper = mapper;
-
             _hostEnvironment = hostEnvironment;
         }
 
@@ -86,18 +80,16 @@ namespace RENT.Api.Controllers
             }
         }
 
-        [HttpPut("Update/{id}")]
+        [HttpPut("Update")]
         [Authorize(Roles = "Admin, User")]
         [SupportedOSPlatform("windows")]
-        public async Task<ActionResult<List<UserDto>>> UpdateUserAsync(string id, [FromForm] RequestUserDto userDto)
+        public async Task<ActionResult<List<UserDto>>> UpdateUserAsync( [FromForm] RequestUserDto userDto)
         {
             try
             {
-                if (id == null)
-                    return BadRequest("This user can not by updated");
-
+                String route = Request.Path.Value;
+                var a = _hostEnvironment.ContentRootPath;
                 String src = String.Format("{0}://{1}{2}", Request.Scheme, Request.Host, Request.PathBase);
-
                 var result = await _baseSerrvice.UpdateItem(_hostEnvironment.ContentRootPath, userDto, src);
                 return Ok(result);
             }
@@ -119,7 +111,6 @@ namespace RENT.Api.Controllers
             try
             {
                 var result = await _baseRepository.Search(name);
-
                 if (result.Any())
                     return Ok(result);
 

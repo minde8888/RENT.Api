@@ -65,7 +65,7 @@ namespace Rent.Xunit.ControllerTest
             //Arrange
             var product = GetProductResponseDto();
             var filter = GetPaginationFilter();
-            _mockProductService.Setup(x => x.GetAllProductsAsync(filter, Url, "api/v1/Products")).ReturnsAsync(product);
+            _mockProductService.Setup(x => x.GetAllProductsAsync(filter, Url, "/api/v1/Products")).ReturnsAsync(product);
             //Act
             var response = _controller.GetAllAsync(filter);
             var result = response.Result.Result as OkObjectResult; 

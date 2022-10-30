@@ -1,5 +1,5 @@
-﻿using AutoFixture.AutoMoq;
-using AutoFixture;
+﻿using AutoFixture;
+using AutoFixture.AutoMoq;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using RENT.Api.Controllers;
@@ -7,18 +7,15 @@ using RENT.Data.Interfaces;
 using RENT.Domain.Dtos;
 using System.Runtime.Versioning;
 
-
 namespace Rent.Xunit.ControllerTest
 {
     public class CategoryControllerTest
     {
         private readonly Mock<ICategoryRepository> _mockCategoryRepository;
         private readonly CategoryController _controller;
-
         public CategoryControllerTest()
         {
             _mockCategoryRepository = new Mock<ICategoryRepository>();
-
             _controller = new CategoryController(_mockCategoryRepository.Object);
         }
 
@@ -35,8 +32,8 @@ namespace Rent.Xunit.ControllerTest
             //result
             Assert.NotNull(result);
             Assert.Equal(category, result.Value);
-
         }
+
         [Fact]
         public void GetAllCategories()
         {
@@ -58,6 +55,7 @@ namespace Rent.Xunit.ControllerTest
             Assert.Equal(typeof(Task<ActionResult<CategoriesDto>>), response.GetType());
             Assert.Equal(listCategories, result.Value);
         }
+
         [Fact]
         public void GetReturnCategoryWithSameId()
         {
@@ -73,6 +71,7 @@ namespace Rent.Xunit.ControllerTest
             Assert.Equal(typeof(Task<ActionResult<CategoriesDto>>), response.GetType());
             Assert.Equal(category, result.Value);
         }
+
         [Fact]
         [SupportedOSPlatform("windows")]
         public void UpdatweCategoryValues()
@@ -85,6 +84,7 @@ namespace Rent.Xunit.ControllerTest
             // Assert
             Assert.Equal(typeof(OkResult), response.GetType());
         }
+
         [Fact]
         [SupportedOSPlatform("windows")]
         public void DeleteCategory()
@@ -97,6 +97,7 @@ namespace Rent.Xunit.ControllerTest
             // Assert
             Assert.Equal(typeof(OkResult), response.GetType());
         }
+
         private CategoriesDto GetCategoriesDto()
         {
             var fixture = new Fixture();
@@ -104,8 +105,8 @@ namespace Rent.Xunit.ControllerTest
             {
                 ConfigureMembers = true
             });
-           
-           return fixture.Create<CategoriesDto>();
+
+            return fixture.Create<CategoriesDto>();
         }
     }
 }

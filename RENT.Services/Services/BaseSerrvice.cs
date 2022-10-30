@@ -29,13 +29,16 @@ namespace RENT.Services.Services
         }
         public async Task<UserDto> UpdateItem(string contentRootPath, RequestUserDto user, string src)
         {
-            string[] imagesNames = user.ImageName.Split(',');
-            foreach (var image in imagesNames)
+            if (user.ImageFile != null && user.ImageName != null)
             {
-                string imagePath = Path.Combine(contentRootPath, "Images", image);
-                _imagesService.DeleteImage(imagePath);
-            }
-            user.ImageName = _imagesService.SaveImage(user.ImageFile, user.Height, user.Width);
+                string[] imagesNames = user.ImageName.Split(',');
+                foreach (var image in imagesNames)
+                {
+                    string imagePath = Path.Combine(contentRootPath, "Images", image);
+                    _imagesService.DeleteImage(imagePath);
+                }
+                user.ImageName = _imagesService.SaveImage(user.ImageFile, user.Height, user.Width);
+            }          
             var itemReturn = await _baseRepository.UpdateItemAsync(user);
             GetImagesAsync(itemReturn, src);
 
