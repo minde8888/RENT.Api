@@ -18,7 +18,7 @@ namespace RENT.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("Identity")
-                .HasAnnotation("ProductVersion", "7.0.0-preview.7.22376.2")
+                .HasAnnotation("ProductVersion", "7.0.0-rc.1.22426.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -338,7 +338,7 @@ namespace RENT.Data.Migrations
                     b.Property<string>("CategoriesName")
                         .HasColumnType("text");
 
-                    b.Property<string>("Decription")
+                    b.Property<string>("Description")
                         .HasColumnType("text");
 
                     b.Property<string>("ImageName")
@@ -449,9 +449,6 @@ namespace RENT.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("CategoriesId")
-                        .HasColumnType("uuid");
-
                     b.Property<Guid?>("CustomersId")
                         .HasColumnType("uuid");
 
@@ -460,6 +457,9 @@ namespace RENT.Data.Migrations
 
                     b.Property<DateTime>("DateUpdated")
                         .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("text");
 
                     b.Property<string>("ImageHeight")
                         .HasColumnType("text");
@@ -473,6 +473,9 @@ namespace RENT.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("Phone")
+                        .HasColumnType("text");
+
                     b.Property<string>("Place")
                         .HasColumnType("text");
 
@@ -482,8 +485,8 @@ namespace RENT.Data.Migrations
                     b.Property<string>("Price")
                         .HasColumnType("text");
 
-                    b.Property<string>("ProductCode")
-                        .HasColumnType("text");
+                    b.Property<Guid?>("ProductsContactFormId")
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("SellerId")
                         .HasColumnType("uuid");
@@ -503,55 +506,6 @@ namespace RENT.Data.Migrations
                     b.HasIndex("ShopId");
 
                     b.ToTable("Products", "Identity");
-                });
-
-            modelBuilder.Entity("RENT.Domain.Entities.ProductsSpecifications", b =>
-                {
-                    b.Property<Guid>("ProductsSpecificationsId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Capacity")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("EnergySource")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Height")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Length")
-                        .HasColumnType("text");
-
-                    b.Property<string>("LiftingHeight")
-                        .HasColumnType("text");
-
-                    b.Property<string>("MaxLoad")
-                        .HasColumnType("text");
-
-                    b.Property<Guid?>("ProductsId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Speed")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Weight")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Width")
-                        .HasColumnType("text");
-
-                    b.HasKey("ProductsSpecificationsId");
-
-                    b.HasIndex("ProductsId");
-
-                    b.ToTable("Specifications", "Identity");
                 });
 
             modelBuilder.Entity("RENT.Domain.Entities.Roles.ApplicationRole", b =>
@@ -818,15 +772,6 @@ namespace RENT.Data.Migrations
                     b.Navigation("Customers");
 
                     b.Navigation("Seller");
-                });
-
-            modelBuilder.Entity("RENT.Domain.Entities.ProductsSpecifications", b =>
-                {
-                    b.HasOne("RENT.Domain.Entities.Products", "Products")
-                        .WithMany()
-                        .HasForeignKey("ProductsId");
-
-                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("RENT.Domain.Entities.Seller", b =>

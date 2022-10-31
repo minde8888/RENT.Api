@@ -50,7 +50,7 @@ namespace RENT.Api.Controllers
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Could not find web user account");
+                    "Could not find categories");
             }
         }
 

@@ -41,7 +41,6 @@ namespace RENT.Services.Services
         {
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
             return await _productsRepository.GetProductsAsync(ImageSrc, validFilter, route);
-
         }
         public async Task<ProductDto> GetProductById(Guid userId, string imageSrc)
         {
