@@ -118,7 +118,7 @@ namespace Rent.Xunit.ControllerTest
             Assert.Equal(typeof(Task<ActionResult>), response.GetType());
         }
 
-        private ProducRequestDto GetProductRequestDto()
+        private ProductsRequestDto GetProductRequestDto()
         {
             var fixture = new Fixture();
             fixture.Customize(new AutoMoqCustomization()
@@ -126,7 +126,7 @@ namespace Rent.Xunit.ControllerTest
                 ConfigureMembers = true
             });
 
-            return fixture.Create<ProducRequestDto>();
+            return fixture.Create<ProductsRequestDto>();
         }
 
         private List<Products> GetProductsData()
