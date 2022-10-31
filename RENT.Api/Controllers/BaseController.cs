@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RENT.Data.Interfaces;
@@ -16,20 +15,15 @@ namespace RENT.Api.Controllers
     {
         private readonly IBaseRepository<T> _baseRepository;
         private readonly IBaseSerrvice<T> _baseSerrvice;
-        private readonly IMapper _mapper;
-        private readonly IImagesService _imagesService;
         private readonly IWebHostEnvironment _hostEnvironment;
 
-        public BaseController(IBaseRepository<T> baseRepository,
+        public BaseController(
+            IBaseRepository<T> baseRepository,
             IBaseSerrvice<T> baseSerrvice,
-            IMapper mapper,
-            IImagesService imagesService,
             IWebHostEnvironment hostEnvironment)
         {
             _baseRepository = baseRepository;
             _baseSerrvice = baseSerrvice;
-            _mapper = mapper;
-            _imagesService = imagesService;
             _hostEnvironment = hostEnvironment;
         }
 
@@ -71,21 +65,11 @@ namespace RENT.Api.Controllers
             try
             {
                 if (string.IsNullOrEmpty(id))
-                    return BadRequest();
+                    return BadRequest("Can not find Id");
 
-                var item = await _baseRepository.GetItemIdAsync(id);
-                if (item == null)
-                    return NotFound();
+                String ImageSrc = String.Format("{0}://{1}{2}", Request.Scheme, Request.Host, Request.PathBase);
 
-                var result = _mapper.Map<UserDto>(item);
-                var newAddress = _mapper.Map<AddressDto>(item.Address);
-                result.AddressDto = newAddress;
-
-                if (result.ImageName != null)
-                {
-                    String ImageSrc = String.Format("{0}://{1}{2}", Request.Scheme, Request.Host, Request.PathBase);
-                    return Ok(_baseSerrvice.GetImagesAsync(result, ImageSrc));
-                }
+                var result = await _baseSerrvice.GetItemById(ImageSrc, id);
 
                 return Ok(result);
             }
@@ -96,38 +80,18 @@ namespace RENT.Api.Controllers
             }
         }
 
-        [HttpPut("Update/{id}")]
+        [HttpPut("Update")]
         [Authorize(Roles = "Admin, User")]
         [SupportedOSPlatform("windows")]
-        public async Task<ActionResult<List<UserDto>>> UpdateUserAsync(string id, [FromForm] RequestUserDto userDto)
+        public async Task<ActionResult<List<UserDto>>> UpdateUserAsync( [FromForm] RequestUserDto userDto)
         {
             try
             {
-                if (id == null)
-                    return BadRequest("This user can not by updated");
-
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
-
+                String route = Request.Path.Value;
+                var a = _hostEnvironment.ContentRootPath;
                 String src = String.Format("{0}://{1}{2}", Request.Scheme, Request.Host, Request.PathBase);
-
-               
-
-                if (userDto.ImageFile != null && userDto.ImageName != null)
-                {
-                    string[] imagesNames = userDto.ImageName.Split(',');
-                    foreach (var image in imagesNames)
-                    {
-                        string imagePath = Path.Combine(_hostEnvironment.ContentRootPath, "Images", image);
-                        _imagesService.DeleteImage(imagePath);
-                    }
-                    userDto.ImageName = _imagesService.SaveImage(userDto.ImageFile, userDto.Height, userDto.Width);
-                     await _baseRepository.UpdateItemAsync(userDto);  
-                }
-               
-                var itemReturn = await _baseRepository.UpdateItemAsync(userDto);
-                await _baseSerrvice.GetImagesAsync(itemReturn, src);
-                return Ok(itemReturn);
+                var result = await _baseSerrvice.UpdateItem(_hostEnvironment.ContentRootPath, userDto, src);
+                return Ok(result);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -147,7 +111,6 @@ namespace RENT.Api.Controllers
             try
             {
                 var result = await _baseRepository.Search(name);
-
                 if (result.Any())
                     return Ok(result);
 

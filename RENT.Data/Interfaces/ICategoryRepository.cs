@@ -8,5 +8,6 @@ namespace RENT.Data.Interfaces
         public void RemoveCategoryAsync(string id);
         public Task UpdateCategory(CategoriesDto category);
         Task<CategoriesDto> GetCategoriesIdAsync(Guid guidId);
+        Task<List<CategoriesDto>> GetAllCategoriesAsync();
     }
 }

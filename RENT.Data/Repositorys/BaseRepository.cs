@@ -42,13 +42,17 @@ namespace RENT.Data.Repositorys
             return _mapper.Map<UserDto>(item);
         }
 
-        public async Task<T> GetItemIdAsync(string Id)
+        public async Task<UserDto> GetItemIdAsync(string Id)
         {
             var itemToMap = await _context.Set<T>().
                 Include(t => t.Address).
                 SingleOrDefaultAsync(x => x.Id == Guid.Parse(Id));
 
-            return itemToMap;
+            var result = _mapper.Map<UserDto>(itemToMap);
+            var newAddress = _mapper.Map<AddressDto>(itemToMap.Address);
+            result.AddressDto = newAddress;
+
+            return result;
         }
 
         public async Task<UserDto> UpdateItemAsync(RequestUserDto userDto)

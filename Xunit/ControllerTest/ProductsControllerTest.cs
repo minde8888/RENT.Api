@@ -1,9 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoFixture;
+using AutoFixture.AutoMoq;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using RENT.Api.Controllers;
+using RENT.Data.Filter;
 using RENT.Data.Interfaces;
 using RENT.Domain.Dtos.RequestDto;
+using RENT.Domain.Dtos.ResponseDto;
 using RENT.Domain.Entities;
 using System.Runtime.Versioning;
 
@@ -14,16 +18,20 @@ namespace Rent.Xunit.ControllerTest
         private readonly Mock<IProductsRepository> _mockProductRepository;
         private readonly Mock<IProductsService> _mockProductService;
         private readonly ProductsController _controller;
+        private readonly string Url = "http://localhost:44346/api/v1/Products";
 
         public ProductsControllerTest()
         {
             var request = new Mock<HttpRequest>();
             request.Setup(x => x.Scheme).Returns("http");
-            request.Setup(x => x.Host).Returns(HostString.FromUriComponent("https://localhost:44346/"));
-            request.Setup(x => x.PathBase).Returns(PathString.FromUriComponent("/api/v1/"));
+            request.Setup(x => x.Host).Returns(HostString.FromUriComponent("localhost:44346"));
+            request.Setup(x => x.PathBase).Returns(PathString.FromUriComponent("/api/v1/Products"));
+            request.Setup(x => x.Headers["token"]).Returns("fake_token_here");
+            request.Setup(x => x.Path).Returns("/api/v1/Products");
             var httpContext = Mock.Of<HttpContext>(_ =>
                 _.Request == request.Object
             );
+
             _mockProductRepository = new Mock<IProductsRepository>();
             _mockProductService = new Mock<IProductsService>();
 
@@ -33,47 +41,93 @@ namespace Rent.Xunit.ControllerTest
             {
                 ControllerContext = new ControllerContext()
                 {
-                    HttpContext = new DefaultHttpContext()
+                    HttpContext = httpContext
                 }
             };
         }
+
         [Fact]
         [SupportedOSPlatform("windows")]
         public void AddProduct()
         {
             //Arrange
-            var product = new ProducRequestDto();
+            var product = GetProductRequestDto();
             _mockProductService.Setup(x => x.AddProductWithImage(product));
             //Act
             var response = _controller.AddNewProductAsync(product);
-            //result.  
-            Assert.Equal(typeof(Task<IActionResult>), response.GetType());
+            //result
+            Assert.Equal(typeof(Task<ActionResult>), response.GetType());
         }
 
         [Fact]
         public void GetAllProductsByFromQuery()
         {
-            //request.Setup(x => x.PathBase).Returns(PathString.FromUriComponent("/api/v1/?PageNumber=1&PageSize=5"));
+            //Arrange
+            var product = GetProductResponseDto();
+            var filter = GetPaginationFilter();
+            _mockProductService.Setup(x => x.GetAllProductsAsync(filter, Url, "/api/v1/Products")).ReturnsAsync(product);
+            //Act
+            var response = _controller.GetAllAsync(filter);
+            var result = response.Result.Result as OkObjectResult; 
+            //result
+            Assert.NotNull(response);
+            Assert.NotNull(result);
+            Assert.Equal(typeof(Task<ActionResult<ProductResponseDto>>), response.GetType());
+            Assert.Equal(product, result.Value);
         }
+
         [Fact]
         public void GetReturnsProductWithSameId()
         {
             //Arrange
             var productList = GetProductsData();
             var productListDto = GetProductsDtoData();
-
-            _mockProductService.Setup(x => x.GetProductById(productList[0].ProductsId, "imageSrc")).ReturnsAsync(productListDto);
+            _mockProductService.Setup(x => x.GetProductById(productListDto[0].ProductsId, Url)).ReturnsAsync(productListDto[0]);
             //Act
             var response = _controller.GetAsync(productList[0].ProductsId.ToString());
+            var result = response.Result.Result as OkObjectResult;
             // Assert
             Assert.NotNull(response);
-            //Assert.NotNull(response.Content);
-            //Assert.Equal(mockResult., response);
-            //var productResult = Assert.IsType<List<Products>>(response);
-            //Assert.Equal(1, productResult.Count);
+            Assert.NotNull(result);
+            Assert.Equal(typeof(Task<ActionResult<List<ProductDto>>>), response.GetType());
+            Assert.Equal(productListDto[0], result.Value);
         }
 
+        [Fact]
+        [SupportedOSPlatform("windows")]
+        public void UpdateProductValues()
+        {
+            //Arrange
+            _mockProductService.Setup(x => x.UpdateItemAsync(GetProductRequestDto()));
+            //Act
+            var response = _controller.UpdateAsync(GetProductRequestDto());
+            // Assert
+            Assert.Equal(typeof(OkResult), response.GetType());
+        }
 
+        [Fact]
+        [SupportedOSPlatform("windows")]
+        public void DeleteProduct()
+        {
+            //Arrange
+            var id = Guid.NewGuid();
+            _mockProductRepository.Setup(x => x.RemoveProductsAsync(id.ToString()));   
+            //Act
+            var response = _controller.DeleteProductAsync(id.ToString());
+            // Assert
+            Assert.Equal(typeof(Task<ActionResult>), response.GetType());
+        }
+
+        private ProductsRequestDto GetProductRequestDto()
+        {
+            var fixture = new Fixture();
+            fixture.Customize(new AutoMoqCustomization()
+            {
+                ConfigureMembers = true
+            });
+
+            return fixture.Create<ProductsRequestDto>();
+        }
 
         private List<Products> GetProductsData()
         {
@@ -85,6 +139,7 @@ namespace Rent.Xunit.ControllerTest
             };
             return productsData;
         }
+
         private List<ProductDto> GetProductsDtoData()
         {
             List<ProductDto> productsData = new()
@@ -94,6 +149,25 @@ namespace Rent.Xunit.ControllerTest
                 new ProductDto() { ProductsId = new Guid("197C5532-C5CA-4A31-AF68-C1A54A3D06C4") }
             };
             return productsData;
+        }
+
+        private PaginationFilter GetPaginationFilter()
+        {
+            var fixture = new Fixture();
+            fixture.Customize(new AutoMoqCustomization()
+            {
+                ConfigureMembers = true
+            });
+            return fixture.Create<PaginationFilter>();
+        }
+        private ProductResponseDto GetProductResponseDto()
+        {
+            var fixture = new Fixture();
+            fixture.Customize(new AutoMoqCustomization()
+            {
+                ConfigureMembers = true
+            });
+            return fixture.Create<ProductResponseDto>();
         }
     }
 }

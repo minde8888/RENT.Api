@@ -35,6 +35,25 @@ namespace RENT.Api.Controllers
             }
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult<CategoriesDto>> GetAll()
+        {
+            try
+            {
+                var productsInCategory = await _categoryRepository.GetAllCategoriesAsync();
+                if (productsInCategory == null)
+                    return NotFound();
+
+                return Ok(productsInCategory);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Could not find web user account");
+            }
+        }
+
         [HttpGet("id")]
         [AllowAnonymous]
         public async Task<ActionResult<CategoriesDto>> Get(String id)
@@ -61,7 +80,7 @@ namespace RENT.Api.Controllers
         [Authorize(Roles = "User, Admin")]
         [HttpPut("Update")]
         [SupportedOSPlatform("windows")]
-        public ActionResult UpdateCategory(CategoriesDto category)
+        public ActionResult Update(CategoriesDto category)
         {
             try
             {
@@ -73,12 +92,11 @@ namespace RENT.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError,
                 "Error update  -> Category");
             }
-
         }
 
         [HttpDelete("Delete/{id}")]
         [Authorize(Roles = "User, Admin")]
-        public ActionResult DeleteCategory(String id)
+        public ActionResult Delete(String id)
         {
             if (String.IsNullOrEmpty(id))
                 return BadRequest();
