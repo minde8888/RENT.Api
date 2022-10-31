@@ -1,5 +1,4 @@
 ﻿using RENT.Data.Interfaces;
-using RENT.Data.Repositorys;
 using RENT.Domain.Dtos;
 using RENT.Domain.Dtos.RequestDto;
 using RENT.Domain.Entities;

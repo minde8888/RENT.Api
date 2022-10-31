@@ -15,8 +15,8 @@ namespace Rent.Xunit.ControllerTest
     public class BaseControllerTest<T> : ControllerBase where T : BaseEntity
     {
         private readonly IWebHostEnvironment _hostEnvironment;
-        private readonly Mock<IBaseRepository<T>> _mockBaseRepository;
-        private readonly Mock<IBaseSerrvice<T>> _mockBaseSerrvice;
+        //private readonly Mock<IBaseRepository<T>> _mockBaseRepository;
+        //private readonly Mock<IBaseSerrvice<T>> _mockBaseSerrvice;
         private readonly BaseController<Seller> _sellerController;
         private readonly BaseController<Customers> _customersController;
         private readonly Mock<IBaseRepository<Seller>> _mockSellerRepository;
@@ -34,8 +34,7 @@ namespace Rent.Xunit.ControllerTest
             //request.Setup(x => x.Path).Returns("/api/v1/Products");
             request.Setup(x => x.HttpContext.User.FindFirst(It.IsAny<string>()).Value).Returns("E4DE1CC1-5271-4B2F-9783-A96E9F904DE9");
             var httpContext = Mock.Of<HttpContext>(_ =>
-                _.Request == request.Object
-               
+                _.Request == request.Object               
             );
          //   Mock.Of<ClaimsIdentity>(ci => ci.FindFirst(It.IsAny<string>()) == claim);
 
@@ -44,8 +43,8 @@ namespace Rent.Xunit.ControllerTest
             _mockSellerSerrvice = new Mock<IBaseSerrvice<Seller>>();
             _mockCustomersSerrvice = new Mock<IBaseSerrvice<Customers>>();
             _mockCustomersRepository = new Mock<IBaseRepository<Customers>>();
-            _mockBaseSerrvice = new Mock<IBaseSerrvice<T>>();
-            _mockBaseRepository = new Mock<IBaseRepository<T>>();
+            //_mockBaseSerrvice = new Mock<IBaseSerrvice<T>>();
+            //_mockBaseRepository = new Mock<IBaseRepository<T>>();
             _sellerController = new BaseController<Seller>(
                 _mockSellerRepository.Object,
                 _mockSellerSerrvice.Object,
