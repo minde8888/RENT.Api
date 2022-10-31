@@ -1,13 +1,11 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using RENT.Api.Controllers;
 using RENT.Data.Interfaces;
 using RENT.Domain.Dtos.RequestDto;
 using RENT.Domain.Entities;
-using System.Net;
+using System.Runtime.Versioning;
 
 namespace Rent.Xunit.ControllerTest
 {
@@ -26,9 +24,8 @@ namespace Rent.Xunit.ControllerTest
             var httpContext = Mock.Of<HttpContext>(_ =>
                 _.Request == request.Object
             );
-            _mockProductRepository = new Mock<IProductsRepository>();  
+            _mockProductRepository = new Mock<IProductsRepository>();
             _mockProductService = new Mock<IProductsService>();
-
 
             _controller = new ProductsController(
                 _mockProductService.Object,
@@ -41,11 +38,12 @@ namespace Rent.Xunit.ControllerTest
             };
         }
         [Fact]
+        [SupportedOSPlatform("windows")]
         public void AddProduct()
         {
             //Arrange
             var product = new ProducRequestDto();
-           _mockProductService.Setup(x => x.AddProductWithImage(product));
+            _mockProductService.Setup(x => x.AddProductWithImage(product));
             //Act
             var response = _controller.AddNewProductAsync(product);
             //result.  
@@ -63,7 +61,8 @@ namespace Rent.Xunit.ControllerTest
             //Arrange
             var productList = GetProductsData();
             var productListDto = GetProductsDtoData();
-            _mockProductService.Setup(x => x.GetProductById(productList[0].ProductsId, "imageSrc")).ReturnsAsync(productListDto);  
+
+            _mockProductService.Setup(x => x.GetProductById(productList[0].ProductsId, "imageSrc")).ReturnsAsync(productListDto);
             //Act
             var response = _controller.GetAsync(productList[0].ProductsId.ToString());
             // Assert

@@ -96,7 +96,7 @@ namespace RENT.Api.Controllers
                 return BadRequest("This product can not by updated");
             try
             {
-                _productsService.UpdateItemAsync( product);
+                _productsService.UpdateItemAsync(product);
                 return Ok();
             }
             catch (DbUpdateException)
