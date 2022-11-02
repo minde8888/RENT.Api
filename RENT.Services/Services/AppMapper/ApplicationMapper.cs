@@ -42,7 +42,7 @@ namespace RENT.Services.Services.AppMapper
 
             CreateMap<Posts, PostsDto>().ReverseMap();
             CreateMap<Categories, CategoriesDto>().ReverseMap();
-            CreateMap<Products, ProductDto>().
+            CreateMap<Products, ProductsDto>().
                 ForMember(dest => dest.PostsDto, act => act.MapFrom(src => src.Posts)).
                 ForMember(dest => dest.CategoriesDto, act => act.MapFrom(src => src.Categories)).ReverseMap();
 

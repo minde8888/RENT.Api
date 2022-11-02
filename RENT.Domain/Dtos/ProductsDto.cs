@@ -1,6 +1,6 @@
 ﻿namespace RENT.Domain.Dtos.RequestDto
 {
-    public class ProductDto
+    public class ProductsDto
     {
         public Guid ProductsId { get; set; }
         public string ImageName { get; set; }

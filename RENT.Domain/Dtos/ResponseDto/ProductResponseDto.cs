@@ -11,7 +11,7 @@ namespace RENT.Domain.Dtos.ResponseDto
         public int TotalRecords { get; set; }
         public int? NextPage { get; set; }
         public int? PreviousPage { get; set; }
-        public List<ProductDto> ProductDto { get; set; }
+        public List<ProductsDto> ProductDto { get; set; }
 
     }
 }

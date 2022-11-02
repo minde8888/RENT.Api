@@ -30,7 +30,7 @@ namespace RENT.Api.Controllers
         [Authorize(Roles = "User, Admin")]
         [HttpPost]
         [SupportedOSPlatform("windows")]
-        public async Task<ActionResult> AddNewProductAsync([FromForm] ProducRequestDto product)
+        public async Task<ActionResult> AddNewProductAsync([FromForm] ProductsRequestDto product)
         {
             try
             {
@@ -64,7 +64,7 @@ namespace RENT.Api.Controllers
 
         [HttpGet("id")]
         [AllowAnonymous]
-        public async Task<ActionResult<List<ProductDto>>> GetAsync(String id)
+        public async Task<ActionResult<List<ProductsDto>>> GetAsync(String id)
         {
             try
             {
@@ -86,7 +86,7 @@ namespace RENT.Api.Controllers
         [Authorize(Roles = "User, Admin")]
         [HttpPut("Update")]
         [SupportedOSPlatform("windows")]
-        public ActionResult UpdateAsync([FromForm] ProducRequestDto product)
+        public ActionResult UpdateAsync([FromForm] ProductsRequestDto product)
         {
             if (product.ProductsId == Guid.Empty)
                 return BadRequest("This product can not by updated");
