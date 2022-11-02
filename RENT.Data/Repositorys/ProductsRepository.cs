@@ -190,6 +190,6 @@ namespace RENT.Data.Repositorys
             product.Posts.IsDeleted = true;
 
             await _context.SaveChangesAsync();
-        }
+        } 
     }
 }

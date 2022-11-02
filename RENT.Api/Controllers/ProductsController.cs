@@ -86,7 +86,7 @@ namespace RENT.Api.Controllers
         [Authorize(Roles = "User, Admin")]
         [HttpPut("Update")]
         [SupportedOSPlatform("windows")]
-        public async Task<ActionResult<List<ProductDto>>> UpdateAsync([FromForm] ProducRequestDto product)
+        public async Task<ActionResult<List<ProductsDto>>> UpdateAsync([FromForm] ProductsRequestDto product)
         {
             if (product.ProductsId == Guid.Empty)
                 return BadRequest("This product can not by updated");
