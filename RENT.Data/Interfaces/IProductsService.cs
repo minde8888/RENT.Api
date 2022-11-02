@@ -9,6 +9,6 @@ namespace RENT.Data.Interfaces
         Task AddProductWithImage(ProducRequestDto product);
         Task<ProductResponseDto> GetAllProductsAsync(PaginationFilter filter, string ImageSrc, string route);
         Task<ProductDto> GetProductById(Guid userId, string imageSrc);
-        Task UpdateItemAsync(ProducRequestDto product);
+        Task<ProductDto> UpdateItemAsync(ProducRequestDto product, string imageSrc);
     }
 }

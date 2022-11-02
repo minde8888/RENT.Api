@@ -86,14 +86,15 @@ namespace RENT.Api.Controllers
         [Authorize(Roles = "User, Admin")]
         [HttpPut("Update")]
         [SupportedOSPlatform("windows")]
-        public ActionResult UpdateAsync([FromForm] ProducRequestDto product)
+        public async Task<ActionResult<List<ProductDto>>> UpdateAsync([FromForm] ProducRequestDto product)
         {
             if (product.ProductsId == Guid.Empty)
                 return BadRequest("This product can not by updated");
             try
             {
-                _productsService.UpdateItemAsync(product);
-                return Ok();
+                String ImageSrc = String.Format("{0}://{1}{2}", Request.Scheme, Request.Host, Request.PathBase);
+                var response =   await _productsService.UpdateItemAsync(product, ImageSrc);
+                return  Ok(response);
             }
             catch (DbUpdateException)
             {

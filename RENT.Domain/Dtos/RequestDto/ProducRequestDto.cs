@@ -18,7 +18,6 @@ namespace RENT.Domain.Dtos.RequestDto
         public string Phone { get; set; }
         public string Email { get; set; }
         public string ImageSrc { get; set; }
-        public string CategoriesName { get; set; }
         public Guid SellerId { get; set; }
     }
 }

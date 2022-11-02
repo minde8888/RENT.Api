@@ -50,7 +50,7 @@ namespace RENT.Services.Services
             return GetProductImage(product, imageSrc);
         }
 
-        public async Task UpdateItemAsync(ProducRequestDto product)
+        public async Task<ProductDto> UpdateItemAsync(ProducRequestDto product, string imageSrc)
         {
             if (product.Images != null)
             {
@@ -71,6 +71,9 @@ namespace RENT.Services.Services
                 product.ImageSrc = String.Join(',', imageName);
             }
             await _productsRepository.UpdateProductAsync(product);
+
+            var response = await GetProductById(product.ProductsId, imageSrc);
+            return response;
         }
 
         private ProductDto GetProductImage(Products products, string imageSrc)
