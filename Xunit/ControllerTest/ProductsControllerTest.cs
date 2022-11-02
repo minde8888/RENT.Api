@@ -68,7 +68,7 @@ namespace Rent.Xunit.ControllerTest
             _mockProductService.Setup(x => x.GetAllProductsAsync(filter, Url, "/api/v1/Products")).ReturnsAsync(product);
             //Act
             var response = _controller.GetAllAsync(filter);
-            var result = response.Result.Result as OkObjectResult; 
+            var result = response.Result.Result as OkObjectResult;
             //result
             Assert.NotNull(response);
             Assert.NotNull(result);
@@ -89,7 +89,7 @@ namespace Rent.Xunit.ControllerTest
             // Assert
             Assert.NotNull(response);
             Assert.NotNull(result);
-            Assert.Equal(typeof(Task<ActionResult<List<ProductDto>>>), response.GetType());
+            Assert.Equal(typeof(Task<ActionResult<List<ProductsDto>>>), response.GetType());
             Assert.Equal(productListDto[0], result.Value);
         }
 
@@ -111,7 +111,7 @@ namespace Rent.Xunit.ControllerTest
         {
             //Arrange
             var id = Guid.NewGuid();
-            _mockProductRepository.Setup(x => x.RemoveProductsAsync(id.ToString()));   
+            _mockProductRepository.Setup(x => x.RemoveProductsAsync(id.ToString()));
             //Act
             var response = _controller.DeleteProductAsync(id.ToString());
             // Assert
@@ -140,13 +140,13 @@ namespace Rent.Xunit.ControllerTest
             return productsData;
         }
 
-        private List<ProductDto> GetProductsDtoData()
+        private List<ProductsDto> GetProductsDtoData()
         {
-            List<ProductDto> productsData = new()
+            List<ProductsDto> productsData = new()
             {
-                new ProductDto() { ProductsId = new Guid("E4DE1CC1-5271-4B2F-9783-A96E9F904DE9") },
-                new ProductDto() { ProductsId = new Guid("BAA849FE-5270-4E34-AFCA-0C94D7522166") },
-                new ProductDto() { ProductsId = new Guid("197C5532-C5CA-4A31-AF68-C1A54A3D06C4") }
+                new ProductsDto() { ProductsId = new Guid("E4DE1CC1-5271-4B2F-9783-A96E9F904DE9") },
+                new ProductsDto() { ProductsId = new Guid("BAA849FE-5270-4E34-AFCA-0C94D7522166") },
+                new ProductsDto() { ProductsId = new Guid("197C5532-C5CA-4A31-AF68-C1A54A3D06C4") }
             };
             return productsData;
         }

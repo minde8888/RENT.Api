@@ -20,7 +20,7 @@ namespace RENT.Services.Services
             _productsRepository = productsRepository;
             _imagesService = imagesService;
         }
-        public async Task AddProductWithImage(ProducRequestDto product)
+        public async Task AddProductWithImage(ProductsRequestDto product)
         {
             var imageName = "";
             if (product.Images != null)
@@ -42,7 +42,7 @@ namespace RENT.Services.Services
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
             return await _productsRepository.GetProductsAsync(ImageSrc, validFilter, route);
         }
-        public async Task<ProductDto> GetProductById(Guid userId, string imageSrc)
+        public async Task<ProductsDto> GetProductById(Guid userId, string imageSrc)
         {
             var product = await _productsRepository.GetProductIdAsync(userId);
             if (product == null)
@@ -76,9 +76,9 @@ namespace RENT.Services.Services
             return response;
         }
 
-        private ProductDto GetProductImage(Products products, string imageSrc)
+        private ProductsDto GetProductImage(Products products, string imageSrc)
         {
-            var productsToReturn = _mapper.Map<ProductDto>(products);
+            var productsToReturn = _mapper.Map<ProductsDto>(products);
             var newImages = new List<string>();        
             string[] ImageName = productsToReturn.ImageName.Split(',');
                 foreach (var img in ImageName)

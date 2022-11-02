@@ -24,7 +24,7 @@ namespace RENT.Data.Repositorys
             _uriService = uriService;
         }
 
-        public async Task AddProductsAsync(ProducRequestDto product)
+        public async Task AddProductsAsync(ProductsRequestDto product)
         {
             Products products = new()
             {
@@ -93,7 +93,7 @@ namespace RENT.Data.Repositorys
             response.TotalRecords = products.TotalRecords;
             response.NextPage = products.NexPage;
             response.PreviousPage = products.PrevPage;
-            response.ProductDto = _mapper.Map<List<ProductDto>>(products.Data);
+            response.ProductDto = _mapper.Map<List<ProductsDto>>(products.Data);
 
             foreach (var item in response.ProductDto)
             {
@@ -120,7 +120,7 @@ namespace RENT.Data.Repositorys
                 Where(x => x.ProductsId == Id).FirstOrDefaultAsync();
         }
 
-        public async Task UpdateProductAsync(ProducRequestDto productDto)
+        public async Task UpdateProductAsync(ProductsRequestDto productDto)
         {
             var products = await _context.Products.
                   Include(p => p.Posts).
