@@ -98,11 +98,18 @@ namespace Rent.Xunit.ControllerTest
         public void UpdateProductValues()
         {
             //Arrange
-            _mockProductService.Setup(x => x.UpdateItemAsync(GetProductRequestDto()));
+            var productResponse = GetProductDto();
+            var productUpdate = GetProductRequestDto();
+            _mockProductService.Setup(x => x.UpdateItemAsync(productUpdate, Url)).ReturnsAsync(productResponse);
             //Act
-            var response = _controller.UpdateAsync(GetProductRequestDto());
+            var response = _controller.UpdateAsync(productUpdate);
             // Assert
-            Assert.Equal(typeof(OkResult), response.GetType());
+            var result = response.Result.Result as OkObjectResult;
+            //result
+            Assert.NotNull(response);
+            Assert.NotNull(result);
+            Assert.Equal(typeof(Task<ActionResult<List<ProductsDto>>>), response.GetType());
+            Assert.Equal(productResponse, result.Value);
         }
 
         [Fact]
@@ -128,6 +135,19 @@ namespace Rent.Xunit.ControllerTest
 
             return fixture.Create<ProductsRequestDto>();
         }
+
+        private ProductsDto GetProductDto()
+        {
+            var fixture = new Fixture();
+            fixture.Customize(new AutoMoqCustomization()
+            {
+                ConfigureMembers = true
+            });
+
+            return fixture.Create<ProductsDto>();
+        }
+
+
 
         private List<Products> GetProductsData()
         {
