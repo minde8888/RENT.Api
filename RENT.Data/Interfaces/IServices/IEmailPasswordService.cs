@@ -1,6 +1,6 @@
 ﻿using RENT.Domain.Entities.Auth;
 
-namespace RENT.Data.Interfaces
+namespace RENT.Data.Interfaces.IServices
 {
     public interface IEmailPasswordService
     {

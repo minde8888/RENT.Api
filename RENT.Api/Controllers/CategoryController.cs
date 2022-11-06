@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RENT.Data.Interfaces;
+using RENT.Data.Interfaces.IRepositories;
 using RENT.Domain.Dtos;
 using System.Runtime.Versioning;
 
@@ -61,7 +61,7 @@ namespace RENT.Api.Controllers
             try
             {
                 if (String.IsNullOrEmpty(id))
-                    return BadRequest();
+                    return BadRequest("Could not find id");
                 var guidId = new Guid(id);
 
                 var productsInCategory = await _categoryRepository.GetCategoriesIdAsync(guidId);

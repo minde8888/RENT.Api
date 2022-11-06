@@ -7,7 +7,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RENT.Api.Configuration;
 using RENT.Data.Context;
-using RENT.Data.Interfaces;
+using RENT.Data.Interfaces.IRepositories;
+using RENT.Data.Interfaces.IServices;
 using RENT.Data.Repository;
 using RENT.Data.Repositorys;
 using RENT.Domain.Entities.Auth;
@@ -90,18 +91,19 @@ namespace RENT.Api
                 o.TokenLifespan = TimeSpan.FromHours(3));
 
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
-            services.AddTransient<IMailReposidory, MailRepository>();
+           
+            services.AddScoped(typeof(DbContext), typeof(AppDbContext));           
 
-            services.AddScoped(typeof(DbContext), typeof(AppDbContext));
-
-            services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
             services.AddScoped(typeof(IEmailPasswordService), typeof(EmailPasswordService));
             services.AddScoped(typeof(IImagesService), typeof(ImagesService));
             services.AddScoped(typeof(IProductsService), typeof(ProductsService));
+            services.AddScoped(typeof(IUserServices), typeof(UserServices));
+            services.AddScoped(typeof(ITokenService), typeof(TokenService));
+
+            services.AddTransient<IMailService, MailService>();
+            services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
             services.AddScoped(typeof(IProductsRepository), typeof(ProductsRepository));
             services.AddScoped(typeof(ICategoryRepository), typeof(CategoryRepository));
-
-
             services.AddScoped(typeof(IBaseSerrvice<>), typeof(BaseSerrvice<>));
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 

@@ -15,8 +15,8 @@
         public Guid SellerId { get; set; }
         public Seller Seller { get; set; }
         public Customers Customers { get; set; }
-        public Guid PostsId { get; set; }
-        public Posts Posts { get; set; }
+        public Guid PostId { get; set; }
+        public Post Post { get; set; }
         public Guid? ProductsContactFormId { get; set; }
         public DateTime DateCreated { get; set; } = DateTime.Now;
         public DateTime DateUpdated { get; set; }

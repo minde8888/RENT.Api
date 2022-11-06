@@ -2,11 +2,11 @@
 using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
-using RENT.Data.Interfaces.IServices;
 using RENT.Domain.Entities;
 using RENT.Domain.Entities.Settings;
+using RENT.Data.Interfaces.IServices;
 
-namespace RENT.Data.Repositorys
+namespace RENT.Data.Service
 {
     public class MailService : IMailService
     {

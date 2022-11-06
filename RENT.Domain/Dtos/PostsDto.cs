@@ -1,8 +1,8 @@
 ﻿namespace RENT.Domain.Dtos
 {
-    public class PostsDto
+    public class PostDto
     {
-        public Guid PostsId { get; set; }
+        public Guid PostId { get; set; }
         public string ProductName { get; set; }
         public string Content { get; set; }
     }

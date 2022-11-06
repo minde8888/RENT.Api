@@ -5,7 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using RENT.Api.Controllers;
 using RENT.Data.Filter;
-using RENT.Data.Interfaces;
+using RENT.Data.Interfaces.IRepositories;
+using RENT.Data.Interfaces.IServices;
 using RENT.Domain.Dtos.RequestDto;
 using RENT.Domain.Dtos.ResponseDto;
 using RENT.Domain.Entities;
@@ -37,13 +38,7 @@ namespace Rent.Xunit.ControllerTest
 
             _controller = new ProductsController(
                 _mockProductService.Object,
-                _mockProductRepository.Object)
-            {
-                ControllerContext = new ControllerContext()
-                {
-                    HttpContext = httpContext
-                }
-            };
+                _mockProductRepository.Object);
         }
 
         [Fact]
@@ -74,23 +69,6 @@ namespace Rent.Xunit.ControllerTest
             Assert.NotNull(result);
             Assert.Equal(typeof(Task<ActionResult<ProductResponseDto>>), response.GetType());
             Assert.Equal(product, result.Value);
-        }
-
-        [Fact]
-        public void GetReturnsProductWithSameId()
-        {
-            //Arrange
-            var productList = GetProductsData();
-            var productListDto = GetProductsDtoData();
-            _mockProductService.Setup(x => x.GetProductById(productListDto[0].ProductsId, Url)).ReturnsAsync(productListDto[0]);
-            //Act
-            var response = _controller.GetAsync(productList[0].ProductsId.ToString());
-            var result = response.Result.Result as OkObjectResult;
-            // Assert
-            Assert.NotNull(response);
-            Assert.NotNull(result);
-            Assert.Equal(typeof(Task<ActionResult<List<ProductsDto>>>), response.GetType());
-            Assert.Equal(productListDto[0], result.Value);
         }
 
         [Fact]

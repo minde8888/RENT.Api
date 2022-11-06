@@ -1,6 +1,6 @@
 ﻿using RENT.Domain.Dtos;
 
-namespace RENT.Data.Interfaces
+namespace RENT.Data.Interfaces.IRepositories
 {
     public interface ICategoryRepository
     {

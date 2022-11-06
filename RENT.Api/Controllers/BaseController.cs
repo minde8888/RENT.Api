@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using RENT.Data.Interfaces;
+using RENT.Data.Interfaces.IRepositories;
+using RENT.Data.Interfaces.IServices;
 using RENT.Domain.Dtos;
 using RENT.Domain.Dtos.RequestDto;
 using RENT.Domain.Entities;
@@ -67,7 +68,7 @@ namespace RENT.Api.Controllers
                 if (string.IsNullOrEmpty(id))
                     return BadRequest("Can not find Id");
 
-                String ImageSrc = String.Format("{0}://{1}{2}", Request.Scheme, Request.Host, Request.PathBase);
+                String ImageSrc = String.Format("{0}://{1}", Request.Scheme, Request.Host);
 
                 var result = await _baseSerrvice.GetItemById(ImageSrc, id);
 
@@ -88,8 +89,7 @@ namespace RENT.Api.Controllers
             try
             {
                 String route = Request.Path.Value;
-                var a = _hostEnvironment.ContentRootPath;
-                String src = String.Format("{0}://{1}{2}", Request.Scheme, Request.Host, Request.PathBase);
+                String src = String.Format("{0}://{1}", Request.Scheme, Request.Host);
                 var result = await _baseSerrvice.UpdateItem(_hostEnvironment.ContentRootPath, userDto, src);
                 return Ok(result);
             }

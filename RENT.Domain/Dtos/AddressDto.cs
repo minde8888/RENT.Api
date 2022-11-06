@@ -8,7 +8,6 @@
         public string Zip { get; set; }
         public string Country { get; set; }
         public string CompanyCode { get; set; }
-        public Guid? ShopId { get; set; }
         public Guid? SellerId { get; set; }
         public Guid? CustomerId { get; set; }
     }

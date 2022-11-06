@@ -3,7 +3,7 @@ using RENT.Domain.Dtos.RequestDto;
 using RENT.Domain.Dtos.ResponseDto;
 using RENT.Domain.Entities;
 
-namespace RENT.Data.Interfaces
+namespace RENT.Data.Interfaces.IRepositories
 {
     public interface IProductsRepository
     {

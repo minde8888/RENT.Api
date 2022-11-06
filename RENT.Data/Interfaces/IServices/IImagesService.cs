@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace RENT.Data.Interfaces
+namespace RENT.Data.Interfaces.IServices
 {
     public interface IImagesService
     {

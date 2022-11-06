@@ -13,37 +13,28 @@ namespace RENT.Services.Services.AppMapper
         {
             CreateMap<Seller, UserRegistrationDto>().ReverseMap();
 
-            CreateMap<Seller, UserInformationDto>().ReverseMap().
-                ForMember(m => m.Address, opt =>
-               opt.MapFrom(m => m.AddressDto));
+            CreateMap<Seller, UserInformationDto>().ReverseMap();
 
             CreateMap<Address, AddressDto>().ReverseMap();
 
             CreateMap<Seller, UserRegistrationDto>().ReverseMap();
 
-            CreateMap<Seller, UserInformationDto>().ReverseMap().
-                ForMember(m => m.Address, opt =>
-               opt.MapFrom(m => m.AddressDto));
+            CreateMap<Seller, UserInformationDto>().ReverseMap();
 
-            CreateMap<Seller, UserDto>().ReverseMap().
-               ForMember(m => m.Address, opt =>
-               opt.MapFrom(m => m.AddressDto));
+            CreateMap<Seller, UserDto>().ReverseMap();
 
             CreateMap<Customers, UserRegistrationDto>().ReverseMap();
+
             CreateMap<Customers, UserInformationDto>().ReverseMap();
 
-            CreateMap<Customers, UserDto>().ReverseMap().
-               ForMember(m => m.Address, opt =>
-               opt.MapFrom(m => m.AddressDto));
+            CreateMap<Customers, UserDto>().ReverseMap();
 
-            CreateMap<Customers, UserDto>().ReverseMap().
-                ForMember(m => m.Address, opt =>
-                opt.MapFrom(m => m.AddressDto));
+            CreateMap<Customers, UserDto>().ReverseMap();
 
-            CreateMap<Posts, PostsDto>().ReverseMap();
+            CreateMap<Post, PostDto>().ReverseMap();
             CreateMap<Categories, CategoriesDto>().ReverseMap();
             CreateMap<Products, ProductsDto>().
-                ForMember(dest => dest.PostsDto, act => act.MapFrom(src => src.Posts)).
+                ForMember(dest => dest.PostDto, act => act.MapFrom(src => src.Post)).
                 ForMember(dest => dest.CategoriesDto, act => act.MapFrom(src => src.Categories)).ReverseMap();
 
             CreateMap<PagedResponse<Products>, ProductResponseDto>().ReverseMap().

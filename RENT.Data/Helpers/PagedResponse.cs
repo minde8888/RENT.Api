@@ -1,5 +1,5 @@
 ﻿using RENT.Data.Filter;
-using RENT.Data.Interfaces;
+using RENT.Data.Interfaces.IServices;
 using RENT.Domain.Entities.Wrappers;
 
 namespace RENT.Data.Helpers

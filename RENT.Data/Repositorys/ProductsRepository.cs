@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RENT.Data.Context;
 using RENT.Data.Filter;
 using RENT.Data.Helpers;
-using RENT.Data.Interfaces;
+using RENT.Data.Interfaces.IRepositories;
+using RENT.Data.Interfaces.IServices;
 using RENT.Domain.Dtos.RequestDto;
 using RENT.Domain.Dtos.ResponseDto;
 using RENT.Domain.Entities;
@@ -41,13 +41,13 @@ namespace RENT.Data.Repositorys
             _context.Products.Add(products);
             await _context.SaveChangesAsync();
 
-            Posts post = new()
+            Post post = new()
             {
                 ProductName = product.ProductName,
                 Content = product.ProductDescription,
                 ProductsId = products.ProductsId
             };
-            _context.Posts.Add(post);
+            _context.Post.Add(post);
             await _context.SaveChangesAsync();
 
             string[] categories = product.CategoriesName.Split(',');
@@ -74,14 +74,14 @@ namespace RENT.Data.Repositorys
         {
             var pagedData = await _context.Products
                  .Include(c => c.Categories)
-                 .Include(p => p.Posts)
+                 .Include(p => p.Post)
                  .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                  .Take(validFilter.PageSize)
                  .ToListAsync();
 
             var totalRecords = await _context.Products
                  .Include(c => c.Categories)
-                 .Include(p => p.Posts)
+                 .Include(p => p.Post)
                  .CountAsync();
 
             var products = PaginationHelper.CreatePagedReponse<Products>(pagedData, validFilter, totalRecords, _uriService, route);
@@ -116,14 +116,14 @@ namespace RENT.Data.Repositorys
         {
             return await _context.Products.
                 Include(c => c.Categories).
-                Include(p => p.Posts).
+                Include(p => p.Post).
                 Where(x => x.ProductsId == Id).FirstOrDefaultAsync();
         }
 
         public async Task UpdateProductAsync(ProductsRequestDto productDto)
         {
             var products = await _context.Products.
-                  Include(p => p.Posts).
+                  Include(p => p.Post).
                   Where(x => x.ProductsId == productDto.ProductsId).FirstOrDefaultAsync();
 
             if (products != null)
@@ -138,11 +138,11 @@ namespace RENT.Data.Repositorys
                 products.Size = productDto.Size;
                 products.DateUpdated = DateTime.UtcNow;
 
-                products.Posts.Content = productDto.ProductDescription;
-                products.Posts.ProductName = productDto.ProductName;
+                products.Post.Content = productDto.ProductDescription;
+                products.Post.ProductName = productDto.ProductName;
             }
             _context.Entry(products).State = EntityState.Modified;
-            _context.Entry(products.Posts).State = EntityState.Modified;
+            _context.Entry(products.Post).State = EntityState.Modified;
 
             if (productDto.CategoriesName != null)
             {
@@ -175,7 +175,6 @@ namespace RENT.Data.Repositorys
             await _context.SaveChangesAsync();
         }
 
-        [HttpDelete("Delete/{id}")]
         public async Task RemoveProductsAsync(string id)
         {
             if (String.IsNullOrEmpty(id)) throw new Exception();
@@ -183,11 +182,11 @@ namespace RENT.Data.Repositorys
             Guid newId = new(id);
 
             var product = await _context.Products.
-                Include(p => p.Posts).
+                Include(p => p.Post).
                 Where(x => x.ProductsId == newId).FirstOrDefaultAsync();
 
             product.IsDeleted = true;
-            product.Posts.IsDeleted = true;
+            product.Post.IsDeleted = true;
 
             await _context.SaveChangesAsync();
         } 

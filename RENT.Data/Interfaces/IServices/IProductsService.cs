@@ -2,7 +2,7 @@
 using RENT.Domain.Dtos.RequestDto;
 using RENT.Domain.Dtos.ResponseDto;
 
-namespace RENT.Data.Interfaces
+namespace RENT.Data.Interfaces.IServices
 {
     public interface IProductsService
     {

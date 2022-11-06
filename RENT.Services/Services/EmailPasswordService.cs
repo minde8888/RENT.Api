@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
-using RENT.Data.Interfaces;
+using RENT.Data.Interfaces.IServices;
 using RENT.Domain.Entities.Auth;
 using RENT.Domain.Entities.Settings;
 using System.Net.Mail;

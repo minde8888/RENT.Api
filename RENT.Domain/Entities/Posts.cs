@@ -2,9 +2,9 @@
 
 namespace RENT.Domain.Entities
 {
-    public class Posts
+    public class Post
     {
-        public Guid PostsId { get; set; }
+        public Guid PostId { get; set; }
         public string ProductName { get; set; }
         public string Content { get; set; }
         public bool IsDeleted { get; set; } = false;

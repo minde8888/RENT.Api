@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using Org.BouncyCastle.Asn1.Ocsp;
 using RENT.Data.Filter;
-using RENT.Data.Interfaces;
+using RENT.Data.Interfaces.IRepositories;
+using RENT.Data.Interfaces.IServices;
 using RENT.Domain.Dtos.RequestDto;
 using RENT.Domain.Dtos.ResponseDto;
 using RENT.Domain.Entities;

@@ -1,6 +1,6 @@
 ﻿using RENT.Data.Filter;
 
-namespace RENT.Data.Interfaces
+namespace RENT.Data.Interfaces.IServices
 {
     public interface IUriService
     {

@@ -20,9 +20,8 @@ namespace RENT.Data.Context
         public DbSet<Customers> Customers { get; set; }
         public DbSet<Address> Address { get; set; }
         public DbSet<Products> Products { get; set; }
-        public DbSet<Posts> Posts { get; set; }
+        public DbSet<Post> Post { get; set; }
         public DbSet<Seller> Seller { get; set; }
-        public DbSet<Shop> Shop { get; set; }
         public DbSet<RefreshToken> RefreshToken { get; set; }
         public DbSet<CategoriesProduct> CategoriesProduct { get; set; }
 
@@ -38,9 +37,8 @@ namespace RENT.Data.Context
             builder.Entity<Customers>().HasQueryFilter(p => p.IsDeleted == false);
             builder.Entity<Address>().HasQueryFilter(p => p.IsDeleted == false);
             builder.Entity<Products>().HasQueryFilter(p => p.IsDeleted == false);
-            builder.Entity<Posts>().HasQueryFilter(p => p.IsDeleted == false);
+            builder.Entity<Post>().HasQueryFilter(p => p.IsDeleted == false);
             builder.Entity<Seller>().HasQueryFilter(p => p.IsDeleted == false);
-            builder.Entity<Shop>().HasQueryFilter(p => p.IsDeleted == false);
             builder.Entity<ApplicationUser>().HasQueryFilter(p => p.IsDeleted == false);
 
             builder.Entity<IdentityUserLogin<string>>(entity =>
@@ -79,16 +77,10 @@ namespace RENT.Data.Context
             .HasMany(c => c.Products)
             .WithOne(e => e.Seller);
 
-
-            builder.Entity<Shop>()
-            .HasOne(b => b.Address)
-            .WithOne(i => i.Shop)
-            .HasForeignKey<Address>(b => b.ShopId);
-
             builder.Entity<Products>()
-             .HasOne(c => c.Posts)
+             .HasOne(c => c.Post)
              .WithOne(e => e.Products)
-              .HasForeignKey<Posts>(b => b.ProductsId);
+              .HasForeignKey<Post>(b => b.ProductsId);
         }
     }
 }

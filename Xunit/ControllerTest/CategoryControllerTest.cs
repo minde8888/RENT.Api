@@ -3,7 +3,7 @@ using AutoFixture.AutoMoq;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using RENT.Api.Controllers;
-using RENT.Data.Interfaces;
+using RENT.Data.Interfaces.IRepositories;
 using RENT.Domain.Dtos;
 using System.Runtime.Versioning;
 

@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RENT.Data.Filter;
-using RENT.Data.Interfaces;
+using RENT.Data.Interfaces.IRepositories;
+using RENT.Data.Interfaces.IServices;
 using RENT.Domain.Dtos.RequestDto;
 using RENT.Domain.Dtos.ResponseDto;
 using System.Runtime.Versioning;
@@ -19,7 +20,6 @@ namespace RENT.Api.Controllers
         private readonly IProductsService _productsService;
 
         public ProductsController(
-
             IProductsService productsService,
             IProductsRepository productsRepository)
         {
@@ -51,7 +51,7 @@ namespace RENT.Api.Controllers
             try
             {
                 String route = Request.Path.Value;
-                String ImageSrc = String.Format("{0}://{1}{2}", Request.Scheme, Request.Host, Request.PathBase);
+                String ImageSrc = String.Format("{0}://{1}", Request.Scheme, Request.Host);
                 var response = await _productsService.GetAllProductsAsync(filter, ImageSrc, route);
                 return Ok(response);
             }
@@ -59,27 +59,6 @@ namespace RENT.Api.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
                   "Error Get data from the database" + ex);
-            }
-        }
-
-        [HttpGet("id")]
-        [AllowAnonymous]
-        public async Task<ActionResult<List<ProductsDto>>> GetAsync(String id)
-        {
-            try
-            {
-                if (String.IsNullOrEmpty(id))
-                    return BadRequest();
-                var userId = new Guid(id);
-
-                String ImageSrc = String.Format("{0}://{1}{2}", Request.Scheme, Request.Host, Request.PathBase);
-                var productsToReturn = await _productsService.GetProductById(userId, ImageSrc);
-                return Ok(productsToReturn);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Could not find web user account");
             }
         }
 
@@ -92,7 +71,7 @@ namespace RENT.Api.Controllers
                 return BadRequest("This product can not by updated");
             try
             {
-                String ImageSrc = String.Format("{0}://{1}{2}", Request.Scheme, Request.Host, Request.PathBase);
+                String ImageSrc = String.Format("{0}://{1}", Request.Scheme, Request.Host);
                 var response = await _productsService.UpdateItemAsync(product, ImageSrc);
                 return Ok(response);
             }

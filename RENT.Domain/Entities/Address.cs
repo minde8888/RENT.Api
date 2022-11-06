@@ -10,8 +10,6 @@ namespace RENT.Domain.Entities
         public string Country { get; set; }
         public string CompanyCode { get; set; }
         public bool IsDeleted { get; set; } = false;
-        public Guid? ShopId { get; set; }
-        public Shop Shop { get; set; }
         public Guid? SellerId { get; set; }
         public Seller Seller { get; set; }
         public Guid? CustomerId { get; set; }

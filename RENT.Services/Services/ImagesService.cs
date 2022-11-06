@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using RENT.Data.Interfaces;
+using RENT.Data.Interfaces.IServices;
 using System.Drawing;
 using System.Runtime.Versioning;
 

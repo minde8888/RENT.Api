@@ -18,7 +18,7 @@ namespace RENT.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("Identity")
-                .HasAnnotation("ProductVersion", "7.0.0-rc.1.22426.7")
+                .HasAnnotation("ProductVersion", "7.0.0-rc.2.22472.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -169,9 +169,6 @@ namespace RENT.Data.Migrations
                     b.Property<Guid?>("SellerId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("ShopId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Street")
                         .HasColumnType("text");
 
@@ -184,9 +181,6 @@ namespace RENT.Data.Migrations
                         .IsUnique();
 
                     b.HasIndex("SellerId")
-                        .IsUnique();
-
-                    b.HasIndex("ShopId")
                         .IsUnique();
 
                     b.ToTable("Address", "Identity");
@@ -414,9 +408,9 @@ namespace RENT.Data.Migrations
                     b.ToTable("Customers", "Identity");
                 });
 
-            modelBuilder.Entity("RENT.Domain.Entities.Posts", b =>
+            modelBuilder.Entity("RENT.Domain.Entities.Post", b =>
                 {
-                    b.Property<Guid>("PostsId")
+                    b.Property<Guid>("PostId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
@@ -435,12 +429,12 @@ namespace RENT.Data.Migrations
                     b.Property<Guid?>("ProductsId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("PostsId");
+                    b.HasKey("PostId");
 
                     b.HasIndex("ProductsId")
                         .IsUnique();
 
-                    b.ToTable("Posts", "Identity");
+                    b.ToTable("Post", "Identity");
                 });
 
             modelBuilder.Entity("RENT.Domain.Entities.Products", b =>
@@ -479,7 +473,7 @@ namespace RENT.Data.Migrations
                     b.Property<string>("Place")
                         .HasColumnType("text");
 
-                    b.Property<Guid>("PostsId")
+                    b.Property<Guid>("PostId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Price")
@@ -491,9 +485,6 @@ namespace RENT.Data.Migrations
                     b.Property<Guid>("SellerId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("ShopId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Size")
                         .HasColumnType("text");
 
@@ -502,8 +493,6 @@ namespace RENT.Data.Migrations
                     b.HasIndex("CustomersId");
 
                     b.HasIndex("SellerId");
-
-                    b.HasIndex("ShopId");
 
                     b.ToTable("Products", "Identity");
                 });
@@ -582,55 +571,6 @@ namespace RENT.Data.Migrations
                     b.ToTable("Seller", "Identity");
                 });
 
-            modelBuilder.Entity("RENT.Domain.Entities.Shop", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<DateTime>("DateUpdated")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ImageName")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Occupation")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Roles")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ShopName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Surname")
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Shop", "Identity");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("RENT.Domain.Entities.Roles.ApplicationRole", null)
@@ -692,15 +632,9 @@ namespace RENT.Data.Migrations
                         .WithOne("Address")
                         .HasForeignKey("RENT.Domain.Entities.Address", "SellerId");
 
-                    b.HasOne("RENT.Domain.Entities.Shop", "Shop")
-                        .WithOne("Address")
-                        .HasForeignKey("RENT.Domain.Entities.Address", "ShopId");
-
                     b.Navigation("Customers");
 
                     b.Navigation("Seller");
-
-                    b.Navigation("Shop");
                 });
 
             modelBuilder.Entity("RENT.Domain.Entities.Auth.RefreshToken", b =>
@@ -744,11 +678,11 @@ namespace RENT.Data.Migrations
                     b.Navigation("ApplicationUser");
                 });
 
-            modelBuilder.Entity("RENT.Domain.Entities.Posts", b =>
+            modelBuilder.Entity("RENT.Domain.Entities.Post", b =>
                 {
                     b.HasOne("RENT.Domain.Entities.Products", "Products")
-                        .WithOne("Posts")
-                        .HasForeignKey("RENT.Domain.Entities.Posts", "ProductsId");
+                        .WithOne("Post")
+                        .HasForeignKey("RENT.Domain.Entities.Post", "ProductsId");
 
                     b.Navigation("Products");
                 });
@@ -765,10 +699,6 @@ namespace RENT.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RENT.Domain.Entities.Shop", null)
-                        .WithMany("Products")
-                        .HasForeignKey("ShopId");
-
                     b.Navigation("Customers");
 
                     b.Navigation("Seller");
@@ -779,17 +709,6 @@ namespace RENT.Data.Migrations
                     b.HasOne("RENT.Domain.Entities.Auth.ApplicationUser", "ApplicationUser")
                         .WithOne("Seller")
                         .HasForeignKey("RENT.Domain.Entities.Seller", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ApplicationUser");
-                });
-
-            modelBuilder.Entity("RENT.Domain.Entities.Shop", b =>
-                {
-                    b.HasOne("RENT.Domain.Entities.Auth.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -814,17 +733,10 @@ namespace RENT.Data.Migrations
 
             modelBuilder.Entity("RENT.Domain.Entities.Products", b =>
                 {
-                    b.Navigation("Posts");
+                    b.Navigation("Post");
                 });
 
             modelBuilder.Entity("RENT.Domain.Entities.Seller", b =>
-                {
-                    b.Navigation("Address");
-
-                    b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("RENT.Domain.Entities.Shop", b =>
                 {
                     b.Navigation("Address");
 

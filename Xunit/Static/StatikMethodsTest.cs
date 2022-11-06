@@ -4,7 +4,7 @@ using FluentAssertions;
 using FluentAssertions.Extensions;
 using RENT.Data.Filter;
 using RENT.Data.Helpers;
-using RENT.Data.Interfaces;
+using RENT.Data.Interfaces.IServices;
 using RENT.Domain.Entities;
 
 namespace Rent.Xunit.Static

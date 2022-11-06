@@ -1,4 +1,5 @@
-﻿using RENT.Data.Interfaces;
+﻿using RENT.Data.Interfaces.IRepositories;
+using RENT.Data.Interfaces.IServices;
 using RENT.Domain.Dtos;
 using RENT.Domain.Dtos.RequestDto;
 using RENT.Domain.Entities;
@@ -22,7 +23,7 @@ namespace RENT.Services.Services
             var user = await _baseRepository.GetItemIdAsync(id);
             if (user.ImageName != null)
             {
-                GetImagesAsync(user, imageSrc);
+                GetImages(user, imageSrc);
             }
             return user; 
         }
@@ -39,11 +40,11 @@ namespace RENT.Services.Services
                 user.ImageName = _imagesService.SaveImage(user.ImageFile, user.Height, user.Width);
             }          
             var itemReturn = await _baseRepository.UpdateItemAsync(user);
-            GetImagesAsync(itemReturn, src);
+            GetImages(itemReturn, src);
 
             return itemReturn;
         }
-        public UserDto  GetImagesAsync(UserDto userDto, string imageSrc)
+        public UserDto  GetImages(UserDto userDto, string imageSrc)
         {
             List<string> imageList = new();
 

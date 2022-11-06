@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RENT.Data.Context;
-using RENT.Data.Interfaces;
+using RENT.Data.Interfaces.IRepositories;
 using RENT.Domain.Dtos;
 using RENT.Domain.Dtos.RequestDto;
 using RENT.Domain.Entities;
