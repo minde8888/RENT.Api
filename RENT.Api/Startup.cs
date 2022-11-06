@@ -99,6 +99,7 @@ namespace RENT.Api
             services.AddScoped(typeof(IProductsService), typeof(ProductsService));
             services.AddScoped(typeof(IUserServices), typeof(UserServices));
             services.AddScoped(typeof(ITokenService), typeof(TokenService));
+            services.AddScoped(typeof(IResetPasswordService), typeof(ResetPasswordService));            
 
             services.AddTransient<IMailService, MailService>();
             services.AddScoped(typeof(IUserRepository), typeof(UserRepository));

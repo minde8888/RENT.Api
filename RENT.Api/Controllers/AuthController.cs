@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using RENT.Api.Configuration;
@@ -42,16 +41,16 @@ namespace RENT.Api.Controllers
             try
             {
                 var result = await _userServices.CreateNewUserAsync(user);
-                return Ok(result.Succeeded);
+                return Ok(result.Success);
             }
             catch (Exception ex)
             {
                 return BadRequest(new AuthResult()
                 {
-                    AuthErrors = new List<string>() {
+                    Errors = new List<string>() {
                                 "Error to add user to the DB !!!  " + ex
                             },
-                    AuthSuccess = false
+                    Success = false
                 });
             }
         }
@@ -71,10 +70,10 @@ namespace RENT.Api.Controllers
             {
                 return BadRequest(new AuthResult()
                 {
-                    AuthErrors = new List<string>() {
+                    Errors = new List<string>() {
                                 "Server Error. Please contact support." + ex
                             },
-                    AuthSuccess = false
+                    Success = false
                 });
             }  
         }
@@ -136,10 +135,10 @@ namespace RENT.Api.Controllers
                     {
                         return BadRequest(new AuthResult()
                         {
-                            AuthErrors = new List<string>() {
+                            Errors = new List<string>() {
                             "Invalid tokens"
                             },
-                            AuthSuccess = false
+                            Success = false
                         });
                     }
                     return Ok();
@@ -152,10 +151,10 @@ namespace RENT.Api.Controllers
 
             return BadRequest(new AuthResult()
             {
-                AuthErrors = new List<string>() {
+                Errors = new List<string>() {
                 "Invalid payload"
             },
-                AuthSuccess = false
+                Success = false
             });
         }
     }

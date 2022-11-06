@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Org.BouncyCastle.Asn1.Ocsp;
 using RENT.Data.Filter;
 using RENT.Data.Interfaces.IRepositories;
 using RENT.Data.Interfaces.IServices;

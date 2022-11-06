@@ -86,7 +86,7 @@ namespace RENT.Services.Services
             return new AuthResult()
             {
                 Token = jwtToken,
-                AuthSuccess = true,
+                Success = true,
                 RefreshToken = refreshToken.Token
             };
         }
@@ -118,8 +118,8 @@ namespace RENT.Services.Services
             {
                 return new AuthResult()
                 {
-                    AuthErrors = new List<string>() { "We cannot refresh this since the token has not expired" },
-                    AuthSuccess = false
+                    Errors = new List<string>() { "We cannot refresh this since the token has not expired" },
+                    Success = false
                 };
             }
 
@@ -130,8 +130,8 @@ namespace RENT.Services.Services
             {
                 return new AuthResult()
                 {
-                    AuthErrors = new List<string>() { "refresh token doesnt exist" },
-                    AuthSuccess = false
+                    Errors = new List<string>() { "refresh token doesnt exist" },
+                    Success = false
                 };
             }
 
@@ -140,8 +140,8 @@ namespace RENT.Services.Services
             {
                 return new AuthResult()
                 {
-                    AuthErrors = new List<string>() { "token has expired, user needs to relogin" },
-                    AuthSuccess = false
+                    Errors = new List<string>() { "token has expired, user needs to relogin" },
+                    Success = false
                 };
             }
 
@@ -150,8 +150,8 @@ namespace RENT.Services.Services
             {
                 return new AuthResult()
                 {
-                    AuthErrors = new List<string>() { "token has been used" },
-                    AuthSuccess = false
+                    Errors = new List<string>() { "token has been used" },
+                    Success = false
                 };
             }
 
@@ -160,8 +160,8 @@ namespace RENT.Services.Services
             {
                 return new AuthResult()
                 {
-                    AuthErrors = new List<string>() { "token has been revoked" },
-                    AuthSuccess = false
+                    Errors = new List<string>() { "token has been revoked" },
+                    Success = false
                 };
             }
 
@@ -173,8 +173,8 @@ namespace RENT.Services.Services
             {
                 return new AuthResult()
                 {
-                    AuthErrors = new List<string>() { "the token doenst mateched the saved token" },
-                    AuthSuccess = false
+                    Errors = new List<string>() { "the token doenst mateched the saved token" },
+                    Success = false
                 };
             }
 

@@ -8,6 +8,7 @@ using RENT.Data.Interfaces.IServices;
 using RENT.Domain.Dtos;
 using RENT.Domain.Entities.Auth;
 using System;
+using System.Runtime.CompilerServices;
 
 namespace RENT.Services.Services
 {
@@ -41,11 +42,11 @@ namespace RENT.Services.Services
             {
                 return new AuthResult()
                 {
-                    AuthErrors = new List<string>()
+                    Errors = new List<string>()
                         {
                             "Email or phone number is already in use !!!"
                         },
-                    AuthSuccess = false
+                    Success = false
                 };
             }
 
@@ -68,11 +69,14 @@ namespace RENT.Services.Services
             {
                 return new AuthResult()
                 {
-                    AuthErrors = isCreated.Errors.Select(x => x.Description).ToList(),
-                    AuthSuccess = false
+                    Errors = isCreated.Errors.Select(x => x.Description).ToList(),
+                    Success = false
                 };
             }
-            return isCreated as AuthResult;
+            return new AuthResult()
+            {
+                Success = isCreated.Succeeded               
+            };
         }
 
         public async Task<object> UserInfo(UserLoginRequest user, string imageSrc)
@@ -83,20 +87,20 @@ namespace RENT.Services.Services
             {
                 return new AuthResult()
                 {
-                    AuthErrors = new List<string>() {
+                    Errors = new List<string>() {
                                 "The email address is incorrect. Please retry."
                             },
-                    AuthSuccess = false
+                    Success = false
                 };
             }
             if (existingUser.IsDeleted)
             {
                 return new AuthResult()
                 {
-                    AuthErrors = new List<string>() {
+                    Errors = new List<string>() {
                                 "User account was deleted "
                             },
-                    AuthSuccess = false
+                    Success = false
                 };
             }
 
@@ -106,10 +110,10 @@ namespace RENT.Services.Services
             {
                 return new AuthResult()
                 {
-                    AuthErrors = new List<string>() {
+                    Errors = new List<string>() {
                                 "The password is incorrect. Please try again."
                             },
-                    AuthSuccess = false
+                    Success = false
                 };
             }
             var token = await _tokenService.GenerateJwtTokenAsync(existingUser);
