@@ -1,5 +1,5 @@
-﻿using RENT.Data.Filter;
-using RENT.Data.Interfaces.IServices;
+﻿using RENT.Data.Interfaces.IServices;
+using RENT.Domain.Entities;
 using RENT.Domain.Entities.Wrappers;
 
 namespace RENT.Data.Helpers
@@ -8,8 +8,8 @@ namespace RENT.Data.Helpers
     {
         public static PagedResponse<List<T>> CreatePagedReponse<T>(
             List<T> pagedData,
-            PaginationFilter validFilter, 
-            int totalRecords, 
+            PaginationFilter validFilter,
+            int totalRecords,
             IUriService uriService,
             string route)
         {
@@ -27,13 +27,13 @@ namespace RENT.Data.Helpers
             respose.FirstPage = uriService.GetPageUri(new PaginationFilter(1, validFilter.PageSize), route);
             respose.LastPage = uriService.GetPageUri(new PaginationFilter(roundedTotalPages, validFilter.PageSize), route);
             respose.TotalPages = roundedTotalPages;
-            respose.TotalRecords = totalRecords;     
-            
+            respose.TotalRecords = totalRecords;
+
             respose.NexPage = validFilter.PageNumber >= 1 && validFilter.PageNumber < roundedTotalPages
-                ? new PaginationFilter(validFilter.PageNumber +1, validFilter.PageSize).PageNumber : null;
+                ? new PaginationFilter(validFilter.PageNumber + 1, validFilter.PageSize).PageNumber : null;
 
             respose.PrevPage = validFilter.PageNumber - 1 >= 1 && validFilter.PageNumber <= roundedTotalPages
-                ? new PaginationFilter(validFilter.PageNumber - 1, validFilter.PageSize).PageNumber : null;  
+                ? new PaginationFilter(validFilter.PageNumber - 1, validFilter.PageSize).PageNumber : null;
             return respose;
         }
     }

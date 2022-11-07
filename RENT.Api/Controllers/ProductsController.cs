@@ -2,11 +2,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using RENT.Data.Filter;
 using RENT.Data.Interfaces.IRepositories;
 using RENT.Data.Interfaces.IServices;
 using RENT.Domain.Dtos.RequestDto;
 using RENT.Domain.Dtos.ResponseDto;
+using RENT.Domain.Entities;
 using System.Runtime.Versioning;
 
 namespace RENT.Api.Controllers

@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using RENT.Api.Controllers;
-using RENT.Data.Filter;
 using RENT.Data.Interfaces.IRepositories;
 using RENT.Data.Interfaces.IServices;
 using RENT.Domain.Dtos.RequestDto;

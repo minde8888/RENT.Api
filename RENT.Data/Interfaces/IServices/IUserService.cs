@@ -4,9 +4,9 @@ using RENT.Domain.Dtos;
 
 namespace RENT.Data.Interfaces.IServices
 {
-    public interface IUserServices
+    public interface IUserService
     {
         Task<AuthResult> CreateNewUserAsync(UserRegistrationDto user);
-        Task<object> UserInfo(UserLoginRequest user, string imageSrc);
+        Task<AuthResult> UserInfo(UserLoginRequest user, string imageSrc);
     }
 }

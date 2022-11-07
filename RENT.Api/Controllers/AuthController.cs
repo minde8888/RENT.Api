@@ -18,12 +18,12 @@ namespace RENT.Api.Controllers
     public class AuthController : ControllerBase
     {        
         private readonly TokenValidationParameters _tokenValidationParams;
-        private readonly IUserServices _userServices;
+        private readonly IUserService _userServices;
         private readonly ITokenService _tokenService;
         private readonly IResetPasswordService _resetPasswordService;
 
         public AuthController(TokenValidationParameters tokenValidationParams,
-            IUserServices userServices,
+            IUserService userServices,
             ITokenService tokenService,
             IResetPasswordService resetPasswordService)
         {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
-using RENT.Data.Filter;
 using RENT.Data.Interfaces.IServices;
+using RENT.Domain.Entities;
 
 namespace RENT.Services.Services
 {

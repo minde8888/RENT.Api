@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using RENT.Data.Context;
-using RENT.Data.Filter;
 using RENT.Data.Helpers;
 using RENT.Data.Interfaces.IRepositories;
 using RENT.Data.Interfaces.IServices;
@@ -59,7 +58,7 @@ namespace RENT.Data.Repositorys
                 _context.Categories.Add(cat);
                 await _context.SaveChangesAsync();
 
-                CategoriesProduct category = new()
+                CategoriesProducts category = new()
                 {
                     ProductsId = products.ProductsId,
                     CategoriesId = cat.CategoriesId
@@ -163,7 +162,7 @@ namespace RENT.Data.Repositorys
                     _context.Categories.Add(categories);
                     await _context.SaveChangesAsync();
 
-                    CategoriesProduct categoriesProduct = new()
+                    CategoriesProducts categoriesProduct = new()
                     {
                         CategoriesId = categories.CategoriesId,
                         ProductsId = productDto.ProductsId,
@@ -189,6 +188,6 @@ namespace RENT.Data.Repositorys
             product.Post.IsDeleted = true;
 
             await _context.SaveChangesAsync();
-        } 
+        }
     }
 }

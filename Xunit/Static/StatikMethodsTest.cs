@@ -2,7 +2,6 @@ using AutoFixture;
 using AutoFixture.AutoMoq;
 using FluentAssertions;
 using FluentAssertions.Extensions;
-using RENT.Data.Filter;
 using RENT.Data.Helpers;
 using RENT.Data.Interfaces.IServices;
 using RENT.Domain.Entities;
@@ -48,7 +47,7 @@ namespace Rent.Xunit.Static
             var value = PaginationHelper.CreatePagedReponse(product, filter, 10, uri, "test.com");
             //result
             uriService.Should().NotBeNull();
-            uriService.AbsolutePath.Should().Be("/");  
+            uriService.AbsolutePath.Should().Be("/");
             value.Should().NotBeNull();
             value.TotalRecords.Should().Be(10);
         }

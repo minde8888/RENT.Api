@@ -1,4 +1,4 @@
-﻿using RENT.Data.Filter;
+﻿using RENT.Domain.Entities;
 
 namespace RENT.Data.Interfaces.IServices
 {

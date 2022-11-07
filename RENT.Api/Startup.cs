@@ -91,15 +91,15 @@ namespace RENT.Api
                 o.TokenLifespan = TimeSpan.FromHours(3));
 
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
-           
-            services.AddScoped(typeof(DbContext), typeof(AppDbContext));           
+
+            services.AddScoped(typeof(DbContext), typeof(AppDbContext));
 
             services.AddScoped(typeof(IEmailPasswordService), typeof(EmailPasswordService));
             services.AddScoped(typeof(IImagesService), typeof(ImagesService));
             services.AddScoped(typeof(IProductsService), typeof(ProductsService));
-            services.AddScoped(typeof(IUserServices), typeof(UserServices));
+            services.AddScoped(typeof(IUserService), typeof(UserService));
             services.AddScoped(typeof(ITokenService), typeof(TokenService));
-            services.AddScoped(typeof(IResetPasswordService), typeof(ResetPasswordService));            
+            services.AddScoped(typeof(IResetPasswordService), typeof(ResetPasswordService));
 
             services.AddTransient<IMailService, MailService>();
             services.AddScoped(typeof(IUserRepository), typeof(UserRepository));

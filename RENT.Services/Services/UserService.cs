@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
 using RENT.Api.Configuration;
 using RENT.Api.Configuration.Requests;
 using RENT.Data.Helpers;
@@ -7,25 +6,20 @@ using RENT.Data.Interfaces.IRepositories;
 using RENT.Data.Interfaces.IServices;
 using RENT.Domain.Dtos;
 using RENT.Domain.Entities.Auth;
-using System;
-using System.Runtime.CompilerServices;
 
 namespace RENT.Services.Services
 {
-    public class UserServices : IUserServices
+    public class UserService : IUserService
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly TokenValidationParameters _tokenValidationParams;
         private readonly IUserRepository _userRepository;
         private readonly ITokenService _tokenService;
 
-        public UserServices(UserManager<ApplicationUser> userManager,
-            TokenValidationParameters tokenValidationParams,
+        public UserService(UserManager<ApplicationUser> userManager,
             IUserRepository userRepository,
             ITokenService tokenService)
         {
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
-            _tokenValidationParams = tokenValidationParams ?? throw new ArgumentNullException(nameof(tokenValidationParams));
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             _tokenService = tokenService ?? throw new ArgumentNullException(nameof(tokenService));
         }
@@ -75,11 +69,11 @@ namespace RENT.Services.Services
             }
             return new AuthResult()
             {
-                Success = isCreated.Succeeded               
+                Success = isCreated.Succeeded
             };
         }
 
-        public async Task<object> UserInfo(UserLoginRequest user, string imageSrc)
+        public async Task<AuthResult> UserInfo(UserLoginRequest user, string imageSrc)
         {
             ApplicationUser existingUser = await _userManager.FindByEmailAsync(user.Email);
 
@@ -118,10 +112,13 @@ namespace RENT.Services.Services
             }
             var token = await _tokenService.GenerateJwtTokenAsync(existingUser);
             var result = await _userRepository.GetUserInfo(existingUser, token, imageSrc);
-            return result;
+            return new AuthResult()
+            {
+                UserInformationDto = result
+            };
         }
 
-        public string StringRandom() 
+        public string StringRandom()
         {
             string unique = RandomString.RandString(36);
 

@@ -28,7 +28,7 @@ namespace RENT.Data.Repository
             _context.Categories.Add(cat);
             await _context.SaveChangesAsync();
 
-            CategoriesProduct categories = new()
+            CategoriesProducts categories = new()
             {
                 ProductsId = category.ProductsId,
                 CategoriesId = cat.CategoriesId

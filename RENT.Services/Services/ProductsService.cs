@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using RENT.Data.Filter;
 using RENT.Data.Interfaces.IRepositories;
 using RENT.Data.Interfaces.IServices;
 using RENT.Domain.Dtos.RequestDto;
@@ -46,7 +45,7 @@ namespace RENT.Services.Services
         {
             var product = await _productsRepository.GetProductIdAsync(userId);
             if (product == null)
-                 throw new Exception();
+                throw new Exception();
             return GetProductImage(product, imageSrc);
         }
 
@@ -79,16 +78,16 @@ namespace RENT.Services.Services
         private ProductsDto GetProductImage(Products products, string imageSrc)
         {
             var productsToReturn = _mapper.Map<ProductsDto>(products);
-            var newImages = new List<string>();        
+            var newImages = new List<string>();
             string[] ImageName = productsToReturn.ImageName.Split(',');
-                foreach (var img in ImageName)
+            foreach (var img in ImageName)
+            {
+                if (!String.IsNullOrEmpty(img))
                 {
-                    if (!String.IsNullOrEmpty(img))
-                    {
-                        newImages.Add(String.Format("{0}/Images/{1}", imageSrc, img));
-                        productsToReturn.ImageSrc = newImages;
-                    }
-                }            
+                    newImages.Add(String.Format("{0}/Images/{1}", imageSrc, img));
+                    productsToReturn.ImageSrc = newImages;
+                }
+            }
             return productsToReturn;
         }
     }

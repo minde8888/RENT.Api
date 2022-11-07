@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RENT.Domain.Entities
+﻿namespace RENT.Domain.Entities
 {
-    public class CategoriesProduct
+    public class CategoriesProducts
     {
         public Guid CategoriesId { get; set; }
         public Categories Categories { get; set; }

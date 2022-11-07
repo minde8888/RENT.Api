@@ -23,7 +23,7 @@ namespace RENT.Data.Context
         public DbSet<Post> Post { get; set; }
         public DbSet<Seller> Seller { get; set; }
         public DbSet<RefreshToken> RefreshToken { get; set; }
-        public DbSet<CategoriesProduct> CategoriesProduct { get; set; }
+        public DbSet<CategoriesProducts> CategoriesProduct { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -47,13 +47,13 @@ namespace RENT.Data.Context
                 entity.ToTable("UserLogins");
             });
 
-            builder.Entity<CategoriesProduct>()
+            builder.Entity<CategoriesProducts>()
                 .HasKey(i => new { i.ProductsId, i.CategoriesId });
 
             builder.Entity<Categories>()
            .HasMany(x => x.Products)
            .WithMany(x => x.Categories)
-           .UsingEntity<CategoriesProduct>(
+           .UsingEntity<CategoriesProducts>(
                x => x.HasOne(x => x.Products)
                .WithMany().HasForeignKey(x => x.ProductsId),
                x => x.HasOne(x => x.Categories)

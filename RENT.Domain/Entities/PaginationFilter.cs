@@ -1,4 +1,4 @@
-﻿namespace RENT.Data.Filter
+﻿namespace RENT.Domain.Entities
 {
     public class PaginationFilter
     {
