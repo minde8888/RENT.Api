@@ -7,7 +7,7 @@ namespace RENT.Data.Interfaces.IRepositories
     public interface IUserRepository
     {
         public Task AddNewUserAsync(UserRegistrationDto user);
-        public Task<UserInformationDto> GetUserInfo(ApplicationUser user, AuthResult token, string ImageSrc);
+        public Task<UserInformationDto> GetUserInfo(ApplicationUser user, AuthResult token, string imageSrc);
     }
 }
 

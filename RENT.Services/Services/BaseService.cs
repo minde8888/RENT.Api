@@ -6,13 +6,13 @@ using RENT.Domain.Entities;
 
 namespace RENT.Services.Services
 {
-    public class BaseSerrvice<T> : IBaseSerrvice<T> where T : BaseEntity
+    public class BaseService<T> : IBaseService<T> where T : BaseEntity
     {
         private readonly IBaseRepository<T> _baseRepository;
         private readonly IImagesService _imagesService;
 
 
-        public BaseSerrvice(IBaseRepository<T> baseRepository, IImagesService imagesService)
+        public BaseService(IBaseRepository<T> baseRepository, IImagesService imagesService)
         {
             _baseRepository = baseRepository;
             _imagesService = imagesService;
@@ -31,10 +31,10 @@ namespace RENT.Services.Services
         {
             if (user.ImageFile != null && user.ImageName != null)
             {
-                string[] imagesNames = user.ImageName.Split(',');
+                var imagesNames = user.ImageName.Split(',');
                 foreach (var image in imagesNames)
                 {
-                    string imagePath = Path.Combine(contentRootPath, "Images", image);
+                    var imagePath = Path.Combine(contentRootPath, "Images", image);
                     _imagesService.DeleteImage(imagePath);
                 }
                 user.ImageName = _imagesService.SaveImage(user.ImageFile, user.Height, user.Width);
@@ -49,8 +49,7 @@ namespace RENT.Services.Services
             List<string> imageList = new();
 
             if (!string.IsNullOrEmpty(userDto.ImageName))
-
-                imageList.Add(string.Format("{0}/Images/{1}", imageSrc, userDto.ImageName));
+                imageList.Add($"{imageSrc}/Images/{userDto.ImageName}");
 
             userDto.ImageSrc = imageList;
 

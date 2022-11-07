@@ -11,9 +11,9 @@ namespace RENT.Api.Controllers
     public class SellerController : BaseController<Seller>
     {
         public SellerController(IBaseRepository<Seller> baseRepository,
-            IBaseSerrvice<Seller> baseSerrvice,
+            IBaseService<Seller> baseService,
             IWebHostEnvironment hostEnvironment) :
-            base(baseRepository, baseSerrvice, hostEnvironment)
+            base(baseRepository, baseService, hostEnvironment)
         {
         }
     }

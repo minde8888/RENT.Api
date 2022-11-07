@@ -9,8 +9,7 @@ using RENT.Api.Configuration;
 using RENT.Data.Context;
 using RENT.Data.Interfaces.IRepositories;
 using RENT.Data.Interfaces.IServices;
-using RENT.Data.Repository;
-using RENT.Data.Repositorys;
+using RENT.Data.Repositories;
 using RENT.Domain.Entities.Auth;
 using RENT.Domain.Entities.Roles;
 using RENT.Domain.Entities.Settings;
@@ -105,7 +104,7 @@ namespace RENT.Api
             services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
             services.AddScoped(typeof(IProductsRepository), typeof(ProductsRepository));
             services.AddScoped(typeof(ICategoryRepository), typeof(CategoryRepository));
-            services.AddScoped(typeof(IBaseSerrvice<>), typeof(BaseSerrvice<>));
+            services.AddScoped(typeof(IBaseService<>), typeof(BaseService<>));
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 
             services.AddSwaggerGen(c =>

@@ -18,7 +18,7 @@ namespace Rent.Xunit.ControllerTest
         private readonly Mock<IProductsRepository> _mockProductRepository;
         private readonly Mock<IProductsService> _mockProductService;
         private readonly ProductsController _controller;
-        private readonly string Url = "http://localhost:44346/api/v1/Products";
+        private readonly string _url = "http://localhost:44346/api/v1/Products";
 
         public ProductsControllerTest()
         {
@@ -34,7 +34,7 @@ namespace Rent.Xunit.ControllerTest
 
             _mockProductRepository = new Mock<IProductsRepository>();
             _mockProductService = new Mock<IProductsService>();
-
+           
             _controller = new ProductsController(
                 _mockProductService.Object,
                 _mockProductRepository.Object);
@@ -59,7 +59,7 @@ namespace Rent.Xunit.ControllerTest
             //Arrange
             var product = GetProductResponseDto();
             var filter = GetPaginationFilter();
-            _mockProductService.Setup(x => x.GetAllProductsAsync(filter, Url, "/api/v1/Products")).ReturnsAsync(product);
+            _mockProductService.Setup(x => x.GetAllProductsAsync(filter, _url, "/api/v1/Products")).ReturnsAsync(product);
             //Act
             var response = _controller.GetAllAsync(filter);
             var result = response.Result.Result as OkObjectResult;
@@ -77,7 +77,7 @@ namespace Rent.Xunit.ControllerTest
             //Arrange
             var productResponse = GetProductDto();
             var productUpdate = GetProductRequestDto();
-            _mockProductService.Setup(x => x.UpdateItemAsync(productUpdate, Url)).ReturnsAsync(productResponse);
+            _mockProductService.Setup(x => x.UpdateItemAsync(productUpdate, _url)).ReturnsAsync(productResponse);
             //Act
             var response = _controller.UpdateAsync(productUpdate);
             // Assert

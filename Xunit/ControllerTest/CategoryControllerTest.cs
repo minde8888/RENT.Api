@@ -25,7 +25,7 @@ namespace Rent.Xunit.ControllerTest
         {
             //Arrange
             var category = GetCategoriesDto();
-            _mockCategoryRepository.Setup(x => x.AddCategotyAsync(category)).ReturnsAsync(category);
+            _mockCategoryRepository.Setup(x => x.AddCategoryAsync(category)).ReturnsAsync(category);
             //Act
             var response = _controller.AddNewCategory(category);
             var result = response.Result as OkObjectResult;
@@ -74,7 +74,7 @@ namespace Rent.Xunit.ControllerTest
 
         [Fact]
         [SupportedOSPlatform("windows")]
-        public void UpdatweCategoryValues()
+        public void UpdateCategoryValues()
         {
             //Arrange
             var category = GetCategoriesDto();

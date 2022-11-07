@@ -36,7 +36,7 @@ namespace Rent.Xunit.ServicesTest
             //Arrange
             var user = GetUser();
             var userDto = GetUserDto();
-            Guid g = Guid.NewGuid();
+            var g = Guid.NewGuid();
 
             _mockUserManager.Setup(x => x.FindByIdAsync(user.Id.ToString(), CancellationToken.None))
            .ReturnsAsync(GetUser());

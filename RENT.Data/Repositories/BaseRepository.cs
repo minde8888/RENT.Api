@@ -8,7 +8,7 @@ using RENT.Domain.Dtos.RequestDto;
 using RENT.Domain.Entities;
 using RENT.Domain.Entities.Auth;
 
-namespace RENT.Data.Repositorys
+namespace RENT.Data.Repositories
 {
     public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
     {
@@ -25,9 +25,11 @@ namespace RENT.Data.Repositorys
             _mapper = mapper;
         }
 
-        public async Task AddItemAsync(T t, string UserId)
+        public async Task AddItemAsync(T t, string userId)
         {
-            var user = await _userManager.FindByIdAsync(UserId);
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) throw new Exception();
+
             t.UserId = new Guid(user.Id.ToString());
             await _context.AddAsync(t);
             await _context.SaveChangesAsync();
@@ -42,14 +44,14 @@ namespace RENT.Data.Repositorys
             return _mapper.Map<UserDto>(item);
         }
 
-        public async Task<UserDto> GetItemIdAsync(string Id)
+        public async Task<UserDto> GetItemIdAsync(string id)
         {
             var itemToMap = await _context.Set<T>().
                 Include(t => t.Address).
-                SingleOrDefaultAsync(x => x.Id == Guid.Parse(Id));
+                SingleOrDefaultAsync(x => x.Id == Guid.Parse(id));
 
             var result = _mapper.Map<UserDto>(itemToMap);
-            var newAddress = _mapper.Map<AddressDto>(itemToMap.Address);
+            var newAddress = _mapper.Map<AddressDto>(itemToMap?.Address);
             result.AddressDto = newAddress;
 
             return result;
@@ -59,9 +61,10 @@ namespace RENT.Data.Repositorys
         {
             var item = _context.Set<T>().
                 Include(manager => manager.Address).
-                Where(m => m.Id == userDto.Id).FirstOrDefault();
+                Single(m => m.Id == userDto.Id);
 
-            if (item == null && userDto == null) throw new Exception();
+            if (item == null || userDto == null) throw new NullReferenceException();
+
             item.Name = userDto.Name;
             item.Surname = userDto.Surname;
             item.Occupation = userDto.Occupation;
@@ -69,7 +72,7 @@ namespace RENT.Data.Repositorys
             if (userDto.ImageName != null)
             {
                 item.ImageName = userDto.ImageName;
-            }           
+            }
             item.DateUpdated = DateTime.UtcNow;
             item.Address.City = userDto.City;
             item.Address.Country = userDto.Country;
@@ -81,21 +84,23 @@ namespace RENT.Data.Repositorys
             _context.Entry(item).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
-            var newAddress = _mapper.Map<AddressDto>(item.Address); 
+            var newAddress = _mapper.Map<AddressDto>(item.Address);
             var itemReturn = _mapper.Map<UserDto>(item);
             itemReturn.AddressDto = newAddress;
 
             return itemReturn;
         }
 
-        public async Task RemoveItemAsync(string Id)
+        public async Task RemoveItemAsync(string id)
         {
             var item = _context.
                 Set<T>().
-                Where(x => x.Id == Guid.Parse(Id)).
-                FirstOrDefault();
+                Single(x => x.Id == Guid.Parse(id));
+            if (item == null ) throw new NullReferenceException();
 
             var user = await _userManager.FindByEmailAsync(item.Email);
+            if (user == null) throw new Exception();
+
             item.IsDeleted = true;
             user.IsDeleted = true;
             await _context.SaveChangesAsync();

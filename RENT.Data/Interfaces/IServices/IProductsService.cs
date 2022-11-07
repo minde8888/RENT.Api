@@ -7,7 +7,7 @@ namespace RENT.Data.Interfaces.IServices
     public interface IProductsService
     {
         Task AddProductWithImage(ProductsRequestDto product);
-        Task<ProductResponseDto> GetAllProductsAsync(PaginationFilter filter, string ImageSrc, string route);
+        Task<ProductResponseDto> GetAllProductsAsync(PaginationFilter filter, string imageSrc, string route);
         Task<ProductsDto> GetProductById(Guid userId, string imageSrc);
         Task<ProductsDto> UpdateItemAsync(ProductsRequestDto product, string imageSrc);
     }

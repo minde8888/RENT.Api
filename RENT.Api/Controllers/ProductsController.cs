@@ -50,9 +50,9 @@ namespace RENT.Api.Controllers
         {
             try
             {
-                String route = Request.Path.Value;
-                String ImageSrc = String.Format("{0}://{1}", Request.Scheme, Request.Host);
-                var response = await _productsService.GetAllProductsAsync(filter, ImageSrc, route);
+                var route = Request.Path.Value;
+                var imageSrc = $"{Request.Scheme}://{Request.Host}";
+                var response = await _productsService.GetAllProductsAsync(filter,imageSrc, route);
                 return Ok(response);
             }
             catch (Exception ex)
@@ -71,8 +71,8 @@ namespace RENT.Api.Controllers
                 return BadRequest("This product can not by updated");
             try
             {
-                String ImageSrc = String.Format("{0}://{1}", Request.Scheme, Request.Host);
-                var response = await _productsService.UpdateItemAsync(product, ImageSrc);
+                var imageSrc = $"{Request.Scheme}://{Request.Host}";
+                var response = await _productsService.UpdateItemAsync(product, imageSrc);
                 return Ok(response);
             }
             catch (DbUpdateException)
@@ -89,9 +89,9 @@ namespace RENT.Api.Controllers
 
         [HttpDelete("Delete/{id}")]
         [Authorize(Roles = "User, Admin")]
-        public async Task<ActionResult> DeleteProductAsync(String id)
+        public async Task<ActionResult> DeleteProductAsync(string id)
         {
-            if (String.IsNullOrEmpty(id))
+            if (string.IsNullOrEmpty(id))
                 return BadRequest();
 
             await _productsRepository.RemoveProductsAsync(id);

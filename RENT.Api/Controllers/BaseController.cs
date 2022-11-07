@@ -15,16 +15,16 @@ namespace RENT.Api.Controllers
     public class BaseController<T> : ControllerBase where T : BaseEntity
     {
         private readonly IBaseRepository<T> _baseRepository;
-        private readonly IBaseSerrvice<T> _baseSerrvice;
+        private readonly IBaseService<T> _baseService;
         private readonly IWebHostEnvironment _hostEnvironment;
 
         public BaseController(
             IBaseRepository<T> baseRepository,
-            IBaseSerrvice<T> baseSerrvice,
+            IBaseService<T> baseService,
             IWebHostEnvironment hostEnvironment)
         {
             _baseRepository = baseRepository;
-            _baseSerrvice = baseSerrvice;
+            _baseService = baseService;
             _hostEnvironment = hostEnvironment;
         }
 
@@ -34,8 +34,8 @@ namespace RENT.Api.Controllers
         {
             try
             {
-                string UserId = HttpContext.User.FindFirstValue("id");
-                await _baseRepository.AddItemAsync(t, UserId);
+                var userId = HttpContext.User.FindFirstValue("id");
+                await _baseRepository.AddItemAsync(t, userId);
                 return CreatedAtAction("Get", new { t.Id }, t);
             }
             catch (Exception)
@@ -61,16 +61,16 @@ namespace RENT.Api.Controllers
         }
 
         [HttpGet("id")]
-        public async Task<ActionResult<T>> Get(String id)
+        public async Task<ActionResult<T>> Get(string id)
         {
             try
             {
                 if (string.IsNullOrEmpty(id))
                     return BadRequest("Can not find Id");
 
-                String ImageSrc = String.Format("{0}://{1}", Request.Scheme, Request.Host);
+                var imageSrc = $"{Request.Scheme}://{Request.Host}";
 
-                var result = await _baseSerrvice.GetItemById(ImageSrc, id);
+                var result = await _baseService.GetItemById(imageSrc, id);
 
                 return Ok(result);
             }
@@ -88,9 +88,9 @@ namespace RENT.Api.Controllers
         {
             try
             {
-                String route = Request.Path.Value;
-                String src = String.Format("{0}://{1}", Request.Scheme, Request.Host);
-                var result = await _baseSerrvice.UpdateItem(_hostEnvironment.ContentRootPath, userDto, src);
+                var route = Request.Path.Value;
+                var src = $"{Request.Scheme}://{Request.Host}";
+                var result = await _baseService.UpdateItem(_hostEnvironment.ContentRootPath, userDto, src);
                 return Ok(result);
             }
             catch (DbUpdateConcurrencyException)
@@ -125,9 +125,9 @@ namespace RENT.Api.Controllers
 
         [HttpDelete("Delete/{id}")]
         [Authorize(Roles = "Seller, Admin")]
-        public async Task<ActionResult> DeleteManager(String id)
+        public async Task<ActionResult> DeleteManager(string id)
         {
-            if (id == String.Empty)
+            if (id == string.Empty)
                 return BadRequest();
 
             await _baseRepository.RemoveItemAsync(id);

@@ -4,37 +4,50 @@ using RENT.Domain.Entities.Wrappers;
 
 namespace RENT.Data.Helpers
 {
+    public class InClassName<TT>
+    {
+        public InClassName(List<TT> pagedData, PaginationFilter validFilter, int totalRecords, IUriService uriService, string route)
+        {
+            PagedData = pagedData;
+            ValidFilter = validFilter;
+            TotalRecords = totalRecords;
+            UriService = uriService;
+            Route = route;
+        }
+
+        public List<TT> PagedData { get; private set; }
+        public PaginationFilter ValidFilter { get; private set; }
+        public int TotalRecords { get; private set; }
+        public IUriService UriService { get; private set; }
+        public string Route { get; private set; }
+    }
+
     public static class PaginationHelper
     {
-        public static PagedResponse<List<T>> CreatePagedReponse<T>(
-            List<T> pagedData,
-            PaginationFilter validFilter,
-            int totalRecords,
-            IUriService uriService,
-            string route)
+        public static PagedResponse<List<T>> CreatePagedResponse<T>(InClassName<T> inClassName)
         {
-            var respose = new PagedResponse<List<T>>(pagedData, validFilter.PageNumber, validFilter.PageSize);
-            var totalPages = ((double)totalRecords / (double)validFilter.PageSize);
-            int roundedTotalPages = Convert.ToInt32(Math.Ceiling(totalPages));
-            respose.NextPage =
-                validFilter.PageNumber >= 1 && validFilter.PageNumber < roundedTotalPages
-                ? uriService.GetPageUri(new PaginationFilter(validFilter.PageNumber + 1, validFilter.PageSize), route)
+            var response = new PagedResponse<List<T>>(inClassName.PagedData, inClassName.ValidFilter.PageNumber, inClassName.ValidFilter.PageSize);
+            var totalPages = ((double)inClassName.TotalRecords / (double)inClassName.ValidFilter.PageSize);
+            var roundedTotalPages = Convert.ToInt32(Math.Ceiling(totalPages));
+            response.NextPage =
+                inClassName.ValidFilter.PageNumber >= 1 && inClassName.ValidFilter.PageNumber < roundedTotalPages
+                ? inClassName.UriService.GetPageUri(new PaginationFilter(inClassName.ValidFilter.PageNumber + 1, inClassName.ValidFilter.PageSize), inClassName.Route)
                 : null;
-            respose.PreviousPage =
-                validFilter.PageNumber - 1 >= 1 && validFilter.PageNumber <= roundedTotalPages
-                ? uriService.GetPageUri(new PaginationFilter(validFilter.PageNumber - 1, validFilter.PageSize), route)
+            response.PreviousPage =
+                inClassName.ValidFilter.PageNumber - 1 >= 1 && inClassName.ValidFilter.PageNumber <= roundedTotalPages
+                ? inClassName.UriService.GetPageUri(new PaginationFilter(inClassName.ValidFilter.PageNumber - 1, inClassName.ValidFilter.PageSize), inClassName.Route)
                 : null;
-            respose.FirstPage = uriService.GetPageUri(new PaginationFilter(1, validFilter.PageSize), route);
-            respose.LastPage = uriService.GetPageUri(new PaginationFilter(roundedTotalPages, validFilter.PageSize), route);
-            respose.TotalPages = roundedTotalPages;
-            respose.TotalRecords = totalRecords;
+            response.FirstPage = inClassName.UriService.GetPageUri(new PaginationFilter(1, inClassName.ValidFilter.PageSize), inClassName.Route);
+            response.LastPage = inClassName.UriService.GetPageUri(new PaginationFilter(roundedTotalPages, inClassName.ValidFilter.PageSize), inClassName.Route);
+            response.TotalPages = roundedTotalPages;
+            response.TotalRecords = inClassName.TotalRecords;
 
-            respose.NexPage = validFilter.PageNumber >= 1 && validFilter.PageNumber < roundedTotalPages
-                ? new PaginationFilter(validFilter.PageNumber + 1, validFilter.PageSize).PageNumber : null;
+            response.NexPage = inClassName.ValidFilter.PageNumber >= 1 && inClassName.ValidFilter.PageNumber < roundedTotalPages
+                ? new PaginationFilter(inClassName.ValidFilter.PageNumber + 1, inClassName.ValidFilter.PageSize).PageNumber : null;
 
-            respose.PrevPage = validFilter.PageNumber - 1 >= 1 && validFilter.PageNumber <= roundedTotalPages
-                ? new PaginationFilter(validFilter.PageNumber - 1, validFilter.PageSize).PageNumber : null;
-            return respose;
+            response.PrevPage = inClassName.ValidFilter.PageNumber - 1 >= 1 && inClassName.ValidFilter.PageNumber <= roundedTotalPages
+                ? new PaginationFilter(inClassName.ValidFilter.PageNumber - 1, inClassName.ValidFilter.PageSize).PageNumber : null;
+            return response;
         }
     }
 }

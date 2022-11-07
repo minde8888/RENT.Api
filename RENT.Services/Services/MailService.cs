@@ -6,7 +6,8 @@ using RENT.Domain.Entities;
 using RENT.Domain.Entities.Settings;
 using RENT.Data.Interfaces.IServices;
 
-namespace RENT.Data.Service
+namespace RENT.Services.Services
+
 {
     public class MailService : IMailService
     {
@@ -26,22 +27,20 @@ namespace RENT.Data.Service
             email.To.Add(MailboxAddress.Parse(mailRequest.ToEmail));
             email.Subject = mailRequest.Subject;
             var builder = new BodyBuilder();
-            if (mailRequest.Attachments != null)
-            {
-                byte[] fileBytes;
-                foreach (var file in mailRequest.Attachments)
+            if (mailRequest.Attachments == null) return;
+
+            mailRequest.Attachments.ForEach(file =>
                 {
-                    if (file.Length > 0)
+                    if (file.Length > 0) return;
+                    byte[] fileBytes;
+                    using (var ms = new MemoryStream())
                     {
-                        using (var ms = new MemoryStream())
-                        {
-                            file.CopyTo(ms);
-                            fileBytes = ms.ToArray();
-                        }
-                        builder.Attachments.Add(file.FileName, fileBytes, ContentType.Parse(file.ContentType));
+                        file.CopyTo(ms);
+                        fileBytes = ms.ToArray();
                     }
-                }
-            }
+                    builder.Attachments.Add(file.FileName, fileBytes, ContentType.Parse(file.ContentType));
+                });
+          
             builder.HtmlBody = mailRequest.Body;
             email.Body = builder.ToMessageBody();
             using SmtpClient smtp = new();
@@ -54,7 +53,7 @@ namespace RENT.Data.Service
 
         public async Task SendWelcomeEmailAsync(WelcomeRequest request)
         {
-            string FilePath = Directory.GetCurrentDirectory() + "\\Templates\\WelcomeTemplate.html";
+            var FilePath = Directory.GetCurrentDirectory() + "\\Templates\\WelcomeTemplate.html";
             StreamReader str = new(FilePath);
             string MailText = str.ReadToEnd();
             str.Close();

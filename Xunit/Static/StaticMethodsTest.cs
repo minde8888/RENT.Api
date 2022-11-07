@@ -8,22 +8,22 @@ using RENT.Domain.Entities;
 
 namespace Rent.Xunit.Static
 {
-    public class StatikMethodsTest
+    public class StaticMethodsTest
     {
         [Fact]
         public void Random()
         {
-            string unique36 = RandomString.RandString(36);
-            string unique25 = RandomString.RandString(25);
+            var unique36 = RandomString.RandString(36);
+            var unique25 = RandomString.RandString(25);
             unique36.Should().HaveLength(36);
             unique25.Should().HaveLength(25);
         }
         [Fact]
-        public void DateOffsetChack()
+        public void DateOffsetCheck()
         {
             //Arrange
-            DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(1000);
-            long unixTimeStampInSeconds = dateTimeOffset.ToUnixTimeSeconds();
+            var dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(1000);
+            var unixTimeStampInSeconds = dateTimeOffset.ToUnixTimeSeconds();
             //Act
             var expDate = UnixTimeStamp.UnixTimeStampToDateTime(unixTimeStampInSeconds);
             //result
@@ -40,11 +40,13 @@ namespace Rent.Xunit.Static
             });
             var filter = fixture.Create<PaginationFilter>();
             var uri = fixture.Create<IUriService>();
-            List<Products> product = new();
-            product.Add(new Products());
+            List<Products> product = new()
+            {
+                new Products()
+            };
             //Act
             var uriService = uri.GetPageUri(filter, "test.com");
-            var value = PaginationHelper.CreatePagedReponse(product, filter, 10, uri, "test.com");
+            var value = PaginationHelper.CreatePagedResponse(new InClassName<Products>(product, filter, 10, uri, "test.com"));
             //result
             uriService.Should().NotBeNull();
             uriService.AbsolutePath.Should().Be("/");

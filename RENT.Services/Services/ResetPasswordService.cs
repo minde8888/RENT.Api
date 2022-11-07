@@ -30,35 +30,28 @@ namespace RENT.Services.Services
             else
             {
                 var resetPassResult = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
-                if (resetPassResult.Succeeded)
-                {
-                    user.PasswordReset = DateTime.UtcNow;
-                    user.ResetToken = null;
-                    user.ResetTokenExpires = null;
-                    await _userManager.UpdateAsync(user);
+                if (!resetPassResult.Succeeded) throw new Exception();
+                user.PasswordReset = DateTime.UtcNow;
+                user.ResetToken = null;
+                user.ResetTokenExpires = null;
+                await _userManager.UpdateAsync(user);
 
-                    return true;
-                }
+                return true;
             }
-            throw new Exception();
         }
 
         public async Task<bool> SendEmailPasswordReset(ForgotPassword model, string origin)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
-            string token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            if (token != null)
-            {
-                user.ResetToken = token;
-                user.ResetTokenExpires = DateTime.UtcNow.AddDays(1);
-                await _userManager.UpdateAsync(user);
-            }
-            else
-            {
-                throw new ArgumentException("Token is null");
-            }
+            if (user == null) throw new ArgumentNullException();
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            user.ResetToken = token ?? throw new ArgumentException("Token is null");
+            user.ResetTokenExpires = DateTime.UtcNow.AddDays(1);
+            await _userManager.UpdateAsync(user);
+
             var link = $"{origin}/api/Auth/NewPassword?token={token}&email={user.Email}";
-            bool sendEmail = _mailService.SendEmailPasswordReset(model, link);
+            var sendEmail = _mailService.SendEmailPasswordReset(model, link);
             return sendEmail;
         }
     }

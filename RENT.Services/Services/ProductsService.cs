@@ -24,10 +24,10 @@ namespace RENT.Services.Services
             var imageName = "";
             if (product.Images != null)
             {
-                string[] height = product.ImageHeight.Split(',');
-                string[] width = product.ImageWidth.Split(',');
+                var height = product.ImageHeight.Split(',');
+               var width = product.ImageWidth.Split(',');
 
-                for (int i = 0; i < height.Length; i++)
+                for (var i = 0; i < height.Length; i++)
                 {
                     imageName += _imagesService.SaveImage(product.Images[i], height[i], width[i]);
                 }
@@ -36,10 +36,10 @@ namespace RENT.Services.Services
             await _productsRepository.AddProductsAsync(product);
         }
 
-        public async Task<ProductResponseDto> GetAllProductsAsync(PaginationFilter filter, string ImageSrc, string route)
+        public async Task<ProductResponseDto> GetAllProductsAsync(PaginationFilter filter, string imageSrc, string route)
         {
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
-            return await _productsRepository.GetProductsAsync(ImageSrc, validFilter, route);
+            return await _productsRepository.GetProductsAsync(imageSrc, validFilter, route);
         }
         public async Task<ProductsDto> GetProductById(Guid userId, string imageSrc)
         {
@@ -53,13 +53,13 @@ namespace RENT.Services.Services
         {
             if (product.Images != null)
             {
-                string[] height = product.ImageHeight.Split(',');
-                string[] width = product.ImageWidth.Split(',');
-                string[] imageName = product.ImageSrc.Split(',');
+                var height = product.ImageHeight.Split(',');
+                var width = product.ImageWidth.Split(',');
+                var imageName = product.ImageSrc.Split(',');
 
-                int count = 0;
+                var count = 0;
 
-                for (int i = 0; i < imageName.Length; i++)
+                for (var i = 0; i < imageName.Length; i++)
                 {
                     if (imageName[i] == "/")
                     {
@@ -67,7 +67,7 @@ namespace RENT.Services.Services
                         count++;
                     }
                 }
-                product.ImageSrc = String.Join(',', imageName);
+                product.ImageSrc = string.Join(',', imageName);
             }
             await _productsRepository.UpdateProductAsync(product);
 
@@ -79,14 +79,12 @@ namespace RENT.Services.Services
         {
             var productsToReturn = _mapper.Map<ProductsDto>(products);
             var newImages = new List<string>();
-            string[] ImageName = productsToReturn.ImageName.Split(',');
-            foreach (var img in ImageName)
+            var imageName = productsToReturn.ImageName.Split(',');
+            foreach (var img in imageName)
             {
-                if (!String.IsNullOrEmpty(img))
-                {
-                    newImages.Add(String.Format("{0}/Images/{1}", imageSrc, img));
-                    productsToReturn.ImageSrc = newImages;
-                }
+                if (string.IsNullOrEmpty(img)) throw new NullReferenceException();
+                newImages.Add($"{imageSrc}/Images/{img}");
+                productsToReturn.ImageSrc = newImages;
             }
             return productsToReturn;
         }

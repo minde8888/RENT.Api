@@ -16,7 +16,7 @@ namespace RENT.Api.Controllers
     [Route("api/v1/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
-    {        
+    {
         private readonly TokenValidationParameters _tokenValidationParams;
         private readonly IUserService _userServices;
         private readonly ITokenService _tokenService;
@@ -60,9 +60,9 @@ namespace RENT.Api.Controllers
         [Route("Login")]
         public async Task<ActionResult<List<UserInformationDto>>> Login([FromBody] UserLoginRequest user)
         {
-             try
+            try
             {
-                String imageSrc = String.Format("{0}://{1}", Request.Scheme, Request.Host);
+                var imageSrc = $"{Request.Scheme}://{Request.Host}"; 
                 var result = await _userServices.UserInfo(user, imageSrc);
                 return Ok(result);
             }
@@ -75,7 +75,7 @@ namespace RENT.Api.Controllers
                             },
                     Success = false
                 });
-            }  
+            }
         }
 
         [AllowAnonymous]
@@ -83,9 +83,9 @@ namespace RENT.Api.Controllers
         public async Task<IActionResult> ForgotPassword(ForgotPassword model)
         {
             try
-            {           
-                bool emailHelper = await _resetPasswordService.SendEmailPasswordReset(model, Request.Headers["origin"]);
-                return Ok();
+            {
+                var emailHelper = await _resetPasswordService.SendEmailPasswordReset(model, Request.Headers["origin"]);
+                return Ok(emailHelper);
             }
             catch (SmtpFailedRecipientException sx)
             {
@@ -103,12 +103,11 @@ namespace RENT.Api.Controllers
         {
             try
             {
-                bool result = await _resetPasswordService.NewPassword(model);
+                var result = await _resetPasswordService.NewPassword(model);
                 if (result)
-                {
                     return Ok(new { message = "Password reset successful, you can now login" });
-                }
-                return Ok(new { message = "Password reset successful, you can now login" });
+
+                return Ok();
             }
             catch (Exception)
             {
@@ -121,41 +120,30 @@ namespace RENT.Api.Controllers
         [Route("RefreshToken")]
         public async Task<IActionResult> RefreshToken([FromBody] TokenRequests tokenRequest)
         {
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    JwtSecurityTokenHandler jwtTokenHandler = new();
+                JwtSecurityTokenHandler jwtTokenHandler = new();
 
-                    _tokenValidationParams.ValidateLifetime = false;
-                    var principal = jwtTokenHandler.ValidateToken(tokenRequest.Token, _tokenValidationParams, out var validatedToken);
-                    _tokenValidationParams.ValidateLifetime = true;
-                    var res = await _tokenService.VerifyToken(tokenRequest, principal, validatedToken);
-                    if (res == null)
+                _tokenValidationParams.ValidateLifetime = false;
+                var principal = jwtTokenHandler.ValidateToken(tokenRequest.Token, _tokenValidationParams, out var validatedToken);
+                _tokenValidationParams.ValidateLifetime = true;
+                var res = await _tokenService.VerifyToken(tokenRequest, principal, validatedToken);
+                if (res == null)
+                {
+                    return BadRequest(new AuthResult()
                     {
-                        return BadRequest(new AuthResult()
-                        {
-                            Errors = new List<string>() {
+                        Errors = new List<string>() {
                             "Invalid tokens"
                             },
-                            Success = false
-                        });
-                    }
-                    return Ok();
+                        Success = false
+                    });
                 }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex);
-                }
+                return Ok();
             }
-
-            return BadRequest(new AuthResult()
+            catch (Exception ex)
             {
-                Errors = new List<string>() {
-                "Invalid payload"
-            },
-                Success = false
-            });
+                return BadRequest(ex);
+            }
         }
     }
 }

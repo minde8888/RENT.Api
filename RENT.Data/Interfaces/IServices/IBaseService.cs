@@ -4,7 +4,7 @@ using RENT.Domain.Entities;
 
 namespace RENT.Data.Interfaces.IServices
 {
-    public interface IBaseSerrvice<T>
+    public interface IBaseService<T>
     {
         UserDto GetImages(UserDto userDto, string imageSrc);
         Task<UserDto> GetItemById(string imageSrc, string id);

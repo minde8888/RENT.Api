@@ -8,7 +8,7 @@ using RENT.Domain.Dtos.RequestDto;
 using RENT.Domain.Dtos.ResponseDto;
 using RENT.Domain.Entities;
 
-namespace RENT.Data.Repositorys
+namespace RENT.Data.Repositories
 {
     public class ProductsRepository : IProductsRepository
     {
@@ -49,12 +49,14 @@ namespace RENT.Data.Repositorys
             _context.Post.Add(post);
             await _context.SaveChangesAsync();
 
-            string[] categories = product.CategoriesName.Split(',');
+            var categories = product.CategoriesName.Split(',');
 
             foreach (var item in categories)
             {
-                Categories cat = new();
-                cat.CategoriesName = item;
+                Categories cat = new()
+                {
+                    CategoriesName = item
+                };
                 _context.Categories.Add(cat);
                 await _context.SaveChangesAsync();
 
@@ -65,11 +67,10 @@ namespace RENT.Data.Repositorys
                 };
                 _context.CategoriesProduct.Add(category);
                 await _context.SaveChangesAsync();
-
             }
         }
 
-        public async Task<ProductResponseDto> GetProductsAsync(string ImageSrc, PaginationFilter validFilter, string route)
+        public async Task<ProductResponseDto> GetProductsAsync(string imageSrc, PaginationFilter validFilter, string route)
         {
             var pagedData = await _context.Products
                  .Include(c => c.Categories)
@@ -83,40 +84,41 @@ namespace RENT.Data.Repositorys
                  .Include(p => p.Post)
                  .CountAsync();
 
-            var products = PaginationHelper.CreatePagedReponse<Products>(pagedData, validFilter, totalRecords, _uriService, route);
+            var products = PaginationHelper.CreatePagedResponse<Products>(new InClassName<Products>(pagedData, validFilter, totalRecords, _uriService, route));
 
-            ProductResponseDto response = new();
-            response.PageNumber = products.PageNumber;
-            response.PageSize = products.PageSize;
-            response.TotalPages = products.TotalPages;
-            response.TotalRecords = products.TotalRecords;
-            response.NextPage = products.NexPage;
-            response.PreviousPage = products.PrevPage;
-            response.ProductDto = _mapper.Map<List<ProductsDto>>(products.Data);
+            ProductResponseDto response = new()
+            {
+                PageNumber = products.PageNumber,
+                PageSize = products.PageSize,
+                TotalPages = products.TotalPages,
+                TotalRecords = products.TotalRecords,
+                NextPage = products.NexPage,
+                PreviousPage = products.PrevPage,
+                ProductDto = _mapper.Map<List<ProductsDto>>(products.Data)
+            };
 
             foreach (var item in response.ProductDto)
             {
-                string[] name = item.ImageName.Split(','); ;
+                var name = item.ImageName.Split(','); ;
                 var newImages = new List<string>();
 
-                foreach (var img in name)
+                name.ToList().ForEach(img =>
                 {
-                    if (!String.IsNullOrEmpty(img))
-                    {
-                        newImages.Add(string.Format("{0}/Images/{1}", ImageSrc, img));
-                        item.ImageSrc = newImages;
-                    }
-                }
+                    if (string.IsNullOrEmpty(img)) return;
+                    var url = $"{ imageSrc}/ Images /{ img}";
+                    newImages.Add(url);
+                    item.ImageSrc = newImages;
+                });
             }
             return response;
         }
 
-        public async Task<Products> GetProductIdAsync(Guid Id)
+        public async Task<Products> GetProductIdAsync(Guid id)
         {
             return await _context.Products.
                 Include(c => c.Categories).
                 Include(p => p.Post).
-                Where(x => x.ProductsId == Id).FirstOrDefaultAsync();
+                Where(x => x.ProductsId == id).FirstOrDefaultAsync();
         }
 
         public async Task UpdateProductAsync(ProductsRequestDto productDto)
@@ -139,19 +141,19 @@ namespace RENT.Data.Repositorys
 
                 products.Post.Content = productDto.ProductDescription;
                 products.Post.ProductName = productDto.ProductName;
-            }
-            _context.Entry(products).State = EntityState.Modified;
-            _context.Entry(products.Post).State = EntityState.Modified;
 
+                _context.Entry(products).State = EntityState.Modified;
+                _context.Entry(products.Post).State = EntityState.Modified;
+            }
+            
             if (productDto.CategoriesName != null)
             {
                 var cats = _context.CategoriesProduct.
                   Include(c => c.Categories).
                   Where(x => x.ProductsId == productDto.ProductsId);
                 _context.CategoriesProduct.RemoveRange(cats);
-                _context.SaveChanges();
-
-                string[] category = productDto.CategoriesName.Split(',');
+           
+                var category = productDto.CategoriesName.Split(',');
 
                 foreach (var item in category)
                 {
@@ -176,7 +178,7 @@ namespace RENT.Data.Repositorys
 
         public async Task RemoveProductsAsync(string id)
         {
-            if (String.IsNullOrEmpty(id)) throw new Exception();
+            if (string.IsNullOrEmpty(id)) throw new Exception();
 
             Guid newId = new(id);
 
@@ -184,9 +186,11 @@ namespace RENT.Data.Repositorys
                 Include(p => p.Post).
                 Where(x => x.ProductsId == newId).FirstOrDefaultAsync();
 
-            product.IsDeleted = true;
-            product.Post.IsDeleted = true;
-
+            if (product != null)
+            {
+                product.IsDeleted = true;
+                product.Post.IsDeleted = true;
+            }
             await _context.SaveChangesAsync();
         }
     }

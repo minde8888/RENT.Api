@@ -30,7 +30,7 @@ namespace RENT.Services.Services
             _jwtConfig = optionsMonitor.CurrentValue;
             _tokenValidationParams = tokenValidationParams ?? throw new ArgumentNullException(nameof(tokenValidationParams)); ;
         }
-        public RefreshToken GetrefreshToken(SecurityToken token, string rand, ApplicationUser user)
+        public RefreshToken GetRefreshToken(SecurityToken token, string rand, ApplicationUser user)
         {
             RefreshToken refreshToken = new()
             {
@@ -49,9 +49,9 @@ namespace RENT.Services.Services
         public async Task<AuthResult> GenerateJwtTokenAsync(ApplicationUser user)
         {
             var roles = await _userManager.GetRolesAsync(user);
-
+            if (user?.Email == null) throw new ArgumentNullException();
             var roleClaims = new List<Claim>();
-            for (int i = 0; i < roles.Count; i++)
+            for (var i = 0; i < roles.Count; i++)
             {
                 roleClaims.Add(new Claim(ClaimTypes.Role, roles[i]));
             }
@@ -77,8 +77,8 @@ namespace RENT.Services.Services
             var token = jwtTokenHandler.CreateToken(tokenDescriptor);
             var jwtToken = jwtTokenHandler.WriteToken(token);
 
-            string rand = RandomString.RandString(25) + Guid.NewGuid();
-            var refreshToken = GetrefreshToken(token, rand, user);
+            var rand = RandomString.RandString(25) + Guid.NewGuid();
+            var refreshToken = GetRefreshToken(token, rand, user);
 
             _context.RefreshToken.Add(refreshToken);
             await _context.SaveChangesAsync();
@@ -130,7 +130,7 @@ namespace RENT.Services.Services
             {
                 return new AuthResult()
                 {
-                    Errors = new List<string>() { "refresh token doesnt exist" },
+                    Errors = new List<string>() { "refresh token doesn't exist" },
                     Success = false
                 };
             }
@@ -140,7 +140,7 @@ namespace RENT.Services.Services
             {
                 return new AuthResult()
                 {
-                    Errors = new List<string>() { "token has expired, user needs to relogin" },
+                    Errors = new List<string>() { "token has expired, user needs to reloading" },
                     Success = false
                 };
             }
@@ -168,12 +168,12 @@ namespace RENT.Services.Services
             // we are getting here the jwt token id
             var jti = principal.Claims.SingleOrDefault(x => x.Type == JwtRegisteredClaimNames.Jti).Value;
 
-            // check the id that the recieved token has against the id saved in the db
+            // check the id that the received token has against the id saved in the db
             if (storedRefreshToken.JwtId != jti)
             {
                 return new AuthResult()
                 {
-                    Errors = new List<string>() { "the token doenst mateched the saved token" },
+                    Errors = new List<string>() { "the token doesn't match the saved token" },
                     Success = false
                 };
             }

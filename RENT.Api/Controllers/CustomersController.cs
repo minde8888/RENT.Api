@@ -14,9 +14,9 @@ namespace RENT.Api.Controllers
     public class CustomersController : BaseController<Customers>
     {
         public CustomersController(IBaseRepository<Customers> baseRepository,
-            IBaseSerrvice<Customers> baseSerrvice,
+            IBaseService<Customers> baseService,
             IWebHostEnvironment hostEnvironment) :
-            base(baseRepository, baseSerrvice, hostEnvironment)
+            base(baseRepository, baseService, hostEnvironment)
         {
 
         }

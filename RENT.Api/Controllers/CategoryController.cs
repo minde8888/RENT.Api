@@ -25,7 +25,7 @@ namespace RENT.Api.Controllers
         {
             try
             {
-                var categoryReturn = await _categoryRepository.AddCategotyAsync(category);
+                var categoryReturn = await _categoryRepository.AddCategoryAsync(category);
                 return Ok(categoryReturn);
             }
             catch (Exception)
@@ -56,11 +56,11 @@ namespace RENT.Api.Controllers
 
         [HttpGet("id")]
         [AllowAnonymous]
-        public async Task<ActionResult<CategoriesDto>> Get(String id)
+        public async Task<ActionResult<CategoriesDto>> Get(string id)
         {
             try
             {
-                if (String.IsNullOrEmpty(id))
+                if (string.IsNullOrEmpty(id))
                     return BadRequest("Could not find id");
                 var guidId = new Guid(id);
 
@@ -96,7 +96,7 @@ namespace RENT.Api.Controllers
 
         [HttpDelete("Delete/{id}")]
         [Authorize(Roles = "User, Admin")]
-        public ActionResult Delete(String id)
+        public ActionResult Delete(string id)
         {
             if (String.IsNullOrEmpty(id))
                 return BadRequest();
