@@ -82,7 +82,7 @@ namespace RENT.Services.Services
             var imageName = productsToReturn.ImageName.Split(',');
             foreach (var img in imageName)
             {
-                if (string.IsNullOrEmpty(img)) throw new NullReferenceException();
+                if (string.IsNullOrEmpty(img)) throw new ArgumentNullException();
                 newImages.Add($"{imageSrc}/Images/{img}");
                 productsToReturn.ImageSrc = newImages;
             }

@@ -18,17 +18,14 @@ namespace RENT.Services.Services
         private readonly AppDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;    
         private readonly JwtConfig _jwtConfig;
-        private readonly TokenValidationParameters _tokenValidationParams;
         public TokenService(
             AppDbContext context,
             UserManager<ApplicationUser> userManager,    
-            IOptionsMonitor<JwtConfig> optionsMonitor,
-            TokenValidationParameters tokenValidationParams)
+            IOptionsMonitor<JwtConfig> optionsMonitor)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
-            _jwtConfig = optionsMonitor.CurrentValue;
-            _tokenValidationParams = tokenValidationParams ?? throw new ArgumentNullException(nameof(tokenValidationParams)); ;
+            _jwtConfig = optionsMonitor.CurrentValue; 
         }
         public RefreshToken GetRefreshToken(SecurityToken token, string rand, ApplicationUser user)
         {
@@ -51,10 +48,10 @@ namespace RENT.Services.Services
             var roles = await _userManager.GetRolesAsync(user);
             if (user?.Email == null) throw new ArgumentNullException();
             var roleClaims = new List<Claim>();
-            for (var i = 0; i < roles.Count; i++)
+            roles.ToList().ForEach(role =>
             {
-                roleClaims.Add(new Claim(ClaimTypes.Role, roles[i]));
-            }
+                roleClaims.Add(new Claim(ClaimTypes.Role, role));
+            });
 
             var jwtTokenHandler = new JwtSecurityTokenHandler();
 
@@ -93,8 +90,6 @@ namespace RENT.Services.Services
 
         public async Task<AuthResult> VerifyToken(TokenRequests tokenRequest, ClaimsPrincipal principal, SecurityToken validatedToken)
         {
-            JwtSecurityTokenHandler jwtTokenHandler = new();
-
             // This validation function will make sure that the token meets the validation parameters
             // and its an actual jwt token not just a random string
             // Now we need to check if the token has a valid security algorithm

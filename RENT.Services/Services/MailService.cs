@@ -53,11 +53,11 @@ namespace RENT.Services.Services
 
         public async Task SendWelcomeEmailAsync(WelcomeRequest request)
         {
-            var FilePath = Directory.GetCurrentDirectory() + "\\Templates\\WelcomeTemplate.html";
-            StreamReader str = new(FilePath);
-            string MailText = str.ReadToEnd();
+            var filePath = Directory.GetCurrentDirectory() + "\\Templates\\WelcomeTemplate.html";
+            StreamReader str = new(filePath);
+            var mailText = str.ReadToEnd();
             str.Close();
-            MailText = MailText.Replace("[username]", request.UserName).Replace("[email]", request.ToEmail);
+            mailText = mailText.Replace("[username]", request.UserName).Replace("[email]", request.ToEmail);
             var email = new MimeMessage
             {
                 Sender = MailboxAddress.Parse(_mailSettings.Mail)
@@ -66,7 +66,7 @@ namespace RENT.Services.Services
             email.Subject = $"Welcome {request.UserName}";
             var builder = new BodyBuilder
             {
-                HtmlBody = MailText
+                HtmlBody = mailText
             };
             email.Body = builder.ToMessageBody();
             using var smtp = new SmtpClient();

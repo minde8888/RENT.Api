@@ -47,7 +47,7 @@ namespace RENT.Data.Repositories
         {
             var prodCat = await _context.CategoriesProduct
                 .Where(x => x.CategoriesId == guidId).FirstOrDefaultAsync();
-            if (prodCat?.Categories == null) throw new NullReferenceException();
+            if (prodCat?.Categories == null) throw new ArgumentNullException(nameof(prodCat));
 
             return _mapper.Map<CategoriesDto>(prodCat.Categories);
         }
@@ -62,7 +62,7 @@ namespace RENT.Data.Repositories
                 var guid = new Guid(categoriesId[i]);
                 var categorySave = _context.Categories
                     .Single(x => x.CategoriesId == guid);
-                if (categorySave?.CategoriesName == null) throw new NullReferenceException();
+                if (categorySave?.CategoriesName == null) throw new ArgumentNullException(nameof(categorySave));
 
                 categorySave.CategoriesName = categories[i];
                 _context.Entry(categorySave).State = EntityState.Modified;
@@ -75,7 +75,7 @@ namespace RENT.Data.Repositories
             var guid = new Guid(id);
             var cat = _context.Categories
                 .Single(x => x.CategoriesId == guid);
-            if (cat?.CategoriesName == null) throw new NullReferenceException();
+            if (cat?.CategoriesName == null) throw new ArgumentNullException(nameof(cat));
 
             _context.Categories.Remove(cat);
             _context.SaveChangesAsync();

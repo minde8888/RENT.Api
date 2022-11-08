@@ -10,7 +10,7 @@ namespace RENT.Services.Services
     {
         public string SaveImage(IFormFile imageFile, string height, string width)
         {
-            if (imageFile == null) throw new NullReferenceException();
+            if (imageFile == null) throw new ArgumentNullException();
             
                 var imageName = "";
                 var imageNames = new string(Path.GetFileNameWithoutExtension(imageFile.FileName).Take(10).ToArray()).Replace(' ', '-');

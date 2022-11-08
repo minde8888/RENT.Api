@@ -63,7 +63,7 @@ namespace RENT.Data.Repositories
                 Include(manager => manager.Address).
                 Single(m => m.Id == userDto.Id);
 
-            if (item == null || userDto == null) throw new NullReferenceException();
+            if (item == null || userDto == null) throw new ArgumentNullException();
 
             item.Name = userDto.Name;
             item.Surname = userDto.Surname;
@@ -96,7 +96,7 @@ namespace RENT.Data.Repositories
             var item = _context.
                 Set<T>().
                 Single(x => x.Id == Guid.Parse(id));
-            if (item == null ) throw new NullReferenceException();
+            if (item == null ) throw new ArgumentNullException(nameof(item));
 
             var user = await _userManager.FindByEmailAsync(item.Email);
             if (user == null) throw new Exception();

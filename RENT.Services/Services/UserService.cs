@@ -120,7 +120,7 @@ namespace RENT.Services.Services
 
         public string StringRandom()
         {
-            string unique = RandomString.RandString(36);
+            var unique = RandomString.RandString(36);
 
             var existName = _userManager.FindByNameAsync(unique);
             if (existName.Result != null)

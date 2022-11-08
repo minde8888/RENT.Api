@@ -10,11 +10,6 @@ namespace RENT.Services.Services
     {
         private readonly MailSettings _mailSettings;
 
-        public EmailPasswordService(MailSettings mailSettings)
-        {
-            _mailSettings = mailSettings ?? throw new ArgumentNullException(nameof(mailSettings));
-        }
-
         public EmailPasswordService(IOptions<MailSettings> mailSettings)
         {
             _mailSettings = mailSettings.Value;
@@ -39,8 +34,6 @@ namespace RENT.Services.Services
                 Host = _mailSettings.Host,
                 Port = _mailSettings.Port,
             };
-           
-            var a = mailMessage;
             client.Send(mailMessage);
             return true;
         }
