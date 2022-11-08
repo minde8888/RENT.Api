@@ -84,7 +84,7 @@ namespace RENT.Data.Repositories
                  .Include(p => p.Post)
                  .CountAsync();
 
-            var products = PaginationHelper.CreatePagedResponse<Products>(new InClassName<Products>(pagedData, validFilter, totalRecords, _uriService, route));
+            var products = PaginationHelper.CreatePagedResponse<Products>(new PageParamsWrapper<Products>(pagedData, validFilter, totalRecords, _uriService, route));
 
             ProductResponseDto response = new()
             {

@@ -40,7 +40,7 @@ namespace RENT.Api.Controllers
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                "Error Get data from the database -> AddNewProduct" + ex);
+             "Error Get data from the database -> AddNewProduct" + ex);
             }
         }
 
@@ -52,7 +52,7 @@ namespace RENT.Api.Controllers
             {
                 var route = Request.Path.Value;
                 var imageSrc = $"{Request.Scheme}://{Request.Host}";
-                var response = await _productsService.GetAllProductsAsync(filter,imageSrc, route);
+                var response = await _productsService.GetAllProductsAsync(filter, imageSrc, route);
                 return Ok(response);
             }
             catch (Exception ex)

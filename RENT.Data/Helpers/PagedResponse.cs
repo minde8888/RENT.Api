@@ -1,30 +1,11 @@
-﻿using RENT.Data.Interfaces.IServices;
-using RENT.Domain.Entities;
+﻿using RENT.Domain.Entities;
 using RENT.Domain.Entities.Wrappers;
 
 namespace RENT.Data.Helpers
 {
-    public class InClassName<TT>
-    {
-        public InClassName(List<TT> pagedData, PaginationFilter validFilter, int totalRecords, IUriService uriService, string route)
-        {
-            PagedData = pagedData;
-            ValidFilter = validFilter;
-            TotalRecords = totalRecords;
-            UriService = uriService;
-            Route = route;
-        }
-
-        public List<TT> PagedData { get; private set; }
-        public PaginationFilter ValidFilter { get; private set; }
-        public int TotalRecords { get; private set; }
-        public IUriService UriService { get; private set; }
-        public string Route { get; private set; }
-    }
-
     public static class PaginationHelper
     {
-        public static PagedResponse<List<T>> CreatePagedResponse<T>(InClassName<T> inClassName)
+        public static PagedResponse<List<T>> CreatePagedResponse<T>(PageParamsWrapper<T> inClassName)
         {
             var response = new PagedResponse<List<T>>(inClassName.PagedData, inClassName.ValidFilter.PageNumber, inClassName.ValidFilter.PageSize);
             var totalPages = ((double)inClassName.TotalRecords / (double)inClassName.ValidFilter.PageSize);

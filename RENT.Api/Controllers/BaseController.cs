@@ -88,7 +88,6 @@ namespace RENT.Api.Controllers
         {
             try
             {
-                var route = Request.Path.Value;
                 var src = $"{Request.Scheme}://{Request.Host}";
                 var result = await _baseService.UpdateItem(_hostEnvironment.ContentRootPath, userDto, src);
                 return Ok(result);

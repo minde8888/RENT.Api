@@ -64,7 +64,7 @@ namespace RENT.Api.Controllers
             {
                 var imageSrc = $"{Request.Scheme}://{Request.Host}"; 
                 var result = await _userServices.UserInfo(user, imageSrc);
-                return Ok(result);
+                return Ok(result.UserInformationDto);
             }
             catch (Exception ex)
             {
