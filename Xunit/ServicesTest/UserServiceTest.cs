@@ -15,6 +15,7 @@ namespace Rent.Xunit.ServicesTest
         private readonly Mock<IUserStore<ApplicationUser>> _mockUserManager;
         private readonly Mock<IUserRepository> _userRepository;
         private readonly Mock<ITokenService> _tokenService;
+        private readonly UserManager<ApplicationUser> _mockUser;
         private readonly UserService _userService;
 
         public UserServiceTest()
@@ -22,11 +23,10 @@ namespace Rent.Xunit.ServicesTest
             _mockUserManager = new Mock<IUserStore<ApplicationUser>>(); ;
             _userRepository = new Mock<IUserRepository>();
             _tokenService = new Mock<ITokenService>();
-
-            var mockUser = new UserManager<ApplicationUser>(_mockUserManager.Object, null, null, null, null, null, null, null, null);
+            _mockUser = new UserManager<ApplicationUser>(_mockUserManager.Object, null, null, null, null, null, null, null, null);
 
             _userService = new UserService(
-             mockUser,
+             _mockUser,
             _userRepository.Object,
             _tokenService.Object);
         }
@@ -36,30 +36,29 @@ namespace Rent.Xunit.ServicesTest
             //Arrange
             var user = GetUser();
             var userDto = GetUserDto();
-            var g = Guid.NewGuid();
 
-            _mockUserManager.Setup(x => x.FindByIdAsync(user.Id.ToString(), CancellationToken.None))
-           .ReturnsAsync(GetUser());
-
+            var dbName = nameof(UserServiceTest.CreateNewUserAsync);
+            var context = DbContextInMemory.GetApplicationDbContext(dbName, user);
+            context.Users.Any(u =>
+                u.PhoneNumber ==
+                user.PhoneNumber ||
+                u.Email ==
+                user.Email);
+            _mockUser.CreateAsync(user, userDto.Password);
             _userRepository.Setup(x => x.AddNewUserAsync(userDto));
             //Act
             var response = _userService.CreateNewUserAsync(userDto);
+
         }
 
         private ApplicationUser GetUser()
         {
-            /*    var fixture = new Fixture();
-                fixture.Customize(new AutoMoqCustomization()
-                {
-                    ConfigureMembers = true
-                });
-
-             fixture.Create<ApplicationUser>();*/
             return new ApplicationUser()
             {
-                Id = Guid.NewGuid(),
-                Roles = "test_role",
-                VerificationToken = "123"
+                Roles = "Roles",
+                Email = "Email",
+                UserName = "StringRandom()",
+                PhoneNumber = "PhoneNumber"
             };
         }
 
