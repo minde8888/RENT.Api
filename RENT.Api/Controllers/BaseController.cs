@@ -23,9 +23,9 @@ namespace RENT.Api.Controllers
             IBaseService<T> baseService,
             IWebHostEnvironment hostEnvironment)
         {
-            _baseRepository = baseRepository;
-            _baseService = baseService;
-            _hostEnvironment = hostEnvironment;
+            _baseRepository = baseRepository ?? throw new ArgumentNullException(nameof(baseRepository));
+            _baseService = baseService ?? throw new ArgumentNullException(nameof(baseService));
+            _hostEnvironment = hostEnvironment ?? throw new ArgumentNullException(nameof(hostEnvironment));
         }
 
         [HttpPost]
@@ -68,7 +68,7 @@ namespace RENT.Api.Controllers
                 if (string.IsNullOrEmpty(id))
                     return BadRequest("Can not find Id");
 
-                var imageSrc = $"{Request.Scheme}://{Request.Host}";
+                var imageSrc = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
 
                 var result = await _baseService.GetItemById(imageSrc, id);
 
@@ -84,11 +84,11 @@ namespace RENT.Api.Controllers
         [HttpPut("Update")]
         [Authorize(Roles = "Admin, User")]
         [SupportedOSPlatform("windows")]
-        public async Task<ActionResult<List<UserDto>>> UpdateUserAsync( [FromForm] RequestUserDto userDto)
+        public async Task<ActionResult<List<UserDto>>> UpdateUserAsync([FromForm] RequestUserDto userDto)
         {
             try
             {
-                var src = $"{Request.Scheme}://{Request.Host}";
+                var src = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
                 var result = await _baseService.UpdateItem(_hostEnvironment.ContentRootPath, userDto, src);
                 return Ok(result);
             }

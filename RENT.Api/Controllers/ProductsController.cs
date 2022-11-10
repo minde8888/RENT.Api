@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RENT.Data.Interfaces.IRepositories;
@@ -23,8 +22,8 @@ namespace RENT.Api.Controllers
             IProductsService productsService,
             IProductsRepository productsRepository)
         {
-            _productsRepository = productsRepository;
-            _productsService = productsService;
+            _productsRepository = productsRepository ?? throw new ArgumentNullException(nameof(productsRepository));
+            _productsService = productsService ?? throw new ArgumentNullException(nameof(productsService));
         }
 
         [Authorize(Roles = "User, Admin")]
@@ -51,7 +50,7 @@ namespace RENT.Api.Controllers
             try
             {
                 var route = Request.Path.Value;
-                var imageSrc = $"{Request.Scheme}://{Request.Host}";
+                var imageSrc = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
                 var response = await _productsService.GetAllProductsAsync(filter, imageSrc, route);
                 return Ok(response);
             }
@@ -71,7 +70,7 @@ namespace RENT.Api.Controllers
                 return BadRequest("This product can not by updated");
             try
             {
-                var imageSrc = $"{Request.Scheme}://{Request.Host}";
+                var imageSrc = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
                 var response = await _productsService.UpdateItemAsync(product, imageSrc);
                 return Ok(response);
             }

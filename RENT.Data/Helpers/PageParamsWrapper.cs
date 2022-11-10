@@ -7,11 +7,11 @@ namespace RENT.Data.Helpers
     {
         public PageParamsWrapper(List<T> pagedData, PaginationFilter validFilter, int totalRecords, IUriService uriService, string route)
         {
-            PagedData = pagedData;
-            ValidFilter = validFilter;
+            PagedData = pagedData ?? throw new ArgumentNullException(nameof(pagedData));
+            ValidFilter = validFilter ?? throw new ArgumentNullException(nameof(validFilter));
+            UriService = uriService ?? throw new ArgumentNullException(nameof(uriService));
+            Route = route ?? throw new ArgumentNullException(nameof(route));
             TotalRecords = totalRecords;
-            UriService = uriService;
-            Route = route;
         }
 
         public List<T> PagedData { get; private set; }
