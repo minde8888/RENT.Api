@@ -46,7 +46,7 @@ namespace Rent.Xunit.Static
             };
             //Act
             var uriService = uri.GetPageUri(filter, "test.com");
-            var value = PaginationHelper.CreatePagedResponse(new InClassName<Products>(product, filter, 10, uri, "test.com"));
+            var value = PaginationHelper.CreatePagedResponse(new PageParamsWrapper<Products>(product, filter, 10, uri, "test.com"));
             //result
             uriService.Should().NotBeNull();
             uriService.AbsolutePath.Should().Be("/");
