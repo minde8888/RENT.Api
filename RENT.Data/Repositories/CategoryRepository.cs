@@ -14,8 +14,8 @@ namespace RENT.Data.Repositories
 
         public CategoryRepository(AppDbContext context, IMapper mapper)
         {
-            _context = context;
-            _mapper = mapper;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public async Task<CategoriesDto> AddCategoryAsync(CategoriesDto category)
@@ -47,7 +47,7 @@ namespace RENT.Data.Repositories
         {
             var prodCat = await _context.CategoriesProduct
                 .Where(x => x.CategoriesId == guidId).FirstOrDefaultAsync();
-            if (prodCat?.Categories == null) throw new ArgumentNullException(nameof(prodCat));
+            if (prodCat?.Categories == null) throw new ArgumentNullException("Could not get Categories from DB", nameof(prodCat));
 
             return _mapper.Map<CategoriesDto>(prodCat.Categories);
         }
@@ -62,7 +62,7 @@ namespace RENT.Data.Repositories
                 var guid = new Guid(categoriesId[i]);
                 var categorySave = _context.Categories
                     .Single(x => x.CategoriesId == guid);
-                if (categorySave?.CategoriesName == null) throw new ArgumentNullException(nameof(categorySave));
+                if (categorySave?.CategoriesName == null) throw new ArgumentNullException("Could not get Categories from DB", nameof(categorySave));
 
                 categorySave.CategoriesName = categories[i];
                 _context.Entry(categorySave).State = EntityState.Modified;
@@ -75,7 +75,7 @@ namespace RENT.Data.Repositories
             var guid = new Guid(id);
             var cat = _context.Categories
                 .Single(x => x.CategoriesId == guid);
-            if (cat?.CategoriesName == null) throw new ArgumentNullException(nameof(cat));
+            if (cat?.CategoriesName == null) throw new ArgumentNullException("Could not get Categories from DB", nameof(cat));
 
             _context.Categories.Remove(cat);
             _context.SaveChangesAsync();

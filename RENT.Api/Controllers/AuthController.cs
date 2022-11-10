@@ -61,7 +61,7 @@ namespace RENT.Api.Controllers
         {
             try
             {
-                var imageSrc = $"{Request.Scheme}://{Request.Host}"; 
+                var imageSrc = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
                 var result = await _userServices.UserInfo(user, imageSrc);
                 return Ok(result.UserInformationDto);
             }

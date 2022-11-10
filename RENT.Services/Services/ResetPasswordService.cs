@@ -43,7 +43,7 @@ namespace RENT.Services.Services
         public async Task<bool> SendEmailPasswordReset(ForgotPassword model, string origin)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user == null) throw new ArgumentNullException();
+            if (user == null) throw new ArgumentNullException("Could not find user in DB", nameof(user));
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
             user.ResetToken = token ?? throw new ArgumentException("Token is null");

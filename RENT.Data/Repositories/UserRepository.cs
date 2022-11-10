@@ -66,7 +66,7 @@ namespace RENT.Data.Repositories
                         .Include(product => product.Products)
                         .Where(u => u.UserId == new Guid(user.Id.ToString()))
                         .FirstOrDefaultAsync();
-                        if (seller == null) throw new ArgumentNullException();
+                        if (seller == null) throw new ArgumentNullException("Could not find User", nameof(seller));
 
                         var sellerDto = _mapper.Map<UserInformationDto>(seller);
                         var newAddress = _mapper.Map<AddressDto>(seller.Address);
@@ -86,7 +86,7 @@ namespace RENT.Data.Repositories
                             .Include(address => address.Address)
                             .Where(u => u.UserId == new Guid(user.Id.ToString()))
                             .FirstOrDefaultAsync();
-                        if (client == null) throw new ArgumentNullException();
+                        if (client == null) throw new ArgumentNullException("Could not find Client", nameof(client));
 
                         var clientDto = _mapper.Map<UserInformationDto>(client);
                         var addressNew = _mapper.Map<AddressDto>(client.Address);

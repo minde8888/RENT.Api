@@ -20,9 +20,9 @@ namespace RENT.Data.Repositories
             UserManager<ApplicationUser> userManager,
             IMapper mapper)
         {
-            _context = context;
-            _userManager = userManager;
-            _mapper = mapper;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public async Task AddItemAsync(T t, string userId)
@@ -63,7 +63,7 @@ namespace RENT.Data.Repositories
                 Include(manager => manager.Address).
                 Single(m => m.Id == userDto.Id);
 
-            if (item == null || userDto == null) throw new ArgumentNullException();
+            if (item == null || userDto == null) throw new ArgumentNullException("Could not get data form DB or Request", nameof(item));
 
             item.Name = userDto.Name;
             item.Surname = userDto.Surname;
@@ -96,7 +96,7 @@ namespace RENT.Data.Repositories
             var item = _context.
                 Set<T>().
                 Single(x => x.Id == Guid.Parse(id));
-            if (item == null ) throw new ArgumentNullException(nameof(item));
+            if (item == null) throw new ArgumentNullException("Could not get value from DB", nameof(item));
 
             var user = await _userManager.FindByEmailAsync(item.Email);
             if (user == null) throw new Exception();

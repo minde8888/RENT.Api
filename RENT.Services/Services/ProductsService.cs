@@ -15,9 +15,9 @@ namespace RENT.Services.Services
 
         public ProductsService(IProductsRepository productsRepository, IImagesService imagesService, IMapper mapper)
         {
-            _mapper = mapper;
-            _productsRepository = productsRepository;
-            _imagesService = imagesService;
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _productsRepository = productsRepository ?? throw new ArgumentNullException(nameof(productsRepository));
+            _imagesService = imagesService ?? throw new ArgumentNullException(nameof(imagesService));
         }
         public async Task AddProductWithImage(ProductsRequestDto product)
         {
@@ -25,7 +25,7 @@ namespace RENT.Services.Services
             if (product.Images != null)
             {
                 var height = product.ImageHeight.Split(',');
-               var width = product.ImageWidth.Split(',');
+                var width = product.ImageWidth.Split(',');
 
                 for (var i = 0; i < height.Length; i++)
                 {
@@ -82,7 +82,7 @@ namespace RENT.Services.Services
             var imageName = productsToReturn.ImageName.Split(',');
             foreach (var img in imageName)
             {
-                if (string.IsNullOrEmpty(img)) throw new ArgumentNullException();
+                if (string.IsNullOrEmpty(img)) throw new ArgumentNullException("Could not find image name", nameof(img));
                 newImages.Add($"{imageSrc}/Images/{img}");
                 productsToReturn.ImageSrc = newImages;
             }

@@ -9,7 +9,7 @@ namespace RENT.Services.Services
         private readonly string _baseUri;
         public UriService(string baseUri)
         {
-            _baseUri = baseUri;
+            _baseUri = baseUri ?? throw new ArgumentNullException(nameof(baseUri));
         }
         public Uri GetPageUri(PaginationFilter filter, string route)
         {

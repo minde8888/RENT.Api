@@ -18,25 +18,16 @@ namespace RENT.Data.Repositories
 
         public ProductsRepository(AppDbContext context, IMapper mapper, IUriService uriService)
         {
-            _context = context;
-            _mapper = mapper;
-            _uriService = uriService;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _uriService = uriService ?? throw new ArgumentNullException(nameof(uriService));
         }
 
         public async Task AddProductsAsync(ProductsRequestDto product)
         {
-            Products products = new()
-            {
-                ImageHeight = product.ImageHeight,
-                ImageWidth = product.ImageWidth,
-                ImageName = product.ImageName,
-                Price = product.Price,
-                Size = product.Size,
-                Place = product.Place,
-                Phone = product.Phone,
-                Email = product.Email,
-                SellerId = product.SellerId
-            };
+
+            var products = _mapper.Map<Products>(product);
+
             _context.Products.Add(products);
             await _context.SaveChangesAsync();
 
@@ -145,14 +136,14 @@ namespace RENT.Data.Repositories
                 _context.Entry(products).State = EntityState.Modified;
                 _context.Entry(products.Post).State = EntityState.Modified;
             }
-            
+
             if (productDto.CategoriesName != null)
             {
                 var cats = _context.CategoriesProduct.
                   Include(c => c.Categories).
                   Where(x => x.ProductsId == productDto.ProductsId);
                 _context.CategoriesProduct.RemoveRange(cats);
-           
+
                 var category = productDto.CategoriesName.Split(',');
 
                 foreach (var item in category)

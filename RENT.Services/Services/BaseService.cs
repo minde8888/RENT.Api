@@ -14,18 +14,18 @@ namespace RENT.Services.Services
 
         public BaseService(IBaseRepository<T> baseRepository, IImagesService imagesService)
         {
-            _baseRepository = baseRepository;
-            _imagesService = imagesService;
+            _baseRepository = baseRepository ?? throw new ArgumentNullException(nameof(baseRepository));
+            _imagesService = imagesService ?? throw new ArgumentNullException(nameof(imagesService));
         }
-    
-        public async Task<UserDto> GetItemById(string imageSrc, string id) 
+
+        public async Task<UserDto> GetItemById(string imageSrc, string id)
         {
             var user = await _baseRepository.GetItemIdAsync(id);
             if (user.ImageName != null)
             {
                 GetImages(user, imageSrc);
             }
-            return user; 
+            return user;
         }
         public async Task<UserDto> UpdateItem(string contentRootPath, RequestUserDto user, string src)
         {
@@ -38,13 +38,13 @@ namespace RENT.Services.Services
                     _imagesService.DeleteImage(imagePath);
                 }
                 user.ImageName = _imagesService.SaveImage(user.ImageFile, user.Height, user.Width);
-            }          
+            }
             var itemReturn = await _baseRepository.UpdateItemAsync(user);
             GetImages(itemReturn, src);
 
             return itemReturn;
         }
-        public UserDto  GetImages(UserDto userDto, string imageSrc)
+        public UserDto GetImages(UserDto userDto, string imageSrc)
         {
             List<string> imageList = new();
 

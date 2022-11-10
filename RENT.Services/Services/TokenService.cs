@@ -13,19 +13,19 @@ using System.Text;
 
 namespace RENT.Services.Services
 {
-    public class TokenService: ITokenService
+    public class TokenService : ITokenService
     {
         private readonly AppDbContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;    
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly JwtConfig _jwtConfig;
         public TokenService(
             AppDbContext context,
-            UserManager<ApplicationUser> userManager,    
+            UserManager<ApplicationUser> userManager,
             IOptionsMonitor<JwtConfig> optionsMonitor)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
-            _jwtConfig = optionsMonitor.CurrentValue; 
+            _jwtConfig = optionsMonitor.CurrentValue;
         }
         public RefreshToken GetRefreshToken(SecurityToken token, string rand, ApplicationUser user)
         {
@@ -46,7 +46,7 @@ namespace RENT.Services.Services
         public async Task<AuthResult> GenerateJwtTokenAsync(ApplicationUser user)
         {
             var roles = await _userManager.GetRolesAsync(user);
-            if (user?.Email == null) throw new ArgumentNullException();
+            if (user?.Email == null) throw new ArgumentNullException("Could not find email or user in DB", nameof(user.Email));
             var roleClaims = new List<Claim>();
             roles.ToList().ForEach(role =>
             {
