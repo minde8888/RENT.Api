@@ -37,7 +37,13 @@ namespace Rent.Xunit.ControllerTest
            
             _controller = new ProductsController(
                 _mockProductService.Object,
-                _mockProductRepository.Object);
+                _mockProductRepository.Object)
+            {
+                ControllerContext = new ControllerContext()
+                {
+                    HttpContext = httpContext
+                }
+            };
         }
 
         [Fact]

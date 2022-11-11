@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using RENT.Data.Interfaces.IRepositories;
 using RENT.Data.Interfaces.IServices;
